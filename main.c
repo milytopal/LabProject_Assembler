@@ -1,6 +1,11 @@
 #include <stdio.h>
 
-int main() {
+
+#include "extrnVariables.h"
+
+int main(int argc, char *argv[]) {
+
+
     printf("Hello, World!\n");
     return 0;
 }
