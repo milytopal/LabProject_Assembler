@@ -21,7 +21,7 @@ typedef struct List{
 
 void add(List, Node);
 Node* get(List, int);
-
+void remove(List, int);
 
 
 #endif //DATA_LINKED_LIST_H

@@ -20,4 +20,7 @@ void add(List list, Node toAdd){
     get(list, list.length)->next = &toAdd;
 }
 
-
+void remove(List list, int index) {
+    Node *node = get(list, index-1);
+    node->next = node->next->next;
+}
