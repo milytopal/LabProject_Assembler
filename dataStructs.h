@@ -23,8 +23,16 @@ typedef enum eErrorCode{MISSING_FILE_NAME,MISSING_FILE}eErrorCode;
 
 
 
+typedef struct Macro{
+    char name[LABEL_LEN];
+    char* tokens;
+}Macro;
 
-
+typedef struct MacroNode *pMacroNode;
+typedef struct MacroNode{
+    Macro macro;
+    pMacroNode pNext;
+};
 
 typedef struct Label{
     char label[LABEL_LEN];
@@ -36,7 +44,7 @@ typedef struct Label{
 typedef struct DataNode *pDataNode;
 typedef struct DataNode{
     int address;
-
+    pDataNode pNext;
 }DataNode;
 
 typedef struct Word{

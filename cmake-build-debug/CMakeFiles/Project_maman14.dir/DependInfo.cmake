@@ -12,6 +12,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/Users/milytopal/CLionProjects/Project_maman14/firstPass.c" "CMakeFiles/Project_maman14.dir/firstPass.c.o" "gcc" "CMakeFiles/Project_maman14.dir/firstPass.c.o.d"
   "/Users/milytopal/CLionProjects/Project_maman14/main.c" "CMakeFiles/Project_maman14.dir/main.c.o" "gcc" "CMakeFiles/Project_maman14.dir/main.c.o.d"
   "/Users/milytopal/CLionProjects/Project_maman14/parseCodeToFile.c" "CMakeFiles/Project_maman14.dir/parseCodeToFile.c.o" "gcc" "CMakeFiles/Project_maman14.dir/parseCodeToFile.c.o.d"
+  "/Users/milytopal/CLionProjects/Project_maman14/preProcessor.c" "CMakeFiles/Project_maman14.dir/preProcessor.c.o" "gcc" "CMakeFiles/Project_maman14.dir/preProcessor.c.o.d"
   "/Users/milytopal/CLionProjects/Project_maman14/secondPass.c" "CMakeFiles/Project_maman14.dir/secondPass.c.o" "gcc" "CMakeFiles/Project_maman14.dir/secondPass.c.o.d"
   "/Users/milytopal/CLionProjects/Project_maman14/utils.c" "CMakeFiles/Project_maman14.dir/utils.c.o" "gcc" "CMakeFiles/Project_maman14.dir/utils.c.o.d"
   )

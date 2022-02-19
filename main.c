@@ -1,6 +1,5 @@
 #include <stdio.h>
 
-
 #include "extrnVariables.h"
 #include "utils.h"
 bool isErrorFound; /* global varivable - represents if error found in current file*/
