@@ -1,8 +1,10 @@
-//
-// Created by Mily Topal on 06/02/2022.
-//
 
-#ifndef PROJECT_MAMAN14_UTILS_H
-#define PROJECT_MAMAN14_UTILS_H
+#ifndef UTILS_H
+#define UTILS_H
+#include "dataStructs.h"
 
-#endif //PROJECT_MAMAN14_UTILS_H
+void printError(const char* currFileName, eErrorCode errCode, int lineNum);
+
+
+
+#endif

@@ -1,5 +1,7 @@
-//
-// Created by Mily Topal on 06/02/2022.
-//
 
 #include "utils.h"
+
+void printError(const char* currFileName, eErrorCode errCode, int lineNum)
+{
+
+}
