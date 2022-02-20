@@ -12,6 +12,8 @@
 #define FUNCT_LEN 5
 #define ARE_FIELD_LEN 3
 
+#define NULL ((void *)0)
+
 #define STARTING_IC 100
 typedef enum bool{false,true}bool;
 typedef enum eLocalizaion{Extern, Entry, NoneExtOrEnt}eLocalizaion;
@@ -32,7 +34,7 @@ typedef struct MacroNode *pMacroNode;
 typedef struct MacroNode{
     Macro macro;
     pMacroNode pNext;
-};
+} MacroNode;
 
 typedef struct Label{
     char label[LABEL_LEN];
@@ -66,7 +68,7 @@ typedef struct WordNode* pWordNode;
 typedef struct WordNode{
     unsigned int address;
     Word word;
-    pWordNode pNextWord;
+    pWordNode pNext;
 }WordNode;
 
 

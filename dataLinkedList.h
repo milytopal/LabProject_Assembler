@@ -1,15 +1,15 @@
 #ifndef DATA_LINKED_LIST_H
 #define DATA_LINKED_LIST_H
 #include "dataStructs.h"
+#include <stdio.h>
 
-#define NODE_STR_LENGTH 20
 
 
-void add(pDataNode, pDataNode);
-void remove(pDataNode, int);
+void addDataNode(pDataNode, pDataNode);
+void removeDataNode(pDataNode, int);
 
-pDataNode get(pDataNode, int);
-int length(pDataNode);
+pDataNode getDataNode(pDataNode, int);
+int lengthDataNode(pDataNode);
 
 
 #endif //DATA_LINKED_LIST_H

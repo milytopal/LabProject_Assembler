@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
     int i;
     if(argc < 2)
     {
-
+מ
     }
     for(i=2; i<argc ; i++)
     {
