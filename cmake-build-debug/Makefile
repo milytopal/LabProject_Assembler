@@ -225,6 +225,30 @@ parseCodeToFile.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_maman14.dir/build.make CMakeFiles/Project_maman14.dir/parseCodeToFile.c.s
 .PHONY : parseCodeToFile.c.s
 
+preProcessor.o: preProcessor.c.o
+.PHONY : preProcessor.o
+
+# target to build an object file
+preProcessor.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_maman14.dir/build.make CMakeFiles/Project_maman14.dir/preProcessor.c.o
+.PHONY : preProcessor.c.o
+
+preProcessor.i: preProcessor.c.i
+.PHONY : preProcessor.i
+
+# target to preprocess a source file
+preProcessor.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_maman14.dir/build.make CMakeFiles/Project_maman14.dir/preProcessor.c.i
+.PHONY : preProcessor.c.i
+
+preProcessor.s: preProcessor.c.s
+.PHONY : preProcessor.s
+
+# target to generate assembly for a file
+preProcessor.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_maman14.dir/build.make CMakeFiles/Project_maman14.dir/preProcessor.c.s
+.PHONY : preProcessor.c.s
+
 secondPass.o: secondPass.c.o
 .PHONY : secondPass.o
 
@@ -294,6 +318,9 @@ help:
 	@echo "... parseCodeToFile.o"
 	@echo "... parseCodeToFile.i"
 	@echo "... parseCodeToFile.s"
+	@echo "... preProcessor.o"
+	@echo "... preProcessor.i"
+	@echo "... preProcessor.s"
 	@echo "... secondPass.o"
 	@echo "... secondPass.i"
 	@echo "... secondPass.s"

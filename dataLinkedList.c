@@ -1,6 +1,4 @@
-//
-// Created by Mily Topal on 06/02/2022.
-// <-- Ubuntu gives an error on this kind of comment, might wanna change it
+
 #include "dataLinkedList.h"
 
 int length(pDataNode list) {

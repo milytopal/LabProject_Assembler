@@ -1,8 +1,12 @@
-//
-// Created by Mily Topal on 06/02/2022.
-//
 
-#ifndef PROJECT_MAMAN14_SECONDPASS_H
-#define PROJECT_MAMAN14_SECONDPASS_H
+#ifndef SECOND_PASS_H
+#define SECOND_PASS_H
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "utils.h"
+#include "dataStructs.h"
 
-#endif //PROJECT_MAMAN14_SECONDPASS_H
+bool secondPass(const char* fileName, bool firstPass);
+
+#endif
