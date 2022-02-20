@@ -32,7 +32,8 @@ typedef struct Label{
 typedef struct DataNode *pDataNode;
 typedef struct DataNode{
     int address;
-
+    char *data;
+    pDataNode pNext;
 }DataNode;
 
 typedef struct Word{

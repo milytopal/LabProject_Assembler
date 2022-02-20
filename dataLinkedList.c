@@ -3,24 +3,33 @@
 // <-- Ubuntu gives an error on this kind of comment, might wanna change it
 #include "dataLinkedList.h"
 
-Node* get(List list, int index){
-    if (index > list.length) {
-        return;
-    }
-
-    Node *node = list.head;
+int length(pDataNode list) {
     int i = 0;
-    for (; i < index; ++i) {
-        node = node->next;
+    pDataNode lp;
+    for (lp = list; lp != NULL; lp = lp->pNext) {
+        i++;
     }
-    return node;
+    return i;
 }
 
-void add(List list, Node toAdd){
-    get(list, list.length)->next = &toAdd;
+pDataNode get(pDataNode list, int index){
+
+    pDataNode lp = list;
+    int i;
+    for (i = 0; i < index; ++i) {
+        lp = lp->pNext;
+    }
+    if (lp == NULL) {
+        printf("[WARNING]: get# on DataNode, index out of bounds! Returned NULL! (%d / %d)", index, length(list));
+    }
+    return lp;
 }
 
-void remove(List list, int index) {
-    Node *node = get(list, index-1);
-    node->next = node->next->next;
+void add(pDataNode list, pDataNode toAdd){
+    get(list, length(list))->pNext = toAdd;
+}
+
+void remove(pDataNode list, int index) {
+    pDataNode node = get(list, index-1);
+    node->pNext = node->pNext->pNext;
 }

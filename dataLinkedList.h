@@ -8,20 +8,12 @@
 
 #define NODE_STR_LENGTH 20
 
-typedef struct Node{
-    char data[NODE_STR_LENGTH];
-    struct Node *next;
-} Node;
 
-typedef struct List{
-    Node *head;
-    int length;
-} List;
+void add(pDataNode, pDataNode);
+void remove(pDataNode, int);
 
-
-void add(List, Node);
-Node* get(List, int);
-void remove(List, int);
+pDataNode get(pDataNode, int);
+int length(pDataNode);
 
 
 #endif //DATA_LINKED_LIST_H
