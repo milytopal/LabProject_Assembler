@@ -13,6 +13,7 @@
 #define ARE_FIELD_LEN 3
 
 #define NULL ((void *)0)
+#define MAX_LINE_LEN 83
 
 #define STARTING_IC 100
 typedef enum bool{false,true}bool;
@@ -21,7 +22,7 @@ typedef enum eDataType{String, Data, NoneDataOrStr}eDataType;
 typedef enum ARE{A=4,R=2,E=1}ARE ;
 typedef enum eCommands{MOV,CMP,ADD,SUB,LEA,CLR,NOT,INC,DEC,JMP,BNE,JSR,RED,PRN,RTS,STOP}eCommands;
 typedef enum eDirectives{DATA,STRING,ENTRY,EXTERN}eDirectives;
-typedef enum eErrorCode{MISSING_FILE_NAME,MISSING_FILE}eErrorCode;
+typedef enum eErrorCode{MISSING_FILE_NAME,MISSING_FILE,LINE_LIMIT_REACHED}eErrorCode;
 
 
 
@@ -39,6 +40,7 @@ typedef struct MacroNode{
 typedef struct Label{
     char label[LABEL_LEN];
     unsigned int address;
+    int value;
     eLocalizaion locationType;
     eDataType dataType;
 }Label;
