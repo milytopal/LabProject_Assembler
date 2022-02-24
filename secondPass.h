@@ -7,6 +7,7 @@
 #include "utils.h"
 #include "dataStructs.h"
 
+
 bool secondPass(const char* fileName, bool firstPass);
 
 #endif

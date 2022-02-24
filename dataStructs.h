@@ -1,5 +1,3 @@
-
-
 #ifndef DATASTRUCTS_H
 #define DATASTRUCTS_H
 
@@ -12,22 +10,34 @@
 #define FUNCT_LEN 5
 #define ARE_FIELD_LEN 3
 
-#define NULL ((void *)0)
+#define LINE_LENGTH 83
+
+//#define NULL ((void *)0)
 
 #define STARTING_IC 100
+#define NUM_OF_CMD 16
+#define MACRO_STR "macro"
+
 typedef enum bool{false,true}bool;
 typedef enum eLocalizaion{Extern, Entry, NoneExtOrEnt}eLocalizaion;
 typedef enum eDataType{String, Data, NoneDataOrStr}eDataType;
 typedef enum ARE{A=4,R=2,E=1}ARE ;
-typedef enum eCommands{MOV,CMP,ADD,SUB,LEA,CLR,NOT,INC,DEC,JMP,BNE,JSR,RED,PRN,RTS,STOP}eCommands;
+typedef enum eCommands{MOV = 0,CMP,ADD,SUB,LEA,CLR,NOT,INC,DEC,JMP,BNE,JSR,RED,PRN,RTS,STOP}eCommands;
 typedef enum eDirectives{DATA,STRING,ENTRY,EXTERN}eDirectives;
 typedef enum eErrorCode{MISSING_FILE_NAME,MISSING_FILE}eErrorCode;
+/* array to hold command strings for comparison*/
+//char cmdStr
 
 
+typedef struct TokenNode *pTokenNode;
+typedef struct TokenNode{
+    char token[LINE_LENGTH];
+    pTokenNode pNext;
+} TokenNode;
 
 typedef struct Macro{
     char name[LABEL_LEN];
-    char* tokens;
+    TokenNode* tokenList;
 }Macro;
 
 typedef struct MacroNode *pMacroNode;
