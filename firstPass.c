@@ -27,7 +27,7 @@ bool firstPass(const char* fileName, bool firstPass)
 
         /* Sould probably check if it's an empty line here */
 
-        if (line[MAX_LINE_LEN-1] != NULL && line[MAX_LINE_LEN-1] != '\0') {
+        if (&line[MAX_LINE_LEN-1] != NULL && line[MAX_LINE_LEN-1] != '\0') {
             printError(asFileName, LINE_LIMIT_REACHED, n);
             return true; /* Can't actually check the line */
         }

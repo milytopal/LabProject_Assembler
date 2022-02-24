@@ -2,6 +2,7 @@
 #define DATA_LINKED_LIST_H
 #include "dataStructs.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 
 

@@ -2,7 +2,7 @@
 #define WORD_LINKED_LIST_H
 #include "dataStructs.h"
 #include <stdio.h>
-
+#include <stdlib.h>
 
 
 void addWordNode(pWordNode, pWordNode);
