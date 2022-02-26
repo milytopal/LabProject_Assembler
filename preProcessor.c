@@ -122,7 +122,8 @@ bool foo(FILE *fp, FILE * newFp)
         fputs(line,newFp);
         clearLine(line);
     }
-    //todo read file
+    deleteMacroList(head);
+    //todo delete list of macros?
     return true;
 }
 
@@ -168,6 +169,7 @@ pMacroNode addNewMacro(const char* name)
     }
     return head; /* returning pointer to the new node*/
 }
+/* add new token the tokens list of a given macro */
 void addLineToMacro(pMacroNode macro, char* line){
 
     pTokenNode addLine = NULL;
@@ -206,4 +208,24 @@ bool writeMacroToFile(pMacroNode macro ,FILE *file)
     }
     return true;
 }
+/* delete the list in the end of process to free memory */
+void deleteMacroList(pMacroNode head ) {
+    pMacroNode nextMacro = NULL;
+    pTokenNode nextToken = NULL;
+    //nextMacro = head;
+    while(head != NULL)
+    {
+        nextMacro = head->pNext;
 
+        /* delete token list in the macro */
+        while(head->macro.tokenList != NULL) {
+            nextToken=head->macro.tokenList->pNext;
+            free(head->macro.tokenList);
+            head->macro.tokenList = nextToken;
+        }
+
+        free(head);
+        head = nextMacro;
+
+    }
+}
