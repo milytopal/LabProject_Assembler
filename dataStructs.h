@@ -1,3 +1,5 @@
+
+
 #ifndef DATASTRUCTS_H
 #define DATASTRUCTS_H
 
@@ -12,7 +14,7 @@
 
 #define LINE_LENGTH 83
 
-//#define NULL ((void *)0)
+#define MAX_LINE_LEN 83
 
 #define STARTING_IC 100
 #define NUM_OF_CMD 16
@@ -22,11 +24,9 @@ typedef enum bool{false,true}bool;
 typedef enum eLocalizaion{Extern, Entry, NoneExtOrEnt}eLocalizaion;
 typedef enum eDataType{String, Data, NoneDataOrStr}eDataType;
 typedef enum ARE{A=4,R=2,E=1}ARE ;
-typedef enum eCommands{MOV = 0,CMP,ADD,SUB,LEA,CLR,NOT,INC,DEC,JMP,BNE,JSR,RED,PRN,RTS,STOP}eCommands;
+typedef enum eCommands{MOV,CMP,ADD,SUB,LEA,CLR,NOT,INC,DEC,JMP,BNE,JSR,RED,PRN,RTS,STOP}eCommands;
 typedef enum eDirectives{DATA,STRING,ENTRY,EXTERN}eDirectives;
-typedef enum eErrorCode{MISSING_FILE_NAME,MISSING_FILE}eErrorCode;
-/* array to hold command strings for comparison*/
-//char cmdStr
+typedef enum eErrorCode{MISSING_FILE_NAME,MISSING_FILE,LINE_LIMIT_REACHED}eErrorCode;
 
 /* the TokenNode is a node for linked list of commands inside a macro */
 typedef struct TokenNode *pTokenNode;
@@ -51,6 +51,7 @@ typedef struct MacroNode{
 typedef struct Label{
     char label[LABEL_LEN];
     unsigned int address;
+    int value;
     eLocalizaion locationType;
     eDataType dataType;
 }Label;
@@ -87,4 +88,4 @@ typedef struct WordNode{
 
 
 
-#endif //DATASTRUCTS_H
+#endif

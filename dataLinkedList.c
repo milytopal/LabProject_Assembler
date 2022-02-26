@@ -24,7 +24,9 @@ pDataNode getDataNode(pDataNode list, int index){
 }
 
 void addDataNode(pDataNode list, pDataNode toAdd){
-    getDataNode(list, lengthDataNode(list))->pNext = toAdd;
+    pDataNode temp = getDataNode(list, lengthDataNode(list))->pNext;
+    temp = (pDataNode) calloc(sizeof(DataNode), 1);
+    temp = toAdd;
 }
 
 void removeDataNode(pDataNode list, int index) {

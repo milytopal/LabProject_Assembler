@@ -8,8 +8,11 @@
 #include "dataStructs.h"
 
 bool firstPass(const char* fileName, bool firstPass);
+static bool isLabelCheck(char*);
 
 
 
+pWordNode list;
+Label *labels;
 
 #endif
