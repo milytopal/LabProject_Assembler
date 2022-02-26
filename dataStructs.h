@@ -28,18 +28,20 @@ typedef enum eErrorCode{MISSING_FILE_NAME,MISSING_FILE}eErrorCode;
 /* array to hold command strings for comparison*/
 //char cmdStr
 
-
+/* the TokenNode is a node for linked list of commands inside a macro */
 typedef struct TokenNode *pTokenNode;
 typedef struct TokenNode{
     char token[LINE_LENGTH];
     pTokenNode pNext;
 } TokenNode;
 
+/* Macro contains a name and a linked list of commands */
 typedef struct Macro{
     char name[LABEL_LEN];
     TokenNode* tokenList;
 }Macro;
 
+/* MacroNode is a struct for a linked list of every macro declaration in the source file*/
 typedef struct MacroNode *pMacroNode;
 typedef struct MacroNode{
     Macro macro;

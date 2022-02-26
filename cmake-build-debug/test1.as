@@ -8,14 +8,15 @@ MAIN: mov r0,r1
       sub S.2,W
       not K
       macro m1
-mov
-mov
+        mov r0,r1
+        sub S.2,W
 endm
 m1
 LOOP:   jmp R
 	prn K
 	inc r7
 	jsr S.2
+m1
 	red W
 END: stop
 K: .data -5

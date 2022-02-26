@@ -18,7 +18,8 @@ void addLineToMacro(pMacroNode macro, char* line);
 
 bool foo(FILE *fp, FILE * newFp);
 void clearLine(char* line);
-int cleanLine(char* line);
+bool writeMacroToFile(pMacroNode macro, FILE *file);
+
 
 pMacroNode findMacro( char* name);
 

@@ -79,7 +79,7 @@ bool foo(FILE *fp, FILE * newFp)
 
 
     cpyLine = (char*)calloc(LINE_LENGTH, sizeof(char));
-    printf("inside foo\n");
+
     while(fgets(line, LINE_LENGTH, fp) != NULL){
         printf("inside foo loop\n");
         if(line[LINE_LENGTH-2]!= '\0')
@@ -98,7 +98,7 @@ bool foo(FILE *fp, FILE * newFp)
             continue;
         }
 
-        if(strstr(line, "macro") != NULL){ //macro statement
+        if(strstr(line, "macro") != NULL){ /*  find macro statement */
             printf("found macro line is : %s\n", cpyLine);              /* todo: delete later*/
             token = strtok(cpyLine, " \t\n");
             printf("found macro 2 rest of line : %s  cpyLine : %s\n", token, cpyLine); /* todo: delete later*/
@@ -111,9 +111,10 @@ bool foo(FILE *fp, FILE * newFp)
             continue;
         }
 
-        macro = findMacro(strtok(cpyLine, " \t\n"));
+        macro = findMacro(strtok(cpyLine, " \t\n")); /* finds the macro object acording to macro name*/
         if(macro != NULL){
             //write macro to file
+            writeMacroToFile(macro,newFp);
             clearLine(line);
             continue;
         }
@@ -169,5 +170,40 @@ pMacroNode addNewMacro(const char* name)
 }
 void addLineToMacro(pMacroNode macro, char* line){
 
-    //strcat(macro->macro.tokens, line);
+    pTokenNode addLine = NULL;
+    pTokenNode curr = NULL;
+    addLine = (pTokenNode)calloc(1 , sizeof (TokenNode));
+    if(macro->macro.tokenList == NULL)
+    {
+        macro->macro.tokenList = (pTokenNode)calloc(LINE_LENGTH , sizeof (TokenNode));
+        strcpy(macro->macro.tokenList->token ,line);
+    }
+    else {
+        curr = macro->macro.tokenList;
+        while (curr->pNext != NULL) {
+            curr = macro->macro.tokenList->pNext;
+        }
+        curr->pNext = (pTokenNode) calloc (1 , sizeof (TokenNode));
+        strcpy(curr->pNext->token,line);
+        curr = curr->pNext;
+        curr = NULL;
+    }
+
 }
+/* write all the tokens in the token list of the macro from head to end */
+bool writeMacroToFile(pMacroNode macro ,FILE *file)
+{
+    pTokenNode  curr = NULL;
+    if(macro == NULL || file == NULL )
+    {
+        return false;
+    }
+    curr = macro->macro.tokenList;
+    while(curr != NULL)
+    {
+        fputs(curr->token,file);
+        curr = curr->pNext;
+    }
+    return true;
+}
+
