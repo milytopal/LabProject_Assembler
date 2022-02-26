@@ -6,9 +6,9 @@ bool firstPass(const char* fileName, bool firstPass)
 {
     FILE *fp = NULL;
     char* asFileName;
-    asFileName = (char*)calloc(strlen(fileName) + strlen(".as") + 1, sizeof(char));
+    asFileName = (char*)calloc(strlen(fileName) + strlen(".am") + 1, sizeof(char));
     strcat(asFileName, fileName);
-    strcat(asFileName, ".as");
+    strcat(asFileName, ".am");
     fp = fopen(asFileName, "r");
 
     if (fp == NULL){
