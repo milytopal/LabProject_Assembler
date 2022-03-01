@@ -19,7 +19,7 @@ bool PreProcessPass(const char* fileName, bool firstPass);
 pMacroNode addNewMacro(const char* name);
 /* add new token the tokens list of a given macro */
 void addLineToMacro(pMacroNode macro, char* line);
-/* read source file and process data acording to the command lines*/
+/* read source file and process data acording to the command lines */
 bool foo(FILE *fp, FILE * newFp);
 /* clear the array holding the line */
 void clearLine(char* line);

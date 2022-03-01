@@ -1,7 +1,8 @@
-
-
 #ifndef DATASTRUCTS_H
 #define DATASTRUCTS_H
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define LABEL_LEN 31
 #define OPCODE_LEN 6
