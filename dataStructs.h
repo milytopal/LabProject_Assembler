@@ -14,19 +14,17 @@
 
 #define LINE_LENGTH 83
 
-#define MAX_LINE_LEN 83
-
 #define STARTING_IC 100
 #define NUM_OF_CMD 16
 #define MACRO_STR "macro"
 
 typedef enum bool{false,true}bool;
 typedef enum eLocalizaion{Extern, Entry, NoneExtOrEnt}eLocalizaion;
-typedef enum eDataType{String, Data, NoneDataOrStr}eDataType;
+typedef enum eDataType{String, Data, Code, NoneDataOrStr}eDataType;
 typedef enum ARE{A=4,R=2,E=1}ARE ;
 typedef enum eCommands{MOV,CMP,ADD,SUB,LEA,CLR,NOT,INC,DEC,JMP,BNE,JSR,RED,PRN,RTS,STOP}eCommands;
 typedef enum eDirectives{DATA,STRING,ENTRY,EXTERN}eDirectives;
-typedef enum eErrorCode{MISSING_FILE_NAME,MISSING_FILE,LINE_LIMIT_REACHED}eErrorCode;
+typedef enum eErrorCode{MISSING_FILE_NAME,MISSING_FILE,LINE_LIMIT_REACHED, LABEL_LIMIT_REACHED, BAD_LABEL_NAME}eErrorCode;
 
 /* the TokenNode is a node for linked list of commands inside a macro */
 typedef struct TokenNode *pTokenNode;
@@ -49,17 +47,17 @@ typedef struct MacroNode{
 } MacroNode;
 
 typedef struct Label{
-    char label[LABEL_LEN];
+    char name[LABEL_LEN];
     unsigned int address;
     int value;
+    int offset;
     eLocalizaion locationType;
     eDataType dataType;
 }Label;
 
 typedef struct DataNode *pDataNode;
 typedef struct DataNode{
-    int address;
-    char *data;
+    Label label;
     pDataNode pNext;
 }DataNode;
 

@@ -33,3 +33,21 @@ void removeDataNode(pDataNode list, int index) {
     pDataNode node = getDataNode(list, index-1);
     node->pNext = node->pNext->pNext;
 }
+
+int contains(pDataNode list, DataNode contain) {
+    
+    pDataNode lp = list;
+    int ind = 0;
+    while (lp != NULL) {
+        if (strcmp(lp->label.name, contain.label.name) == 0) {
+            return ind;
+        }
+        lp = lp->pNext;
+        ind++;
+    }
+
+    return -1;
+}
+
+
+

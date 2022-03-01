@@ -4,11 +4,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "utils.h"
 #include "dataStructs.h"
 
 bool firstPass(const char* fileName, bool firstPass);
-static bool isLabelCheck(char*);
+static int isLabelCheck(char*);
+static int getOpcode(char*);
 
 
 

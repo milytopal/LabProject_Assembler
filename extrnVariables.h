@@ -4,7 +4,11 @@
 #include "dataStructs.h"
 
 
+pWordNode ram;
+pDataNode labels;
 
+int ICF;
+int DCF;
 
 
 
