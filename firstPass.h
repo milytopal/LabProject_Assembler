@@ -15,6 +15,6 @@ static int getOpcode(char*);
 
 
 pWordNode list;
-Label *labels;
+//Label *labels;
 
 #endif

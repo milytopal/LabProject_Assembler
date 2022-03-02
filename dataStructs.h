@@ -5,13 +5,13 @@
 #include <string.h>
 
 #define LABEL_LEN 31
-#define OPCODE_LEN 6
+#define OPCODE_LEN 16
 #define SRC_ADD_LEN 2
 #define SRC_REG_LEN 3
 #define DEST_ADD_LEN 2
 #define DEST_REG_LEN 3
-#define FUNCT_LEN 5
-#define ARE_FIELD_LEN 3
+#define FUNCT_LEN 4
+#define ARE_FIELD_LEN 4
 
 #define LINE_LENGTH 83
 
@@ -25,7 +25,7 @@ typedef enum eDataType{String, Data, Code, NoneDataOrStr}eDataType;
 typedef enum ARE{A=4,R=2,E=1}ARE ;
 typedef enum eCommands{MOV,CMP,ADD,SUB,LEA,CLR,NOT,INC,DEC,JMP,BNE,JSR,RED,PRN,RTS,STOP}eCommands;
 typedef enum eDirectives{DATA,STRING,ENTRY,EXTERN}eDirectives;
-typedef enum eErrorCode{MISSING_FILE_NAME,MISSING_FILE,LINE_LIMIT_REACHED, LABEL_LIMIT_REACHED, BAD_LABEL_NAME}eErrorCode;
+typedef enum eErrorCode{MISSING_FILE_NAME,MISSING_FILE,LINE_LIMIT_REACHED, LABEL_LIMIT_REACHED, BAD_LABEL_NAME,FAILED_TO_CREATE}eErrorCode;
 
 /* the TokenNode is a node for linked list of commands inside a macro */
 typedef struct TokenNode *pTokenNode;
@@ -59,8 +59,14 @@ typedef struct Label{
 typedef struct DataNode *pDataNode;
 typedef struct DataNode{
     Label label;
+    void *dataPtr;              /* void pointer to data of type int or data of type string. todo: check with bar */
     pDataNode pNext;
 }DataNode;
+
+/* Word structure:          |0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|
+*                           |0|A|R|E|          OPCODE               |
+*                           |0|A|R|E| FUNCT |DESTREG|<AM|DESTREG|<AM|
+* AM = ADDRESSING METHOD: 0 = IMMEDIATE ,1 = DIRECT , 2 = INDEX , 3 = REGISTER DIRECT */
 
 typedef struct Word{
     unsigned long index;
@@ -75,6 +81,7 @@ typedef struct Word{
     } code;
 }Word;
 
+
 /* represents every line in the code */
 typedef struct WordNode* pWordNode;
 typedef struct WordNode{
@@ -84,7 +91,10 @@ typedef struct WordNode{
 }WordNode;
 
 
+pWordNode codeHead = NULL;
+pDataNode labelsHead = NULL;
 
-
+int ICF;
+int DCF;
 
 #endif

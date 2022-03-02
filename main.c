@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "extrnVariables.h"
+#include "dataStructs.h"
 #include "utils.h"
 #include "preProcessor.h"
 #include "firstPass.h"

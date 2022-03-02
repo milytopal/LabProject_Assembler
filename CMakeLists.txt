@@ -7,4 +7,4 @@ add_definitions(-Wall -pedantic)
 
 add_executable(Project_maman14 main.c dataStructs.h
         dataLinkedList.h dataLinkedList.c
-        parseCodeToFile.c parseCodeToFile.h utils.c utils.h firstPass.c firstPass.h secondPass.c secondPass.h extrnVariables.h preProcessor.c preProcessor.h)
+        parseCodeToFile.c parseCodeToFile.h utils.c utils.h firstPass.c firstPass.h secondPass.c secondPass.h preProcessor.c preProcessor.h)
