@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="Project_maman14"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j10 -f &quot;/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j10 -f &quot;/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j10 -f &quot;/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j10 -f &quot;/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j10 -f &quot;/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j10 -f &quot;/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j10 -f &quot;/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j10 -f &quot;/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j10 -f &quot;/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j10 -f &quot;/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j10 -f &quot;/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j10 -f &quot;/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Project_maman14">
+				<Option output="/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/Project_maman14" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/13.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j10 -f &quot;/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/Makefile&quot;  VERBOSE=1 Project_maman14"/>
+					<CompileFile command="/usr/bin/make -j10 -f &quot;/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j10 -f &quot;/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j10 -f &quot;/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Project_maman14/fast">
+				<Option output="/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/Project_maman14" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/13.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j10 -f &quot;/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/Makefile&quot;  VERBOSE=1 Project_maman14/fast"/>
+					<CompileFile command="/usr/bin/make -j10 -f &quot;/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j10 -f &quot;/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j10 -f &quot;/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/milytopal/CLionProjects/Project_maman14/dataLinkedList.c">
+			<Option target="Project_maman14"/>
+		</Unit>
+		<Unit filename="/Users/milytopal/CLionProjects/Project_maman14/dataLinkedList.h">
+			<Option target="Project_maman14"/>
+		</Unit>
+		<Unit filename="/Users/milytopal/CLionProjects/Project_maman14/dataStructs.h">
+			<Option target="Project_maman14"/>
+		</Unit>
+		<Unit filename="/Users/milytopal/CLionProjects/Project_maman14/firstPass.c">
+			<Option target="Project_maman14"/>
+		</Unit>
+		<Unit filename="/Users/milytopal/CLionProjects/Project_maman14/firstPass.h">
+			<Option target="Project_maman14"/>
+		</Unit>
+		<Unit filename="/Users/milytopal/CLionProjects/Project_maman14/main.c">
+			<Option target="Project_maman14"/>
+		</Unit>
+		<Unit filename="/Users/milytopal/CLionProjects/Project_maman14/parseCodeToFile.c">
+			<Option target="Project_maman14"/>
+		</Unit>
+		<Unit filename="/Users/milytopal/CLionProjects/Project_maman14/parseCodeToFile.h">
+			<Option target="Project_maman14"/>
+		</Unit>
+		<Unit filename="/Users/milytopal/CLionProjects/Project_maman14/preProcessor.c">
+			<Option target="Project_maman14"/>
+		</Unit>
+		<Unit filename="/Users/milytopal/CLionProjects/Project_maman14/preProcessor.h">
+			<Option target="Project_maman14"/>
+		</Unit>
+		<Unit filename="/Users/milytopal/CLionProjects/Project_maman14/secondPass.c">
+			<Option target="Project_maman14"/>
+		</Unit>
+		<Unit filename="/Users/milytopal/CLionProjects/Project_maman14/secondPass.h">
+			<Option target="Project_maman14"/>
+		</Unit>
+		<Unit filename="/Users/milytopal/CLionProjects/Project_maman14/utils.c">
+			<Option target="Project_maman14"/>
+		</Unit>
+		<Unit filename="/Users/milytopal/CLionProjects/Project_maman14/utils.h">
+			<Option target="Project_maman14"/>
+		</Unit>
+		<Unit filename="/Users/milytopal/CLionProjects/Project_maman14/wordLinkedList.c">
+			<Option target="Project_maman14"/>
+		</Unit>
+		<Unit filename="/Users/milytopal/CLionProjects/Project_maman14/wordLinkedList.h">
+			<Option target="Project_maman14"/>
+		</Unit>
+		<Unit filename="/Users/milytopal/CLionProjects/Project_maman14/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

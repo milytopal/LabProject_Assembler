@@ -1,0 +1,3 @@
+/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/CMakeFiles/Project_maman14.dir

@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/milytopal/CLionProjects/Project_maman14/dataStructs.h
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+
+/Users/milytopal/CLionProjects/Project_maman14/secondPass.c
+secondPass.h
+/Users/milytopal/CLionProjects/Project_maman14/secondPass.h
+
+/Users/milytopal/CLionProjects/Project_maman14/secondPass.h
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+utils.h
+/Users/milytopal/CLionProjects/Project_maman14/utils.h
+dataStructs.h
+/Users/milytopal/CLionProjects/Project_maman14/dataStructs.h
+
+/Users/milytopal/CLionProjects/Project_maman14/utils.h
+stdio.h
+-
+string.h
+-
+ctype.h
+-
+dataStructs.h
+/Users/milytopal/CLionProjects/Project_maman14/dataStructs.h
+
