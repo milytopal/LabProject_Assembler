@@ -4,12 +4,6 @@
 #include "dataStructs.h"
 
 
-pWordNode words;
-pDataNode labels;
-
-int ICF;
-int DCF;
-
 
 
 

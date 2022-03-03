@@ -1,6 +1,6 @@
 assembler: main.o utils.o preProcessor.o firstPass.o secondPass.o parseCodeToFile.o dataLinkedList.o wordLinkedList.o
 	gcc -ansi -Wall -g main.o utils.o preProcessor.o firstPass.o secondPass.o parseCodeToFile.o dataLinkedList.o wordLinkedList.o -o assembler
-main.o: main.c extrnVariables.h utils.h
+main.o: main.c dataStructs.h utils.h
 	gcc -c -ansi -Wall -g main.c -o main.o
 utils.o: utils.c utils.h
 	gcc -c -ansi -Wall -g utils.c -o utils.o

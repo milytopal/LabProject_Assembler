@@ -16,6 +16,4 @@ int isLabelCheck(char*);
 int getOpcode(char*);
 
 
-
-
 #endif

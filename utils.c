@@ -15,3 +15,14 @@ void printError(const char* currFileName, eErrorCode errCode, int lineNum)
             break;
     }
 }
+bool isEmptyLine(char *line)
+{
+    int i, len;
+    len = strlen(line);
+    for(i = 0 ; i < len ; i++)
+    {
+        if(isspace(line[i]) != 0)
+            return false;
+    }
+    return true;
+}
