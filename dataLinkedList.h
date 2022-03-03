@@ -12,7 +12,7 @@ void removeDataNode(pDataNode, int);
 
 pDataNode getDataNode(pDataNode, int);
 int lengthDataNode(pDataNode);
-int contains(pDataNode, DataNode);
+int contains(pDataNode, char*);
 
 
 #endif

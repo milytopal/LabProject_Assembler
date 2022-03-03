@@ -34,9 +34,9 @@ bool firstPass(const char* fileName, bool firstPass)
         i = 0;
         isLabel = false;
 
-        /* Sould probably check if it's an empty line here */
+        if (isEmptyLine(line) == true) continue;
 
-        if (&line[LINE_LENGTH+1] != NULL && line[LINE_LENGTH+1] != '\n') {
+        if (strlen(line) > LINE_LENGTH) {
             printError(asFileName, LINE_LIMIT_REACHED, n);
             return true; /* Can't actually check the line */
         }
@@ -51,14 +51,21 @@ bool firstPass(const char* fileName, bool firstPass)
             case 2:
                 isError = true;
                 printError(asFileName, LABEL_LIMIT_REACHED, n);
+                continue;
                 break;
             case 3:
                 isError = true;
                 printError(asFileName, BAD_LABEL_NAME, n);
+                continue;
+                break;
+            case 4:
+                isError = true;
+                printError(asFileName, LABEL_ALREADY_EXISTS, n);
+                continue;
                 break;
         }
 
-         while (isspace(line[i]) != 0) {
+         while (isSpace(line[i]) != 0) {
              i++;
          }
 
@@ -82,7 +89,7 @@ bool firstPass(const char* fileName, bool firstPass)
                     tempData->pNext = NULL;
                     addDataNode(labels, tempData);
                 }
-                while (isspace(line[i]) != 0) {
+                while (isSpace(line[i]) != 0) {
                     i++;
                 }
 
@@ -108,12 +115,12 @@ bool firstPass(const char* fileName, bool firstPass)
 
                         pWordNode tempWordNode = (pWordNode) calloc(sizeof(pWordNode), 1);
                         tempWordNode->word = tempWord;
-                        tempWordNode->address = IC;
+                        tempWordNode->address = IC+DC;
                         tempWordNode->pNext = NULL;
                         
                         addWordNode(words, tempWordNode);
-                        IC++; DC++;
-                        while (isspace(line[i]) != 0 || line[i] == ',') {
+                        DC++;
+                        while (isSpace(line[i]) != 0 || line[i] == ',') {
                             i++;
                         }
                     }
@@ -131,11 +138,11 @@ bool firstPass(const char* fileName, bool firstPass)
 
                         pWordNode tempWordNode = (pWordNode) calloc(sizeof(pWordNode), 1);
                         tempWordNode->word = tempWord;
-                        tempWordNode->address = IC;
+                        tempWordNode->address = IC+DC;
                         tempWordNode->pNext = NULL;
 
                         addWordNode(words, tempWordNode);
-                        IC++; DC++;
+                        DC++;
                     }
                     /* Now we need to add '\0' to the string */
                     Word tempWord;
@@ -144,11 +151,11 @@ bool firstPass(const char* fileName, bool firstPass)
 
                     pWordNode tempWordNode = (pWordNode) calloc(sizeof(pWordNode), 1);
                     tempWordNode->word = tempWord;
-                    tempWordNode->address = IC;
+                    tempWordNode->address = IC+DC;
                     tempWordNode->pNext = NULL;
 
                     addWordNode(words, tempWordNode);
-                    IC++; DC++;
+                    DC++;
                 }
                 continue;
             }
@@ -160,7 +167,7 @@ bool firstPass(const char* fileName, bool firstPass)
                 i += 8;
                 Label tempLabel;
                 char name[31];
-                while (isspace(line[i]) != 0) {
+                while (isSpace(line[i]) != 0) {
                     i++;
                 }
 
@@ -172,7 +179,7 @@ bool firstPass(const char* fileName, bool firstPass)
 
                 int ind = 0;
                 if (isalpha(line[i])) {
-                    while (isspace(line[i]) == 0) {
+                    while (isSpace(line[i]) == 0) {
                         name[ind++] = line[i++];
                     }
                 }
@@ -208,8 +215,57 @@ bool firstPass(const char* fileName, bool firstPass)
          } /* Ending of handling .string .data .entry .extern */
 
          /* everything else */
+        if (isLabel == false) {
+            i = 0;
+            while (isSpace(line[i]) != 0) {
+                i++;
+            }
+        } /* Checked too much, it's prefered we start over with the line */
+        else {
+            Label tempLabel;
+            strcmp(tempLabel.name, tName);
+            tempLabel.value = IC;
+            tempLabel.address = (IC/16)*16;
+            tempLabel.offset = IC - tempLabel.address;
+            tempLabel.locationType = NoneExtOrEnt;
+            tempLabel.dataType = Code;
 
+            pDataNode tempData = (pDataNode) calloc(sizeof(DataNode), 1);
+            tempData->label = tempLabel;
+            tempData->pNext = NULL;
+            addDataNode(labels, tempData);
+        }
         
+        char *operation = strtok(line[i], ' ');
+        int opCode = getOpcode(operation);
+
+        if (opCode == -1) {
+            isError = true;
+            printError(asFileName, UNKNOWN_OPERATION, n);
+            continue;
+        }
+
+        int funct = getFunct(opCode, operation);
+
+        Word opcodeWord;
+        opcodeWord.code.opcode = opCode;
+        opcodeWord.code.are = A;
+
+        pWordNode opcodeWordNode = (pWordNode) calloc(sizeof(pWordNode), 1);
+        opcodeWordNode->word = opcodeWord;
+        opcodeWordNode->address = IC;
+        opcodeWordNode->pNext = NULL;
+        addWordNode(words, opcodeWordNode);
+        IC++;
+
+        if (opCode < 5) { /* 2 args */
+
+        }
+        else if (opCode < 14) { /* 1 arg */
+
+        }
+
+
     }
 
     /* Need to save a final version of IC and DC here, idk where though */
@@ -230,7 +286,7 @@ int isLabelCheck(char* line) {
     int len = 0;
     for (i = 0; line[i] != '\n'; ++i) {
 
-        if (isspace(line[i]) != 0) {
+        if (isSpace(line[i]) != 0) {
             if (flag != 0) 
                 return 1;
             else
@@ -271,26 +327,63 @@ int isLabelCheck(char* line) {
         return 3; /* ERROR: Label can't be named that! */
     }
 
+    if (contains(labels, label) != -1) {
+        return 4; /* ERROR: Label already exists */
+    }
+
     strcpy(tName, label);
     return 0;
 }
 
-int getOpcode(char* label) {
-    if (strcmp(label, "mov") == 0) return 0;
-    if (strcmp(label, "cmp") == 0) return 1;
-    if (strcmp(label, "add") == 0) return 2;
-    if (strcmp(label, "sub") == 0) return 2;
-    if (strcmp(label, "lea") == 0) return 4;
-    if (strcmp(label, "clr") == 0) return 5;
-    if (strcmp(label, "not") == 0) return 5;
-    if (strcmp(label, "inc") == 0) return 5;
-    if (strcmp(label, "dec") == 0) return 5;
-    if (strcmp(label, "jmp") == 0) return 9;
-    if (strcmp(label, "bne") == 0) return 9;
-    if (strcmp(label, "jsr") == 0) return 9;
-    if (strcmp(label, "red") == 0) return 12;
-    if (strcmp(label, "prn") == 0) return 13;
-    if (strcmp(label, "rts") == 0) return 14;
-    if (strcmp(label, "stop") == 0) return 15;
+int getOpcode(char* op) {
+    if (strcmp(op, "mov") == 0) return 0;
+    if (strcmp(op, "cmp") == 0) return 1;
+    if (strcmp(op, "add") == 0) return 2;
+    if (strcmp(op, "sub") == 0) return 2;
+    if (strcmp(op, "lea") == 0) return 4;
+    if (strcmp(op, "clr") == 0) return 5;
+    if (strcmp(op, "not") == 0) return 5;
+    if (strcmp(op, "inc") == 0) return 5;
+    if (strcmp(op, "dec") == 0) return 5;
+    if (strcmp(op, "jmp") == 0) return 9;
+    if (strcmp(op, "bne") == 0) return 9;
+    if (strcmp(op, "jsr") == 0) return 9;
+    if (strcmp(op, "red") == 0) return 12;
+    if (strcmp(op, "prn") == 0) return 13;
+    if (strcmp(op, "rts") == 0) return 14;
+    if (strcmp(op, "stop") == 0) return 15;
     return -1;
+}
+
+int getFunct(int opCode, char* operation) {
+    switch (opCode) {
+    case 2:
+        if (strcmp(operation, "add")) return 10;
+        if (strcmp(operation, "sub")) return 10;
+        break;
+    case 5:
+        if (strcmp(operation, "clr")) return 10;
+        if (strcmp(operation, "not")) return 11;
+        if (strcmp(operation, "inc")) return 12;
+        if (strcmp(operation, "dec")) return 13;
+        break;
+    case 9:
+        if (strcmp(operation, "jmp")) return 10;
+        if (strcmp(operation, "bne")) return 11;
+        if (strcmp(operation, "jsr")) return 12;
+        break;
+    default:
+        return 0;
+        break;
+    }
+    return 0;
+}
+
+int isSpace(char toCheck) { /* that doesn't consider \n as empty, because \n is when our line ends */
+    if (toCheck == ' ') return 1;
+    if (toCheck == '\t') return 2;
+    if (toCheck == '\v') return 3;
+    if (toCheck == '\f') return 4;
+    if (toCheck == '\r') return 5;
+    return 0;
 }

@@ -25,7 +25,8 @@ typedef enum eDataType{Data, Code, NoneDataOrCode}eDataType;
 typedef enum ARE{A=4,R=2,E=1}ARE ;
 typedef enum eCommands{MOV,CMP,ADD,SUB,LEA,CLR,NOT,INC,DEC,JMP,BNE,JSR,RED,PRN,RTS,STOP}eCommands;
 typedef enum eDirectives{DATA,STRING,ENTRY,EXTERN}eDirectives;
-typedef enum eErrorCode{MISSING_FILE_NAME,MISSING_FILE,LINE_LIMIT_REACHED, LABEL_LIMIT_REACHED, BAD_LABEL_NAME, FAILED_TO_CREATE, NO_ARGUMENTS, INCOMPLETE_CODE}eErrorCode;
+typedef enum eErrorCode{MISSING_FILE_NAME,MISSING_FILE,LINE_LIMIT_REACHED, LABEL_LIMIT_REACHED, BAD_LABEL_NAME, FAILED_TO_CREATE, 
+                        NO_ARGUMENTS, INCOMPLETE_CODE, LABEL_ALREADY_EXISTS, UNKNOWN_OPERATION}eErrorCode;
 
 
 /* the TokenNode is a node for linked list of commands inside a macro */
