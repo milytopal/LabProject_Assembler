@@ -2,6 +2,7 @@
 #include "firstPass.h"
 
 int i;
+char* tName;
 
 bool firstPass(const char* fileName, bool firstPass)
 {
@@ -17,6 +18,11 @@ bool firstPass(const char* fileName, bool firstPass)
         return true;
     }
 
+    /* Making sure we can start giving our lists labels and words */
+    labels = NULL;
+    words = NULL;
+
+    /* Important variables for the loop */
     int IC = STARTING_IC;
     int DC = 0;
     bool isError = false;
@@ -53,15 +59,158 @@ bool firstPass(const char* fileName, bool firstPass)
                 break;
         }
 
-         while (isspace(line[i]) == 0) {
+         while (isspace(line[i]) != 0) {
              i++;
          }
 
          if (line[i] == '.') {
+             /* Handle .string .data .entry .extern */
+            
+            int isData = strcmp(line+i, ".data");
+            int isString = strcmp(line+i, ".string");
+            if (isData == 0 || isString == 0) {
+                if (isLabel == true) {
+                    Label tempLabel;
+                    strcpy(tempLabel.name, tName);
+                    tempLabel.value = IC;
+                    tempLabel.address = (IC/16)*16;
+                    tempLabel.offset = IC - tempLabel.address;
+                    tempLabel.dataType = Data;
+                    tempLabel.locationType = NoneExtOrEnt;
 
-         }
+                    pDataNode tempData = (pDataNode) calloc(sizeof(DataNode), 1);
+                    tempData->label = tempLabel;
+                    tempData->pNext = NULL;
+                    addDataNode(labels, tempData);
+                }
+                while (isspace(line[i]) != 0) {
+                    i++;
+                }
+
+                if (line[i] == '\n') {
+                    isError = true;
+                    printError(asFileName, NO_ARGUMENTS, n);
+                    continue;
+                }
+
+                if (isData == 0) {
+                    i += 6; /* Must have a space */
+                    while (line[i] != '\n') {
+                        char arg[10];
+                        int ind = 0;
+                        while (isdigit(line[i]) == 0 || line[i] == '+' || line[i] == '-') {
+                            arg[ind++] = line[i++];
+                        }
+                        ind = atoi(arg);
+                        
+                        Word tempWord;
+                        tempWord.code.opcode = ind;
+                        tempWord.code.are = A;
+
+                        pWordNode tempWordNode = (pWordNode) calloc(sizeof(pWordNode), 1);
+                        tempWordNode->word = tempWord;
+                        tempWordNode->address = IC;
+                        tempWordNode->pNext = NULL;
+                        
+                        addWordNode(words, tempWordNode);
+                        IC++; DC++;
+                        while (isspace(line[i]) != 0 || line[i] == ',') {
+                            i++;
+                        }
+                    }
+                }
+                else { /* isString == 0 */
+                    i += 7; /* Must have a space */
+                    while (line[i] != '\"') {
+                        i++;
+                    }
+                    i++; /* Right here, 'i' points to the first char in the string */
+                    while (line[i] != '\"') {
+                        Word tempWord;
+                        tempWord.code.opcode = line[i];
+                        tempWord.code.are = A;
+
+                        pWordNode tempWordNode = (pWordNode) calloc(sizeof(pWordNode), 1);
+                        tempWordNode->word = tempWord;
+                        tempWordNode->address = IC;
+                        tempWordNode->pNext = NULL;
+
+                        addWordNode(words, tempWordNode);
+                        IC++; DC++;
+                    }
+                    /* Now we need to add '\0' to the string */
+                    Word tempWord;
+                    tempWord.code.opcode = 0;
+                    tempWord.code.are = A;
+
+                    pWordNode tempWordNode = (pWordNode) calloc(sizeof(pWordNode), 1);
+                    tempWordNode->word = tempWord;
+                    tempWordNode->address = IC;
+                    tempWordNode->pNext = NULL;
+
+                    addWordNode(words, tempWordNode);
+                    IC++; DC++;
+                }
+                continue;
+            }
+            else if (strcmp(line+i, ".entry") == 0) {
+                /* Handled on secondPass ! ! */
+                continue;
+            }
+            else if (strcmp(line+i, ".extern") == 0) {
+                i += 8;
+                Label tempLabel;
+                char name[31];
+                while (isspace(line[i]) != 0) {
+                    i++;
+                }
+
+                if (line[i] == '\n') {
+                    isError = true;
+                    printError(asFileName, INCOMPLETE_CODE, n);
+                    continue;
+                }
+
+                int ind = 0;
+                if (isalpha(line[i])) {
+                    while (isspace(line[i]) == 0) {
+                        name[ind++] = line[i++];
+                    }
+                }
+                else {
+                    isError = true;
+                    printError(asFileName, BAD_LABEL_NAME, n);
+                    continue;
+                }
+
+                if (ind >= 31) {
+                    isError = true;
+                    printError(asFileName, LABEL_LIMIT_REACHED, n);
+                    continue;
+                }
+
+                strcmp(tempLabel.name, name);
+                tempLabel.address = 0;
+                tempLabel.value = 0;
+                tempLabel.offset = 0;
+                tempLabel.locationType = Extern;
+                tempLabel.dataType = NoneDataOrCode;
+
+                pDataNode tempData = (pDataNode) calloc(sizeof(DataNode), 1);
+                tempData->label = tempLabel;
+                tempData->pNext = NULL;
+                addDataNode(labels, tempData);
+                
+                continue;
+            }
+            isError = true;
+            printError(asFileName, INCOMPLETE_CODE, n);
+            continue;
+         } /* Ending of handling .string .data .entry .extern */
 
          /* everything else */
+
+        
     }
 
     /* Need to save a final version of IC and DC here, idk where though */
@@ -76,11 +225,11 @@ A function to check if the first word in the line is a label type, meaning:
     - it starts with an alpha
     - it's all alpha/num
 */
-static int isLabelCheck(char* line) {
+int isLabelCheck(char* line) {
     int flag = 0; /* We will use this to set what situation we're in */
     char label[31];
     int len = 0;
-    for (i = 0; line[i] != '\0'; ++i) {
+    for (i = 0; line[i] != '\n'; ++i) {
 
         if (isspace(line[i]) != 0) {
             if (flag != 0) 
@@ -123,10 +272,11 @@ static int isLabelCheck(char* line) {
         return 3; /* ERROR: Label can't be named that! */
     }
 
+    strcpy(tName, label);
     return 0;
 }
 
-static int getOpcode(char* label) {
+int getOpcode(char* label) {
     if (strcmp(label, "mov") == 0) return 0;
     if (strcmp(label, "cmp") == 0) return 1;
     if (strcmp(label, "add") == 0) return 2;

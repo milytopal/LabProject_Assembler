@@ -7,14 +7,15 @@
 #include <ctype.h>
 #include "utils.h"
 #include "dataStructs.h"
+#include "extrnVariables.h"
+#include "dataLinkedList.h"
+#include "wordLinkedList.h"
 
 bool firstPass(const char* fileName, bool firstPass);
-static int isLabelCheck(char*);
-static int getOpcode(char*);
+int isLabelCheck(char*);
+int getOpcode(char*);
 
 
 
-pWordNode list;
-Label *labels;
 
 #endif

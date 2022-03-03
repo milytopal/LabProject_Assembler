@@ -10,9 +10,9 @@ firstPass.o: firstPass.c firstPass.h
 	gcc -c -ansi -Wall -g firstPass.c -o firstPass.o
 secondPass.o: secondPass.c secondPass.h
 	gcc -c -ansi -Wall -g secondPass.c -o secondPass.o
-parseCodeToFile: parseCodeToFile.c parseCodeToFile.h
+parseCodeToFile.o: parseCodeToFile.c parseCodeToFile.h
 	gcc -c -ansi -Wall -g parseCodeToFile.c -o parseCodeToFile.o
-dataLinkedList: dataLinkedList.c dataLinkedList.h
+dataLinkedList.o: dataLinkedList.c dataLinkedList.h
 	gcc -c -ansi -Wall -g dataLinkedList.c -o dataLinkedList.o
-wordLinkedList: wordLinkedList.c wordLinkedList.h
+wordLinkedList.o: wordLinkedList.c wordLinkedList.h
 	gcc -c -ansi -Wall -g wordLinkedList.c -o wordLinkedList.o

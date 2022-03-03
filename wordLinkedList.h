@@ -12,4 +12,4 @@ pWordNode getWordNode(pWordNode, int);
 int lengthWordNode(pWordNode);
 
 
-#endif //WORD_LINKED_LIST_H
+#endif 

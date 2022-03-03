@@ -68,7 +68,7 @@ bool isMacro(char *line, int i){
 bool foo(FILE *fp, FILE * newFp)
 {
     char line[LINE_LENGTH] = {0};
-    //char cpyLine[LINE_LENGTH] = {0};
+    /* char cpyLine[LINE_LENGTH] = {0}; */
     char* cpyLine = NULL;
     char *rest_of_line = NULL;
     char macro_name[31] = {0};
@@ -113,7 +113,7 @@ bool foo(FILE *fp, FILE * newFp)
 
         macro = findMacro(strtok(cpyLine, " \t\n")); /* finds the macro object acording to macro name*/
         if(macro != NULL){
-            //write macro to file
+            /* write macro to file */
             writeMacroToFile(macro,newFp);
             clearLine(line);
             continue;
@@ -123,7 +123,7 @@ bool foo(FILE *fp, FILE * newFp)
         clearLine(line);
     }
     deleteMacroList(head);
-    //todo delete list of macros?
+    /* todo delete list of macros? */
     return true;
 }
 
@@ -150,7 +150,7 @@ pMacroNode findMacro( char* name)
 
 pMacroNode addNewMacro(const char* name)
 {
-    //return NULL;
+    /* return NULL; */
     pMacroNode curr = NULL;
     if(head == NULL) /* list is empty */
     {
@@ -212,7 +212,7 @@ bool writeMacroToFile(pMacroNode macro ,FILE *file)
 void deleteMacroList(pMacroNode head ) {
     pMacroNode nextMacro = NULL;
     pTokenNode nextToken = NULL;
-    //nextMacro = head;
+    /* nextMacro = head; */
     while(head != NULL)
     {
         nextMacro = head->pNext;

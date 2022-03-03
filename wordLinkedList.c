@@ -24,6 +24,10 @@ pWordNode getWordNode(pWordNode list, int index){
 }
 
 void addWordNode(pWordNode list, pWordNode toAdd){
+    if (list == NULL) {
+        list = toAdd;
+        return;
+    }
     pWordNode temp = getWordNode(list, lengthWordNode(list))->pNext = toAdd;
     temp = (pWordNode) calloc(sizeof(WordNode), 1);
     temp = toAdd;

@@ -21,11 +21,11 @@
 
 typedef enum bool{false,true}bool;
 typedef enum eLocalizaion{Extern, Entry, NoneExtOrEnt}eLocalizaion;
-typedef enum eDataType{String, Data, Code, NoneDataOrStr}eDataType;
+typedef enum eDataType{Data, Code, NoneDataOrCode}eDataType;
 typedef enum ARE{A=4,R=2,E=1}ARE ;
 typedef enum eCommands{MOV,CMP,ADD,SUB,LEA,CLR,NOT,INC,DEC,JMP,BNE,JSR,RED,PRN,RTS,STOP}eCommands;
 typedef enum eDirectives{DATA,STRING,ENTRY,EXTERN}eDirectives;
-typedef enum eErrorCode{MISSING_FILE_NAME,MISSING_FILE,LINE_LIMIT_REACHED, LABEL_LIMIT_REACHED, BAD_LABEL_NAME}eErrorCode;
+typedef enum eErrorCode{MISSING_FILE_NAME,MISSING_FILE,LINE_LIMIT_REACHED, LABEL_LIMIT_REACHED, BAD_LABEL_NAME, NO_ARGUMENTS, INCOMPLETE_CODE}eErrorCode;
 
 /* the TokenNode is a node for linked list of commands inside a macro */
 typedef struct TokenNode *pTokenNode;
@@ -65,7 +65,7 @@ typedef struct DataNode{
 typedef struct Word{
     unsigned long index;
     union {
-        unsigned int ARE:ARE_FIELD_LEN;
+        ARE are;
         unsigned int funct:FUNCT_LEN;
         unsigned int destReg:DEST_REG_LEN;
         unsigned int destAdd:DEST_ADD_LEN;

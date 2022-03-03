@@ -15,4 +15,4 @@ int lengthDataNode(pDataNode);
 int contains(pDataNode, DataNode);
 
 
-#endif //DATA_LINKED_LIST_H
+#endif
