@@ -297,6 +297,30 @@ utils.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_maman14.dir/build.make CMakeFiles/Project_maman14.dir/utils.c.s
 .PHONY : utils.c.s
 
+wordLinkedList.o: wordLinkedList.c.o
+.PHONY : wordLinkedList.o
+
+# target to build an object file
+wordLinkedList.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_maman14.dir/build.make CMakeFiles/Project_maman14.dir/wordLinkedList.c.o
+.PHONY : wordLinkedList.c.o
+
+wordLinkedList.i: wordLinkedList.c.i
+.PHONY : wordLinkedList.i
+
+# target to preprocess a source file
+wordLinkedList.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_maman14.dir/build.make CMakeFiles/Project_maman14.dir/wordLinkedList.c.i
+.PHONY : wordLinkedList.c.i
+
+wordLinkedList.s: wordLinkedList.c.s
+.PHONY : wordLinkedList.s
+
+# target to generate assembly for a file
+wordLinkedList.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_maman14.dir/build.make CMakeFiles/Project_maman14.dir/wordLinkedList.c.s
+.PHONY : wordLinkedList.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -327,6 +351,9 @@ help:
 	@echo "... utils.o"
 	@echo "... utils.i"
 	@echo "... utils.s"
+	@echo "... wordLinkedList.o"
+	@echo "... wordLinkedList.i"
+	@echo "... wordLinkedList.s"
 .PHONY : help
 
 

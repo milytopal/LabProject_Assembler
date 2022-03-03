@@ -1,34 +1,15 @@
 /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "CodeBlocks - Unix Makefiles" /Users/milytopal/CLionProjects/Project_maman14
--- The C compiler identification is unknown
--- Detecting C compiler ABI info
--- Detecting C compiler ABI info - failed
--- Check for working C compiler: /usr/bin/cc
--- Check for working C compiler: /usr/bin/cc - broken
-CMake Error at /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.21/Modules/CMakeTestCCompiler.cmake:69 (message):
-  The C compiler
+CMake Warning at /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.21/Modules/Platform/Darwin-Initialize.cmake:303 (message):
+  Ignoring CMAKE_OSX_SYSROOT value:
 
-    "/usr/bin/cc"
+   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk
 
-  is not able to compile a simple test program.
-
-  It fails with the following output:
-
-    Change Dir: /Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/CMakeFiles/CMakeTmp
-    
-    Run Build Command(s):/usr/bin/make -f Makefile cmTC_e386e/fast && objc[94690]: Class AMSupportURLConnectionDelegate is implemented in both /usr/lib/libamsupport.dylib (0x1e7eff678) and /Library/Apple/System/Library/PrivateFrameworks/MobileDevice.framework/Versions/A/MobileDevice (0x10a8d82c8). One of the two will be used. Which one is undefined.
-    objc[94690]: Class AMSupportURLSession is implemented in both /usr/lib/libamsupport.dylib (0x1e7eff6c8) and /Library/Apple/System/Library/PrivateFrameworks/MobileDevice.framework/Versions/A/MobileDevice (0x10a8d8318). One of the two will be used. Which one is undefined.
-    
-    You have not agreed to the Xcode license agreements, please run 'sudo xcodebuild -license' from within a Terminal window to review and agree to the Xcode license agreements.
-    
-    
-
-  
-
-  CMake will not be able to correctly generate this project.
+  because the directory does not exist.
 Call Stack (most recent call first):
+  /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.21/Modules/CMakeSystemSpecificInitialize.cmake:21 (include)
   CMakeLists.txt:2 (project)
 
 
--- Configuring incomplete, errors occurred!
-See also "/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/CMakeFiles/CMakeOutput.log".
-See also "/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/CMakeFiles/CMakeError.log".
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug

@@ -37,7 +37,7 @@ bool isDeclaredEntry(char *token) {
 
     if (token == NULL)
         return false;
-    curr = labelsHead;
+    /*curr = labelsHead;*/
     while ((curr != NULL) && (strcmp(curr->label.name, token) != 0)) {
         curr = curr->pNext;
     }
