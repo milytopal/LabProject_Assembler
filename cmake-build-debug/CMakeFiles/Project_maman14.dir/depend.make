@@ -19,8 +19,10 @@ CMakeFiles/Project_maman14.dir/main.c.o: \
  ../extrnVariables.h \
  ../firstPass.h \
  ../main.c \
+ ../parseCodeToFile.h \
  ../preProcessor.h \
  ../secondPass.h \
+ ../testParser.h \
  ../utils.h \
  ../wordLinkedList.h
 CMakeFiles/Project_maman14.dir/parseCodeToFile.c.o: \
@@ -38,6 +40,12 @@ CMakeFiles/Project_maman14.dir/secondPass.c.o: \
  ../secondPass.c \
  ../secondPass.h \
  ../utils.h
+CMakeFiles/Project_maman14.dir/testParser.c.o: \
+ ../dataLinkedList.h \
+ ../dataStructs.h \
+ ../testParser.c \
+ ../testParser.h \
+ ../wordLinkedList.h
 CMakeFiles/Project_maman14.dir/utils.c.o: \
  ../dataStructs.h \
  ../utils.c \

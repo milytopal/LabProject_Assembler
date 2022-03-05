@@ -14,6 +14,7 @@ set(CMAKE_DEPENDS_CHECK_C
   "/Users/milytopal/CLionProjects/Project_maman14/parseCodeToFile.c" "/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/CMakeFiles/Project_maman14.dir/parseCodeToFile.c.o"
   "/Users/milytopal/CLionProjects/Project_maman14/preProcessor.c" "/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/CMakeFiles/Project_maman14.dir/preProcessor.c.o"
   "/Users/milytopal/CLionProjects/Project_maman14/secondPass.c" "/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/CMakeFiles/Project_maman14.dir/secondPass.c.o"
+  "/Users/milytopal/CLionProjects/Project_maman14/testParser.c" "/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/CMakeFiles/Project_maman14.dir/testParser.c.o"
   "/Users/milytopal/CLionProjects/Project_maman14/utils.c" "/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/CMakeFiles/Project_maman14.dir/utils.c.o"
   "/Users/milytopal/CLionProjects/Project_maman14/wordLinkedList.c" "/Users/milytopal/CLionProjects/Project_maman14/cmake-build-debug/CMakeFiles/Project_maman14.dir/wordLinkedList.c.o"
   )

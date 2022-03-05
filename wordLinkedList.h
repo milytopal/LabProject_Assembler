@@ -12,4 +12,5 @@ pWordNode getWordNode(pWordNode, int);
 int lengthWordNode(pWordNode);
 
 
-#endif 
+#endif
+

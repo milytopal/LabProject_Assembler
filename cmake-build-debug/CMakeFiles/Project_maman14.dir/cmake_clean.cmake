@@ -5,6 +5,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/Project_maman14.dir/parseCodeToFile.c.o"
   "CMakeFiles/Project_maman14.dir/preProcessor.c.o"
   "CMakeFiles/Project_maman14.dir/secondPass.c.o"
+  "CMakeFiles/Project_maman14.dir/testParser.c.o"
   "CMakeFiles/Project_maman14.dir/utils.c.o"
   "CMakeFiles/Project_maman14.dir/wordLinkedList.c.o"
   "Project_maman14"

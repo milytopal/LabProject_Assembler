@@ -19,8 +19,10 @@ CMakeFiles/Project_maman14.dir/main.c.o
  /Users/milytopal/CLionProjects/Project_maman14/extrnVariables.h
  /Users/milytopal/CLionProjects/Project_maman14/firstPass.h
  /Users/milytopal/CLionProjects/Project_maman14/main.c
+ /Users/milytopal/CLionProjects/Project_maman14/parseCodeToFile.h
  /Users/milytopal/CLionProjects/Project_maman14/preProcessor.h
  /Users/milytopal/CLionProjects/Project_maman14/secondPass.h
+ /Users/milytopal/CLionProjects/Project_maman14/testParser.h
  /Users/milytopal/CLionProjects/Project_maman14/utils.h
  /Users/milytopal/CLionProjects/Project_maman14/wordLinkedList.h
 CMakeFiles/Project_maman14.dir/parseCodeToFile.c.o
@@ -38,6 +40,12 @@ CMakeFiles/Project_maman14.dir/secondPass.c.o
  /Users/milytopal/CLionProjects/Project_maman14/secondPass.c
  /Users/milytopal/CLionProjects/Project_maman14/secondPass.h
  /Users/milytopal/CLionProjects/Project_maman14/utils.h
+CMakeFiles/Project_maman14.dir/testParser.c.o
+ /Users/milytopal/CLionProjects/Project_maman14/dataLinkedList.h
+ /Users/milytopal/CLionProjects/Project_maman14/dataStructs.h
+ /Users/milytopal/CLionProjects/Project_maman14/testParser.c
+ /Users/milytopal/CLionProjects/Project_maman14/testParser.h
+ /Users/milytopal/CLionProjects/Project_maman14/wordLinkedList.h
 CMakeFiles/Project_maman14.dir/utils.c.o
  /Users/milytopal/CLionProjects/Project_maman14/dataStructs.h
  /Users/milytopal/CLionProjects/Project_maman14/utils.c

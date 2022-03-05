@@ -82,7 +82,6 @@ typedef struct Word{
     } code;
 }Word;
 
-
 /* represents every line in the code */
 typedef struct WordNode* pWordNode;
 typedef struct WordNode{
