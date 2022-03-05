@@ -1,6 +1,6 @@
 #include <unistd.h>
 #include "parseCodeToFile.h"
-bool parseCodeToFile(char *fileName, bool error)
+bool parseCodeToFile(char *fileName, bool error ,pWordNode word)
 {
     FILE *entF = NULL;
     FILE *extF = NULL;

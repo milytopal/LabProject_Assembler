@@ -23,6 +23,7 @@ bool secondPass(const char* fileName, bool firstPass)
 
     return false;
 }
+
 bool isInstruction(char *token)
 {
     if((strcmp(token,".data") == 0) ||(strcmp(token,".extern") == 0)||(strcmp(token,".string") == 0))

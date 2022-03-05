@@ -112,6 +112,12 @@
 		<Unit filename="/Users/milytopal/CLionProjects/Project_maman14/secondPass.h">
 			<Option target="Project_maman14"/>
 		</Unit>
+		<Unit filename="/Users/milytopal/CLionProjects/Project_maman14/testParser.c">
+			<Option target="Project_maman14"/>
+		</Unit>
+		<Unit filename="/Users/milytopal/CLionProjects/Project_maman14/testParser.h">
+			<Option target="Project_maman14"/>
+		</Unit>
 		<Unit filename="/Users/milytopal/CLionProjects/Project_maman14/utils.c">
 			<Option target="Project_maman14"/>
 		</Unit>

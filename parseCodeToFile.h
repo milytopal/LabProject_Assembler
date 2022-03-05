@@ -3,7 +3,7 @@
 #include "dataStructs.h"
 #include "utils.h"
 
-bool parseCodeToFile(char *fileName, bool error);
+bool parseCodeToFile(char *fileName, bool error ,pWordNode word);
 
 /* convert unsigned int to ascii*/
 char *uitoa(int n);

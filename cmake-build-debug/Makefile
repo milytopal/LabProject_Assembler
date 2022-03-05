@@ -273,6 +273,30 @@ secondPass.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_maman14.dir/build.make CMakeFiles/Project_maman14.dir/secondPass.c.s
 .PHONY : secondPass.c.s
 
+testParser.o: testParser.c.o
+.PHONY : testParser.o
+
+# target to build an object file
+testParser.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_maman14.dir/build.make CMakeFiles/Project_maman14.dir/testParser.c.o
+.PHONY : testParser.c.o
+
+testParser.i: testParser.c.i
+.PHONY : testParser.i
+
+# target to preprocess a source file
+testParser.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_maman14.dir/build.make CMakeFiles/Project_maman14.dir/testParser.c.i
+.PHONY : testParser.c.i
+
+testParser.s: testParser.c.s
+.PHONY : testParser.s
+
+# target to generate assembly for a file
+testParser.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_maman14.dir/build.make CMakeFiles/Project_maman14.dir/testParser.c.s
+.PHONY : testParser.c.s
+
 utils.o: utils.c.o
 .PHONY : utils.o
 
@@ -348,6 +372,9 @@ help:
 	@echo "... secondPass.o"
 	@echo "... secondPass.i"
 	@echo "... secondPass.s"
+	@echo "... testParser.o"
+	@echo "... testParser.i"
+	@echo "... testParser.s"
 	@echo "... utils.o"
 	@echo "... utils.i"
 	@echo "... utils.s"
