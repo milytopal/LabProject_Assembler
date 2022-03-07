@@ -5,6 +5,7 @@
 #include "preProcessor.h"
 #include "firstPass.h"
 #include "secondPass.h"
+#include "parseCodeToFile.h"
 
 bool isErrorFound; /* global varivable - represents if error found in current file*/
 
@@ -26,6 +27,7 @@ int main(int argc, char *argv[]) {
         }
         if(isErrorFound == false)
         {
+            parseCodeToFile(argv[i],false);
             /* todo: parseCodeToFiles */
         }
         /* todo: reset linked listst and everything*/

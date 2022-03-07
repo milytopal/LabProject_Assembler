@@ -1,5 +1,14 @@
 #include <unistd.h>
 #include "parseCodeToFile.h"
+
+typedef struct segmentedMemory
+{
+    unsigned int e:4;
+    unsigned int d:4;
+    unsigned int c:4;
+    unsigned int b:4;
+    unsigned int a:4;
+}segmentedMemory;
 bool parseCodeToFile(char *fileName, bool error)
 {
     FILE *entF = NULL;
@@ -37,6 +46,8 @@ bool parseCodeToFile(char *fileName, bool error)
         return true;
     }else
     {
+        WordNode testing = {0};
+        parseWordToBase(&testing);
         /* todo: print to code file */
     }
     fclose(codeF);
@@ -86,16 +97,35 @@ void printObjectFile(FILE *fp)
 {
 
 }
-char *parseWordToBase(void *word)
+char *parseWordToBase(pWordNode word)
 {
-    auto *tmp = NULL;
-    int index ,val;
+    pWordNode tmp = NULL;
+    segmentedMemory temp;
+    int index ,val, i, areVal,restOfWord;
+    char buff[20] = {0};
+    int segments[5];
     Word tmpWord = {0};
+    char* line = NULL;
+    line = (char*)calloc(30,sizeof(char));
+    word->address = 100;
+    tmpWord.are = A;
+    //tmpWord.code.opcode = 0x3200;
+    tmpWord.code.destAdd = 0x5;
+    tmpWord.code.destReg = 0;
+    tmpWord.code.funct = 0x3;
+    printf("%d\n",sizeof(tmpWord.code));
+
+    sprintf(line,"%04d",word->address);
+    strcat(line,"\t");                  /* adding tab to format */
+    areVal = tmpWord.are;
+    restOfWord = tmpWord.code.opcode;
     /* crate segments 4 of the binary value  */
+    memcpy(&buff , &(tmpWord) ,sizeof (tmpWord));
 
-
-
-    tmp = word;
+    for(i=0; i<5; i++)
+    {
+        segments[i] = temp.a;
+    }
 
 
 

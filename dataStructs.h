@@ -71,9 +71,8 @@ typedef struct DataNode{
 * AM = ADDRESSING METHOD: 0 = IMMEDIATE ,1 = DIRECT , 2 = INDEX , 3 = REGISTER DIRECT */
 
 typedef struct Word{
-    unsigned long index;
+    ARE are;
     union {
-        ARE are;
         unsigned int funct:FUNCT_LEN;
         unsigned int destReg:DEST_REG_LEN;
         unsigned int destAdd:DEST_ADD_LEN;

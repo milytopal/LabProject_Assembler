@@ -111,7 +111,7 @@ bool firstPass(const char* fileName, bool firstPass)
                         
                         Word tempWord;
                         tempWord.code.opcode = ind;
-                        tempWord.code.are = A;
+                        tempWord.are = A;
 
                         pWordNode tempWordNode = (pWordNode) calloc(sizeof(pWordNode), 1);
                         tempWordNode->word = tempWord;
@@ -134,7 +134,7 @@ bool firstPass(const char* fileName, bool firstPass)
                     while (line[i] != '\"') {
                         Word tempWord;
                         tempWord.code.opcode = line[i];
-                        tempWord.code.are = A;
+                        tempWord.are = A;
 
                         pWordNode tempWordNode = (pWordNode) calloc(sizeof(pWordNode), 1);
                         tempWordNode->word = tempWord;
@@ -147,7 +147,7 @@ bool firstPass(const char* fileName, bool firstPass)
                     /* Now we need to add '\0' to the string */
                     Word tempWord;
                     tempWord.code.opcode = 0;
-                    tempWord.code.are = A;
+                    tempWord.are = A;
 
                     pWordNode tempWordNode = (pWordNode) calloc(sizeof(pWordNode), 1);
                     tempWordNode->word = tempWord;
@@ -249,7 +249,7 @@ bool firstPass(const char* fileName, bool firstPass)
 
         Word opcodeWord;
         opcodeWord.code.opcode = opCode;
-        opcodeWord.code.are = A;
+        opcodeWord.are = A;
 
         pWordNode opcodeWordNode = (pWordNode) calloc(sizeof(pWordNode), 1);
         opcodeWordNode->word = opcodeWord;
