@@ -21,8 +21,17 @@ bool isEmptyLine(char *line)
     len = strlen(line);
     for(i = 0 ; i < len ; i++)
     {
-        if(isspace(line[i]) != 0)
+        if(isspace(line[i]) == 0)
             return false;
     }
     return true;
+}
+
+void clearLine(char* line)
+{
+    int i;
+    for(i = 0 ; i < strlen(line) ; i++)
+    {
+        line[i] = '\0';
+    }
 }

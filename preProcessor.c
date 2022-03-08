@@ -31,7 +31,7 @@ bool PreProcessPass(const char* fileName, bool firstPass)
     }
     strcpy(amFileName, fileName);
     strcat(amFileName, ".am");
-    newFp = fopen(amFileName, "a");
+    newFp = fopen(amFileName, "w");
 
     if(newFp == NULL){
         printError(NULL, MISSING_FILE, 0);
@@ -70,18 +70,15 @@ bool foo(FILE *fp, FILE * newFp)
     char line[LINE_LENGTH] = {0};
     /* char cpyLine[LINE_LENGTH] = {0}; */
     char* cpyLine = NULL;
-    char *rest_of_line = NULL;
     char macro_name[31] = {0};
     char* token = NULL;
     pMacroNode newMacro = NULL;
     pMacroNode macro = NULL;
     bool insideMacro = false;
 
-
     cpyLine = (char*)calloc(LINE_LENGTH, sizeof(char));
 
     while(fgets(line, LINE_LENGTH, fp) != NULL){
-        printf("inside foo loop\n");
         if(line[LINE_LENGTH-2]!= '\0')
             continue;
         strcpy(cpyLine, line);
@@ -99,11 +96,8 @@ bool foo(FILE *fp, FILE * newFp)
         }
 
         if(strstr(line, "macro") != NULL){ /*  find macro statement */
-            printf("found macro line is : %s\n", cpyLine);              /* todo: delete later*/
             token = strtok(cpyLine, " \t\n");
-            printf("found macro 2 rest of line : %s  cpyLine : %s\n", token, cpyLine); /* todo: delete later*/
             token = strtok(NULL, " \t\n");
-            printf("macro name %s", token);         /* todo: delete later*/
             insideMacro = true;
             strcpy(macro_name, token);
             newMacro = addNewMacro(macro_name);
@@ -118,22 +112,12 @@ bool foo(FILE *fp, FILE * newFp)
             clearLine(line);
             continue;
         }
-        printf("inside foo loop before fputs line is : %s\n", line);
         fputs(line,newFp);
         clearLine(line);
     }
     deleteMacroList(head);
     /* todo delete list of macros? */
     return true;
-}
-
-void clearLine(char* line)
-{
-    int i;
-    for(i = 0 ; i < strlen(line) ; i++)
-    {
-        line[i] = '\0';
-    }
 }
 
 pMacroNode findMacro( char* name)
@@ -154,7 +138,6 @@ pMacroNode addNewMacro(const char* name)
     pMacroNode curr = NULL;
     if(head == NULL) /* list is empty */
     {
-        printf("in add new macro head == NULL \n");
         head = (pMacroNode) calloc(sizeof(MacroNode),1);
         strcpy((head->macro.name),name);   /* todo: check if good practice */
         head->macro.tokenList = NULL;

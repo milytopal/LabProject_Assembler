@@ -23,14 +23,28 @@ pDataNode getDataNode(pDataNode list, int index){
     return lp;
 }
 
-void addDataNode(pDataNode list, pDataNode toAdd){
-    if (list == NULL) {
-        list = toAdd;
+void addDataNode(pDataNode* list, Label label){
+
+    pDataNode tempData = NULL;
+    pDataNode* curr = NULL;
+    tempData = (pDataNode) calloc(1, sizeof(DataNode));
+    tempData->label = label;
+    tempData->pNext = NULL;
+    curr = list;
+    if(*curr == NULL)
+    {
+        *list = tempData;
+        printf("labelName in list is: %s\n",tempData->label.name );
+
         return;
     }
-    pDataNode temp = getDataNode(list, lengthDataNode(list))->pNext;
-    temp = (pDataNode) calloc(sizeof(DataNode), 1);
-    temp = toAdd; /* Warns that temp isn't used, but it is?? */
+    /* go to end of list */
+    while((*curr)->pNext != NULL)
+    {
+        (*curr) = (*curr)->pNext;
+    }
+    (*curr)->pNext = tempData;
+    printf("labelName in list is: %s\n",(*curr)->pNext->label.name );
 }
 
 void removeDataNode(pDataNode list, int index) {

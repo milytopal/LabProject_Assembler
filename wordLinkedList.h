@@ -5,7 +5,8 @@
 #include <stdlib.h>
 
 
-void addWordNode(pWordNode, pWordNode);
+/*void addWordNode(pWordNode, pWordNode);*/
+void addWordNode(pWordNode*,Word,int);
 void removeWordNode(pWordNode, int);
 
 pWordNode getWordNode(pWordNode, int);

@@ -1,6 +1,8 @@
 ; file ps.as
     .entry LIST
     .extern W
+
+    .extern BAR
 MAIN: add r3,LIST
 LOOP: prn #48
       macro m1

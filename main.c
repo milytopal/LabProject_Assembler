@@ -23,6 +23,7 @@ int main(int argc, char *argv[]) {
         /* todo: startFirstPass(*argv, firstPass:true);*/
         if(isErrorFound == false)
         {
+            firstPass(argv[i],false);
             /* todo: startFirstPass(*argv, firstPass:false);*/
         }
         if(isErrorFound == false)

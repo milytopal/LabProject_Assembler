@@ -27,7 +27,7 @@ typedef enum eCommands{MOV,CMP,ADD,SUB,LEA,CLR,NOT,INC,DEC,JMP,BNE,JSR,RED,PRN,R
 typedef enum eDirectives{DATA,STRING,ENTRY,EXTERN}eDirectives;
 typedef enum eErrorCode{MISSING_FILE_NAME,MISSING_FILE,LINE_LIMIT_REACHED, LABEL_LIMIT_REACHED, BAD_LABEL_NAME, FAILED_TO_CREATE, 
                         NO_ARGUMENTS, INCOMPLETE_CODE, LABEL_ALREADY_EXISTS, UNKNOWN_OPERATION}eErrorCode;
-
+typedef enum eAdrresMethod{IMMEDIATE=0,DIRECT,INDEX,DIRECT_REGISTER}eAdrresMethod;
 
 /* the TokenNode is a node for linked list of commands inside a macro */
 typedef struct TokenNode *pTokenNode;
@@ -61,7 +61,6 @@ typedef struct Label{
 typedef struct DataNode *pDataNode;
 typedef struct DataNode{
     Label label;
-    void *dataPtr;              /* void pointer to data of type int or data of type string. todo: check with bar */
     pDataNode pNext;
 }DataNode;
 
@@ -83,7 +82,7 @@ typedef struct Word{
         twoOperands operands;
         unsigned int opcode:OPCODE_LEN;
     } code;
-    unsigned int are:4;
+    unsigned int are:ARE_FIELD_LEN;
 }Word;
 
 
@@ -94,8 +93,6 @@ typedef struct WordNode{
     Word word;
     pWordNode pNext;
 }WordNode;
-
-
 
 pWordNode words;
 pDataNode labels;

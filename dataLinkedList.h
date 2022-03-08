@@ -6,8 +6,7 @@
 #include <string.h>
 
 
-
-void addDataNode(pDataNode, pDataNode);
+void addDataNode(pDataNode*, Label);
 void removeDataNode(pDataNode, int);
 
 pDataNode getDataNode(pDataNode, int);
