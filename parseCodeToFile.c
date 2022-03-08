@@ -38,7 +38,7 @@ bool parseCodeToFile(char *fileName, bool error)
         perror("getcwd() error");
     }                                           /*todo : remove later*/
 
-    codeF = fopen(codeFileName, "r");        /* create the .obj file */
+    codeF = fopen(codeFileName, "w");        /* create the .obj file */
 
     if (codeF == NULL){
         printError(codeFileName, FAILED_TO_CREATE, 0);
@@ -47,12 +47,42 @@ bool parseCodeToFile(char *fileName, bool error)
     }else
     {
         WordNode testing = {0};
-        parseWordToBase(&testing);
+        pWordNode t = (pWordNode) malloc(sizeof(WordNode));
+        t->address = 100;
+        t->word.are = A;
+        t->word.code.operands.destAdd = 0x3;
+        t->word.code.operands.destReg = 0x4;
+        t->word.code.operands.funct = 0x3;
+        words = t;
+        pWordNode t2 = (pWordNode) malloc(sizeof(WordNode));
+        t2->address = 101;
+        t2->word.are = R;
+        t2->word.code.operands.destAdd = 0x2;
+        t2->word.code.operands.destReg = 0x7;
+        t2->word.code.operands.funct = 0x9;
+        t2->word.code.operands.srcAdd = 0x1;
+        t2->word.code.operands.srcReg = 0x3;
+
+        words->pNext = t2;
+
+        pWordNode t3 = (pWordNode) malloc(sizeof(WordNode));
+        t3->address = 101;
+        t3->word.are = E;
+        t3->word.code.operands.destAdd = 0x0;
+        t3->word.code.operands.destReg = 0x8;
+        t3->word.code.operands.funct = 0x2;
+        t3->word.code.operands.srcAdd = 0x1;
+        t3->word.code.operands.srcReg = 0x3;
+
+        words->pNext->pNext = t3;
+
+        printObjectFile(codeF);
+        //parseWordToBase(&testing);
         /* todo: print to code file */
     }
     fclose(codeF);
 
-    extF = fopen(extFileName, "r");        /* create the .ext file */
+    extF = fopen(extFileName, "w");        /* create the .ext file */
 
     if (extF == NULL){
         printError(extFileName, FAILED_TO_CREATE, 0);
@@ -64,7 +94,7 @@ bool parseCodeToFile(char *fileName, bool error)
     }
     fclose(extF);
 
-    entF = fopen(entFileName, "r");        /* create the .ent file */
+    entF = fopen(entFileName, "w");        /* create the .ent file */
 
     if (entF == NULL){
         printError(entFileName, FAILED_TO_CREATE, 0);
@@ -95,60 +125,61 @@ void printEntriesFile(FILE *fp)
 }
 void printObjectFile(FILE *fp)
 {
-
+    pWordNode curr = words;
+    while(curr !=NULL)
+    {
+        fprintf(fp,"%s",parseWordToBase(curr));
+        curr = curr->pNext;
+    }
 }
 char *parseWordToBase(pWordNode word)
 {
     pWordNode tmp = NULL;
     segmentedMemory temp;
-    int index ,val, i, areVal,restOfWord;
-    char buff[20] = {0};
-    int segments[5];
+    int index ,val, i, wValue,opcode;
+    int segments[5] = {0};
     Word tmpWord = {0};
     char* line = NULL;
     line = (char*)calloc(30,sizeof(char));
-    word->address = 100;
-    tmpWord.are = A;
-    //tmpWord.code.opcode = 0x3200;
-    tmpWord.code.destAdd = 0x5;
-    tmpWord.code.destReg = 0;
-    tmpWord.code.funct = 0x3;
-    printf("%d\n",sizeof(tmpWord.code));
+    tmpWord = word->word;
 
-    sprintf(line,"%04d",word->address);
+    wValue = (tmpWord.are << 16) + tmpWord.code.opcode;
+
+    sprintf(line,"\n%04d",word->address);
     strcat(line,"\t");                  /* adding tab to format */
-    areVal = tmpWord.are;
-    restOfWord = tmpWord.code.opcode;
     /* crate segments 4 of the binary value  */
-    memcpy(&buff , &(tmpWord) ,sizeof (tmpWord));
-
     for(i=0; i<5; i++)
     {
-        segments[i] = temp.a;
+        segments[i] = wValue & 0x0F;
+        wValue >>= 4;
     }
+    strcat(line, printByte(0,segments[4]));
+    strcat(line, "-");
+    strcat(line, printByte(1,segments[3]));
+    strcat(line, "-");
+    strcat(line, printByte(2,segments[2]));
+    strcat(line, "-");
+    strcat(line, printByte(3,segments[1]));
+    strcat(line, "-");
+    strcat(line, printByte(4,segments[0]));
 
-
-
-
-
-
+ return line;
 
 
 }
 /* convert unsigned int to ascii in hex base*/
-char *uitoa(int n)
+char uitoa(int n)
 {
-    char* c = NULL;
-    c = (char*) calloc(1,sizeof (char));
-    if(n <= 0 || n > 15 )
-        return NULL;
+    char c ;
+    if(n < 0 || n > 15 )
+        return '0';
     if(n >= 0 && n < 10)
     {
-        *c = ('0'+n);
+        c = ('0'+n);
     }
     if(n > 9 && n < 16 )
     {
-        *c = ('a' + n);
+        c = ('a' + (n-10));
     }
         return c;
 }
@@ -190,6 +221,6 @@ char *printByte(int index, int value)
             break;
         }
     }
-    byte[1] = *uitoa(value);
+    byte[1] = uitoa(value);
     return byte;
 }

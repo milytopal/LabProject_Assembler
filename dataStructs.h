@@ -7,9 +7,9 @@
 #define LABEL_LEN 31
 #define OPCODE_LEN 16
 #define SRC_ADD_LEN 2
-#define SRC_REG_LEN 3
+#define SRC_REG_LEN 4
 #define DEST_ADD_LEN 2
-#define DEST_REG_LEN 3
+#define DEST_REG_LEN 4
 #define FUNCT_LEN 4
 #define ARE_FIELD_LEN 4
 
@@ -65,21 +65,25 @@ typedef struct DataNode{
     pDataNode pNext;
 }DataNode;
 
+typedef struct twoOperands
+{
+    unsigned int destAdd:DEST_ADD_LEN;
+    unsigned int destReg:DEST_REG_LEN;
+    unsigned int srcAdd:SRC_ADD_LEN;
+    unsigned int srcReg:SRC_REG_LEN;
+    unsigned int funct:FUNCT_LEN;
+}twoOperands;
+
 /* Word structure:          |0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|
 *                           |0|A|R|E|          OPCODE               |
 *                           |0|A|R|E| FUNCT |DESTREG|<AM|DESTREG|<AM|
 * AM = ADDRESSING METHOD: 0 = IMMEDIATE ,1 = DIRECT , 2 = INDEX , 3 = REGISTER DIRECT */
-
 typedef struct Word{
-    ARE are;
     union {
-        unsigned int funct:FUNCT_LEN;
-        unsigned int destReg:DEST_REG_LEN;
-        unsigned int destAdd:DEST_ADD_LEN;
-        unsigned int srcReg:SRC_REG_LEN;
-        unsigned int srcAdd:SRC_ADD_LEN;
+        twoOperands operands;
         unsigned int opcode:OPCODE_LEN;
     } code;
+    unsigned int are:4;
 }Word;
 
 

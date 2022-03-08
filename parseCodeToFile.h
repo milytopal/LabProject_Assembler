@@ -6,7 +6,7 @@
 bool parseCodeToFile(char *fileName, bool error);
 
 /* convert unsigned int to ascii*/
-char *uitoa(int n);
+char uitoa(int n);
 char *printByte(int index, int value);
 char *parseWordToBase(pWordNode word);
 void printExternalsFile(FILE *fp);
