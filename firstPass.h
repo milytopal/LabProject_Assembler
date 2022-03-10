@@ -17,6 +17,7 @@ bool firstPass(const char* fileName, bool firstPass);
 int isLabelCheck(char*);
 int getOpcode(char*);
 int getFunct(int, char*);
+int getAddressingMethod(char*, int); 
 
 int isSpace(char);
 

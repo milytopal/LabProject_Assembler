@@ -76,7 +76,7 @@ bool parseCodeToFile(char *fileName, bool error)
         wordsHead->pNext->pNext = t3;
 
         printObjectFile(codeF);
-        //parseWordToBase(&testing);
+        /* parseWordToBase(&testing); */
         /* todo: print to code file */
     }
     fclose(codeF);

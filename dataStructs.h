@@ -98,8 +98,8 @@ pWordNode wordsHead;
 pDataNode labelsHead;
 
 
-//pDataNode labelsHead = NULL;
-//pWordNode codeHead = NULL;
+/*pDataNode labelsHead = NULL;
+pWordNode codeHead = NULL; */
 
 int IC;
 int DC;

@@ -3,18 +3,21 @@
 int i;
 char* tName;
 
+/*
+Construct a label 
+*/
 Label* LabelConstructor( Label *newL,char* name, int val, eDataType dType, eLocalizaion localize)
 {
-    //Label* newL = NULL;
+    /*Label* newL = NULL;*/
     newL = (Label*)realloc(newL,sizeof (Label));
     strcpy(newL->name, name);
     newL->value = val;
-    //newL->.address = (val/16)*16;
+    /*newL->.address = (val/16)*16;*/
 
     newL->offset = (val % 16);
     newL->address = (val - (newL->offset));
 
-    //newL->.offset = IC - newL->address;
+    /*newL->.offset = IC - newL->address;*/
     newL->dataType = dType;
     newL->locationType = localize;
 
@@ -104,7 +107,7 @@ bool firstPass(const char* fileName, bool firstPass)
         /* Check if .string .data .entry .extern and Handle*/
          if (/*line[i]*/firstToken[0] == '.')
          {
-            // token = strtok(NULL, " \t\n");         /*get next token ?*/
+            /* token = strtok(NULL, " \t\n");*/         /*get next token ?*/
             isData = strcmp(token, ".data");
             isString = strcmp(token, ".string");
             if (isData == 0 || isString == 0) {
@@ -113,9 +116,9 @@ bool firstPass(const char* fileName, bool firstPass)
                     addDataNode(*tempLabel);
 
                 }
-                //while (isSpace(line[i]) != 0) {
-                //    i++;
-                //}
+                /*while (isSpace(line[i]) != 0) {
+                    i++;
+                } */
 
                 if (line[i] == '\n') {
                     isError = true;
@@ -308,6 +311,10 @@ int isLabelCheck(char* line) {
     return 0;
 }
 
+/*
+Get the opcode of an operation.
+    - will return 0 if the given operation in unknown
+*/
 int getOpcode(char* op) {
     if(op == NULL) return -1;
     if (strcmp(op, "mov") == 0) return 0;
@@ -329,6 +336,10 @@ int getOpcode(char* op) {
     return -1;
 }
 
+/*
+Get the funct of an operation.
+    - will return 0 if the operation has no funct (which is what the funct should be at that situation)
+*/
 int getFunct(int opCode, char* operation) {
     switch (opCode) {
     case 2:
@@ -353,7 +364,27 @@ int getFunct(int opCode, char* operation) {
     return 0;
 }
 
-int isSpace(char toCheck) { /* that doesn't consider \n as empty, because \n is when our line ends */
+
+/*
+A function to get the addressing method of an argumet.
+    - it will check 1 argument and return it's AM
+    - it will find errors in the AM's, will return negative ints for errors
+    - use a switch when calling for this!
+*/
+int getAddressingMethod(char* line, int startingInd) {
+    int ind = startingInd; 
+
+
+
+
+
+
+}
+
+/*
+Replacement for isspace() method because isspace() counts '\n' as a space (which is end of line)
+*/
+int isSpace(char toCheck) { 
     if (toCheck == ' ') return 1;
     if (toCheck == '\t') return 2;
     if (toCheck == '\v') return 3;

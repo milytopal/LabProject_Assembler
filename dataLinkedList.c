@@ -27,7 +27,7 @@ void addDataNode(Label label){
 
     pDataNode tempData = NULL;
     pDataNode curr = NULL;
-    //Label tmpL;
+    /*Label tmpL;*/
     tempData = (pDataNode) calloc(1, sizeof(pDataNode));
     memcpy(&(tempData->label),&label,sizeof (Label));
     tempData->pNext = NULL;
