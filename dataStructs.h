@@ -26,7 +26,7 @@ typedef enum ARE{A=4,R=2,E=1}ARE ;
 typedef enum eCommands{MOV,CMP,ADD,SUB,LEA,CLR,NOT,INC,DEC,JMP,BNE,JSR,RED,PRN,RTS,STOP}eCommands;
 typedef enum eDirectives{DATA,STRING,ENTRY,EXTERN}eDirectives;
 typedef enum eErrorCode{MISSING_FILE_NAME,MISSING_FILE,LINE_LIMIT_REACHED, LABEL_LIMIT_REACHED, BAD_LABEL_NAME, FAILED_TO_CREATE, 
-                        NO_ARGUMENTS, INCOMPLETE_CODE, LABEL_ALREADY_EXISTS, UNKNOWN_OPERATION}eErrorCode;
+                        NO_ARGUMENTS, INCOMPLETE_CODE,MISSING_LABEL, LABEL_ALREADY_EXISTS, UNKNOWN_OPERATION}eErrorCode;
 typedef enum eAdrresMethod{IMMEDIATE=0,DIRECT,INDEX,DIRECT_REGISTER}eAdrresMethod;
 
 /* the TokenNode is a node for linked list of commands inside a macro */
@@ -94,14 +94,14 @@ typedef struct WordNode{
     pWordNode pNext;
 }WordNode;
 
-pWordNode words;
-pDataNode labels;
+pWordNode wordsHead;
+pDataNode labelsHead;
 
 
 //pDataNode labelsHead = NULL;
 //pWordNode codeHead = NULL;
 
-int ICF;
-int DCF;
+int IC;
+int DC;
 
 #endif

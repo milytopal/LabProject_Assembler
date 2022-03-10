@@ -4,7 +4,6 @@
 CMakeFiles/Project_maman14.dir/dataLinkedList.c.o
  /Users/milytopal/CLionProjects/Project_mily_oz/dataLinkedList.c
  /Users/milytopal/CLionProjects/Project_mily_oz/dataLinkedList.h
- /Users/milytopal/CLionProjects/Project_mily_oz/dataStructs.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/stdio.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/_stdio.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/sys/cdefs.h
@@ -85,6 +84,7 @@ CMakeFiles/Project_maman14.dir/dataLinkedList.c.o
  /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/strings.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/secure/_strings.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/secure/_string.h
+ /Users/milytopal/CLionProjects/Project_mily_oz/dataStructs.h
 
 CMakeFiles/Project_maman14.dir/firstPass.c.o
  /Users/milytopal/CLionProjects/Project_mily_oz/firstPass.c

@@ -22,38 +22,29 @@ pWordNode getWordNode(pWordNode list, int index){
     }
     return lp;
 }
-/*
-void addWordNode(pWordNode list, pWordNode toAdd){
-    if (list == NULL) {
-        list = toAdd;
-        return;
-    }
-    pWordNode temp = getWordNode(list, lengthWordNode(list))->pNext = toAdd;
-    temp = (pWordNode) calloc(sizeof(WordNode), 1);
-    temp = toAdd;
-}*/
 
-void addWordNode(pWordNode* list, Word word,int address)
+
+void addWordNode(pWordNode list, Word word,int address)
 {
 
     pWordNode tempWordNode = NULL;
-    pWordNode* curr = NULL;
-    tempWordNode = (pWordNode) calloc( 1, sizeof(WordNode));
+    pWordNode curr = NULL;
+    tempWordNode = (pWordNode) calloc( 1, sizeof(pWordNode));
     tempWordNode->word = word;
     tempWordNode->address = address;
-    tempWordNode->pNext = NULL;
-    curr = list;
-    if(*curr == NULL)
+    curr = wordsHead;
+    if(curr == NULL)
     {
-        *list = tempWordNode;
+        wordsHead = tempWordNode;
         return;
     }
     /* go to end of list */
-    while((*curr)->pNext != NULL)
+    while(curr != NULL)
     {
-        (*curr) = (*curr)->pNext;
+        curr = curr->pNext;
     }
-    (*curr)->pNext = tempWordNode;
+    curr = tempWordNode;
+    curr->pNext = NULL;
 }
 void removeWordNode(pWordNode list, int index) {
     pWordNode node = getWordNode(list, index-1);

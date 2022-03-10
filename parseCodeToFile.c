@@ -46,14 +46,13 @@ bool parseCodeToFile(char *fileName, bool error)
         return true;
     }else
     {
-        WordNode testing = {0};
-        pWordNode t = (pWordNode) malloc(sizeof(WordNode));
+        pWordNode t = (pWordNode) malloc(sizeof(pWordNode));
         t->address = 100;
         t->word.are = A;
         t->word.code.operands.destAdd = 0x3;
         t->word.code.operands.destReg = 0x4;
         t->word.code.operands.funct = 0x3;
-        words = t;
+        wordsHead = t;
         pWordNode t2 = (pWordNode) malloc(sizeof(WordNode));
         t2->address = 101;
         t2->word.are = R;
@@ -63,7 +62,7 @@ bool parseCodeToFile(char *fileName, bool error)
         t2->word.code.operands.srcAdd = 0x1;
         t2->word.code.operands.srcReg = 0x3;
 
-        words->pNext = t2;
+        wordsHead->pNext = t2;
 
         pWordNode t3 = (pWordNode) malloc(sizeof(WordNode));
         t3->address = 101;
@@ -74,7 +73,7 @@ bool parseCodeToFile(char *fileName, bool error)
         t3->word.code.operands.srcAdd = 0x1;
         t3->word.code.operands.srcReg = 0x3;
 
-        words->pNext->pNext = t3;
+        wordsHead->pNext->pNext = t3;
 
         printObjectFile(codeF);
         //parseWordToBase(&testing);
@@ -114,6 +113,11 @@ bool parseCodeToFile(char *fileName, bool error)
 }
 void printExternalsFile(FILE *fp)
 {
+    char* line = NULL;
+    if(labelsHead == NULL)
+        return;
+    line = (char*)calloc(LINE_LENGTH,sizeof(char));
+
 
 
 
@@ -125,12 +129,15 @@ void printEntriesFile(FILE *fp)
 }
 void printObjectFile(FILE *fp)
 {
-    pWordNode curr = words;
+    pWordNode curr = wordsHead;
+    char* toPrint = NULL;
     while(curr !=NULL)
     {
-        fprintf(fp,"%s",parseWordToBase(curr));
+        toPrint = parseWordToBase(curr);
+        fprintf(fp,"%s",toPrint);
         curr = curr->pNext;
     }
+    free(toPrint);
 }
 char *parseWordToBase(pWordNode word)
 {
@@ -175,7 +182,7 @@ char uitoa(int n)
         return '0';
     if(n >= 0 && n < 10)
     {
-        c = ('0'+n);
+        c = ('0'+ n);
     }
     if(n > 9 && n < 16 )
     {
