@@ -23,28 +23,34 @@ pDataNode getDataNode(pDataNode list, int index){
     return lp;
 }
 
-void addDataNode(pDataNode* list, Label label){
+void addDataNode(Label label){
 
     pDataNode tempData = NULL;
-    pDataNode* curr = NULL;
-    tempData = (pDataNode) calloc(1, sizeof(DataNode));
-    tempData->label = label;
+    pDataNode curr = NULL;
+    //Label tmpL;
+    tempData = (pDataNode) calloc(1, sizeof(pDataNode));
+    memcpy(&(tempData->label),&label,sizeof (Label));
     tempData->pNext = NULL;
-    curr = list;
-    if(*curr == NULL)
-    {
-        *list = tempData;
-        printf("labelName in list is: %s\n",tempData->label.name );
+    curr = labelsHead;
+    printf("\nlabels Name in list are: " );
 
+    if(curr == NULL)
+    {
+        labelsHead = tempData;
+        labelsHead->pNext = NULL;
+        printf(" %s ",labelsHead->label.name );
         return;
     }
     /* go to end of list */
-    while((*curr)->pNext != NULL)
+    while(curr != NULL)
     {
-        (*curr) = (*curr)->pNext;
+        printf(" %s ",curr->label.name );
+        curr = curr->pNext;
     }
-    (*curr)->pNext = tempData;
-    printf("labelName in list is: %s\n",(*curr)->pNext->label.name );
+    curr = tempData;
+    curr->pNext = NULL;
+    printf("\n " );
+
 }
 
 void removeDataNode(pDataNode list, int index) {
@@ -54,7 +60,8 @@ void removeDataNode(pDataNode list, int index) {
 
 int contains(pDataNode list, char* contain) {
     
-    pDataNode lp = list;
+    pDataNode lp = NULL;
+    lp = labelsHead;
     int ind = 0;
     while (lp != NULL) {
         if (strcmp(lp->label.name, contain) == 0) {

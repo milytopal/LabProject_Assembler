@@ -11,6 +11,8 @@
 #include "dataLinkedList.h"
 #include "wordLinkedList.h"
 
+Label* LabelConstructor( Label *newL,char* name, int val, eDataType dType, eLocalizaion localize);
+
 bool firstPass(const char* fileName, bool firstPass);
 int isLabelCheck(char*);
 int getOpcode(char*);
