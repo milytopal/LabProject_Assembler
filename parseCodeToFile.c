@@ -24,12 +24,6 @@ bool parseCodeToFile(char *fileName, bool error)
     strcpy(entFileName, fileName);
     strcat(entFileName, ".ent");
 
-    if (getcwd(cwd, sizeof(cwd)) != NULL) {     /*todo : remove later*/
-        printf("Current working dir: %s\n", cwd);
-    } else {
-        perror("getcwd() error");
-    }                                           /*todo : remove later*/
-
     codeF = fopen(codeFileName, "w");        /* create the .obj file */
 
     if (codeF == NULL){
@@ -38,15 +32,16 @@ bool parseCodeToFile(char *fileName, bool error)
         return true;
     }else
     {
+        pWordNode tempHead = NULL;
         pWordNode t = (pWordNode) malloc(sizeof(pWordNode));
-        t->word.address = 100;
+        t->word.address = 500;
         t->word.are = A;
         t->word.code.operands.destAdd = 0x3;
         t->word.code.operands.destReg = 0x4;
         t->word.code.operands.funct = 0x3;
-        wordsHead = t;
+        tempHead = t;
         pWordNode t2 = (pWordNode) malloc(sizeof(WordNode));
-        t2->word.address = 101;
+        t2->word.address = 501;
         t2->word.are = R;
         t2->word.code.operands.destAdd = 0x2;
         t2->word.code.operands.destReg = 0x7;
@@ -54,10 +49,10 @@ bool parseCodeToFile(char *fileName, bool error)
         t2->word.code.operands.srcAdd = 0x1;
         t2->word.code.operands.srcReg = 0x3;
 
-        wordsHead->pNext = t2;
+        tempHead->pNext = t2;
 
         pWordNode t3 = (pWordNode) malloc(sizeof(WordNode));
-        t3->word.address = 101;
+        t3->word.address = 502;
         t3->word.are = E;
         t3->word.code.operands.destAdd = 0x0;
         t3->word.code.operands.destReg = 0x8;
@@ -65,7 +60,8 @@ bool parseCodeToFile(char *fileName, bool error)
         t3->word.code.operands.srcAdd = 0x1;
         t3->word.code.operands.srcReg = 0x3;
 
-        wordsHead->pNext->pNext = t3;
+        tempHead->pNext->pNext = t3;
+        tempHead->pNext->pNext->pNext = NULL;
 
         printObjectFile(codeF);
         /* parseWordToBase(&testing); */
@@ -121,7 +117,8 @@ void printEntriesFile(FILE *fp)
 }
 void printObjectFile(FILE *fp)
 {
-    pWordNode curr = wordsHead;
+    pWordNode curr = NULL;
+     curr = wordsHead;
     char* toPrint = NULL;
     while(curr !=NULL)
     {

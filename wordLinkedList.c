@@ -30,8 +30,16 @@ void addWordNode( const Word word,const int address)
         printf(" %d ",(int)(wordsHead->word.code.opcode) );
     }
 }
+
 void deleteWordList(const pWordNode head)
 {
-
+    pWordNode nextNode = NULL;
+    while(wordsHead != NULL)
+    {
+        nextNode = wordsHead->pNext;
+        free(wordsHead);
+        wordsHead = nextNode;
+    }
+    wordsHead = NULL;
 }
 

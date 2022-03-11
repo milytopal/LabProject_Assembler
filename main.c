@@ -4,10 +4,12 @@
 #include "utils.h"
 #include "preProcessor.h"
 #include "firstPass.h"
+#include "wordLinkedList.h"
+#include "dataLinkedList.h"
 #include "secondPass.h"
 #include "parseCodeToFile.h"
 
-bool isErrorFound; /* global varivable - represents if error found in current file*/
+bool isErrorFound; /* global variable - represents if error found in current file*/
 
 int main(int argc, char *argv[]) {
     int i;
@@ -32,6 +34,8 @@ int main(int argc, char *argv[]) {
             /* todo: parseCodeToFiles */
         }
         /* todo: reset linked listst and everything*/
+        deleteWordList(wordsHead);      /* checked - works */
+        deleteDataList(labelsHead);
     }
 
     return 0;

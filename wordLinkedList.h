@@ -7,7 +7,7 @@
 
 /*void addWordNode(pWordNode, pWordNode);*/
 void addWordNode(Word word,int val);
-
+void deleteWordList(pWordNode);
 
 
 #endif

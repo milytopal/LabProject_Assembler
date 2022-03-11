@@ -6,7 +6,7 @@
 #include "dataStructs.h"
 
 void addDataNode(Label label);
-void deleteDataList(pDataNode, int);
+void deleteDataList(pDataNode);
 
 pDataNode getDataNode(pDataNode, int);
 int lengthDataNode(pDataNode);

@@ -47,9 +47,16 @@ void addDataNode(const Label label) {
 
 
 
-void deleteDataList(pDataNode list, int index) {
-    pDataNode node = getDataNode(list, index-1);
-    node->pNext = node->pNext->pNext;
+void deleteDataList(pDataNode list)
+{
+    pDataNode nextNode = NULL;
+    while(labelsHead != NULL)
+    {
+        nextNode = labelsHead->pNext;
+        free(labelsHead);
+        labelsHead = nextNode;
+    }
+    labelsHead = NULL;
 }
 
 int contains(pDataNode list, char* contain) {
