@@ -9,12 +9,12 @@ Label* LabelConstructor(char* name, int val, eDataType dType, eLocalizaion local
     newL = (Label*)malloc(sizeof (Label));
     strcpy(newL->name, name);
     newL->value = val;
-    //newL->.address = (val/16)*16;
+    /*newL->.address = (val/16)*16;*/
 
     newL->offset = (val % 16);
     newL->address = (val - (newL->offset));
 
-    //newL->.offset = IC - newL->address;
+    /*newL->.offset = IC - newL->address;*/
     newL->dataType = dType;
     newL->locationType = localize;
 
@@ -110,7 +110,7 @@ bool firstPass(const char* fileName, bool firstPass)
         /* Check if .string .data .entry .extern and Handle*/
          if (/*line[i]*/firstToken[0] == '.')
          {
-            // token = strtok(NULL, " \t\n");         /*get next token ?*/
+            /* token = strtok(NULL, " \t\n");  */       /*get next token ?*/
             isData = strcmp(token, ".data");
             isString = strcmp(token, ".string");
             if (isData == 0 || isString == 0) {
@@ -119,9 +119,6 @@ bool firstPass(const char* fileName, bool firstPass)
                     addDataNode(*tempLabel);
 
                 }
-                //while (isSpace(line[i]) != 0) {
-                //    i++;
-                //}
 
                 if (line[i] == '\n') {
                     isError = true;
