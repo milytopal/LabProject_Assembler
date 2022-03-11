@@ -17,8 +17,12 @@ bool firstPass(const char* fileName, bool firstPass);
 int isLabelCheck(char*);
 int getOpcode(char*);
 int getFunct(int, char*);
-int getAddressingMethod(char*, int); 
+Argument getArgument(char*); 
 
-int isSpace(char);
+typedef struct Argument {
+    int addressingMethod;
+    int value;
+    bool isLabel;
+} Argument;
 
 #endif

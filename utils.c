@@ -35,3 +35,15 @@ void clearLine(char* line)
         line[i] = '\0';
     }
 }
+
+/*
+Replacement for isspace() method because isspace() counts '\n' as a space (which is end of line)
+*/
+int isSpace(char toCheck) { 
+    if (toCheck == ' ') return 1;
+    if (toCheck == '\t') return 2;
+    if (toCheck == '\v') return 3;
+    if (toCheck == '\f') return 4;
+    if (toCheck == '\r') return 5;
+    return 0;
+}
