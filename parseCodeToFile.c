@@ -1,14 +1,6 @@
 #include <unistd.h>
 #include "parseCodeToFile.h"
 
-typedef struct segmentedMemory
-{
-    unsigned int e:4;
-    unsigned int d:4;
-    unsigned int c:4;
-    unsigned int b:4;
-    unsigned int a:4;
-}segmentedMemory;
 bool parseCodeToFile(char *fileName, bool error)
 {
     FILE *entF = NULL;
@@ -47,14 +39,14 @@ bool parseCodeToFile(char *fileName, bool error)
     }else
     {
         pWordNode t = (pWordNode) malloc(sizeof(pWordNode));
-        t->address = 100;
+        t->word.address = 100;
         t->word.are = A;
         t->word.code.operands.destAdd = 0x3;
         t->word.code.operands.destReg = 0x4;
         t->word.code.operands.funct = 0x3;
         wordsHead = t;
         pWordNode t2 = (pWordNode) malloc(sizeof(WordNode));
-        t2->address = 101;
+        t2->word.address = 101;
         t2->word.are = R;
         t2->word.code.operands.destAdd = 0x2;
         t2->word.code.operands.destReg = 0x7;
@@ -65,7 +57,7 @@ bool parseCodeToFile(char *fileName, bool error)
         wordsHead->pNext = t2;
 
         pWordNode t3 = (pWordNode) malloc(sizeof(WordNode));
-        t3->address = 101;
+        t3->word.address = 101;
         t3->word.are = E;
         t3->word.code.operands.destAdd = 0x0;
         t3->word.code.operands.destReg = 0x8;
@@ -142,7 +134,6 @@ void printObjectFile(FILE *fp)
 char *parseWordToBase(pWordNode word)
 {
     pWordNode tmp = NULL;
-    segmentedMemory temp;
     int index ,val, i, wValue,opcode;
     int segments[5] = {0};
     Word tmpWord = {0};
@@ -152,7 +143,7 @@ char *parseWordToBase(pWordNode word)
 
     wValue = (tmpWord.are << 16) + tmpWord.code.opcode;
 
-    sprintf(line,"\n%04d",word->address);
+    sprintf(line,"\n%04d",word->word.address);
     strcat(line,"\t");                  /* adding tab to format */
     /* crate segments 4 of the binary value  */
     for(i=0; i<5; i++)

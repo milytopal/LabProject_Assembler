@@ -6,11 +6,8 @@
 
 
 /*void addWordNode(pWordNode, pWordNode);*/
-void addWordNode(pWordNode,Word,int);
-void removeWordNode(pWordNode, int);
-
-pWordNode getWordNode(pWordNode, int);
-int lengthWordNode(pWordNode);
+void addWordNode(Word word,int val);
 
 
-#endif 
+
+#endif

@@ -23,37 +23,31 @@ pDataNode getDataNode(pDataNode list, int index){
     return lp;
 }
 
-void addDataNode(Label label){
+void addDataNode(const Label label) {
 
-    pDataNode tempData = NULL;
     pDataNode curr = NULL;
-    /*Label tmpL;*/
-    tempData = (pDataNode) calloc(1, sizeof(pDataNode));
-    memcpy(&(tempData->label),&label,sizeof (Label));
-    tempData->pNext = NULL;
-    curr = labelsHead;
-    printf("\nlabels Name in list are: " );
-
-    if(curr == NULL)
-    {
-        labelsHead = tempData;
+    if (labelsHead == NULL) {
+        labelsHead = (pDataNode) calloc(1, sizeof(DataNode));
+        labelsHead->label = label;
         labelsHead->pNext = NULL;
-        printf(" %s ",labelsHead->label.name );
+        printf("%s", labelsHead->label.name);
         return;
-    }
-    /* go to end of list */
-    while(curr != NULL)
-    {
-        printf(" %s ",curr->label.name );
-        curr = curr->pNext;
-    }
-    curr = tempData;
-    curr->pNext = NULL;
-    printf("\n " );
+    } else {
+        curr = labelsHead;
+        while (curr->pNext != NULL) {
+            printf("\n %s ", curr->label.name);
+            curr = curr->pNext;
+        }
+        curr->pNext = (pDataNode) calloc(1, sizeof(DataNode));
+        curr->pNext->label = label;
+        curr->pNext->pNext = NULL;
 
+    }
 }
 
-void removeDataNode(pDataNode list, int index) {
+
+
+void deleteDataList(pDataNode list, int index) {
     pDataNode node = getDataNode(list, index-1);
     node->pNext = node->pNext->pNext;
 }
