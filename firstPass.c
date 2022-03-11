@@ -3,10 +3,10 @@
 int i;
 char* tName;
 
-Label* LabelConstructor( Label *newL,char* name, int val, eDataType dType, eLocalizaion localize)
+Label* LabelConstructor(char* name, int val, eDataType dType, eLocalizaion localize)
 {
-    //Label* newL = NULL;
-    newL = (Label*)realloc(newL,sizeof (Label));
+    Label* newL = NULL;
+    newL = (Label*)malloc(sizeof (Label));
     strcpy(newL->name, name);
     newL->value = val;
     //newL->.address = (val/16)*16;
@@ -27,15 +27,24 @@ bool firstPass(const char* fileName, bool firstPass)
     char* asFileName;
     /* Important variables for the loop */
     char *token = NULL;
-    bool isError = false;
-    bool isLabel;
-    int lineNum = 0;
-    int isData, isString;
-    char line[LINE_LENGTH] = {0};
     char *firstToken = NULL;
     Label* tempLabel = NULL;
+
+    bool isError = false;
+    bool isLabel;
+    int isData, isString, funct,ind , opCode;
+    int lineNum = 0;
+    Word tempWord;
+    Word opcodeWord;
+
+    char line[LINE_LENGTH] = {0};
+    char arg[31] = {0};
+
+
     IC = STARTING_IC;
     DC = 0;
+
+
 
     tName = (char*)calloc(LABEL_LEN,sizeof(char));
     asFileName = (char*)calloc(strlen(fileName) + strlen(".am") + 1, sizeof(char));
@@ -85,17 +94,14 @@ bool firstPass(const char* fileName, bool firstPass)
                 isError = true;
                 printError(asFileName, LABEL_LIMIT_REACHED, lineNum);
                 continue;
-                break;
             case 3:
                 isError = true;
                 printError(asFileName, BAD_LABEL_NAME, lineNum);
                 continue;
-                break;
             case 4:
                 isError = true;
                 printError(asFileName, LABEL_ALREADY_EXISTS, lineNum);
                 continue;
-                break;
         }/* handle Label */
 
          while (isSpace(line[i]) != 0) {
@@ -109,7 +115,7 @@ bool firstPass(const char* fileName, bool firstPass)
             isString = strcmp(token, ".string");
             if (isData == 0 || isString == 0) {
                 if (isLabel == true) {
-                    tempLabel = LabelConstructor(tempLabel,tName,IC,Data,NoneExtOrEnt);
+                    tempLabel = LabelConstructor(tName,IC,Data,NoneExtOrEnt);
                     addDataNode(*tempLabel);
 
                 }
@@ -125,24 +131,36 @@ bool firstPass(const char* fileName, bool firstPass)
                 }
 
                 if (isData == 0) {
-                    i += 6; /* Must have a space */
-                    while (line[i] != '\n') {
-                        char arg[10];
-                        int ind = 0;
-                        while (isdigit(line[i]) == 0 || line[i] == '+' || line[i] == '-') {
-                            arg[ind++] = line[i++];
+                    /* get argument data */
+                    token = strtok(NULL, ", \t\n");
+                    if(token == NULL)
+                    {
+                        printError(fileName, MISSING_PARAMETER,lineNum);
+                        continue;
+                    }
+
+                    while(token != NULL) {
+
+                        if (isdigit(token[0]) == 0 || token[0] == '-') {
+                            strcpy(arg,token);
+                        }
+                        else
+                        {
+                            printError(fileName,INVALID_ARGUMENT,lineNum);
+                            continue;
                         }
                         ind = atoi(arg);
-
-                        Word tempWord;
+                        if(ind < -32767 || ind > 32767)
+                        {
+                            printError(fileName, NUMBER_OUT_OF_BOUND,lineNum);
+                            continue;
+                        }
                         tempWord.code.opcode = ind;
                         tempWord.are = A;
-
-                        addWordNode(wordsHead, tempWord, (IC+DC));
+                        addWordNode(tempWord, (IC + DC));
                         DC++;
-                        while (isSpace(line[i]) != 0 || line[i] == ',') {
-                            i++;
-                        }
+                        token = strtok(NULL, ", \t\n");
+
                     }
                 }
                 else { /* isString == 0 */
@@ -152,19 +170,17 @@ bool firstPass(const char* fileName, bool firstPass)
                     }
                     i++; /* Right here, 'i' points to the first char in the string */
                     while (line[i] != '\"') {
-                        Word tempWord;
-                        tempWord.code.opcode = line[i];
+                        tempWord.code.opcode = (unsigned int)line[i];
                         tempWord.are = A;
 
-                        addWordNode(wordsHead, tempWord, (IC+DC));
+                        addWordNode(tempWord, (IC+DC));
                         DC++;
                     }
                     /* Now we need to add '\0' to the string */
-                    Word tempWord;
                     tempWord.code.opcode = 0;
                     tempWord.are = A;
 
-                    addWordNode(wordsHead, tempWord,(IC+DC));
+                    addWordNode(tempWord,(IC+DC));
                     DC++;
                 }
                 memset(line,0,LINE_LENGTH);
@@ -177,7 +193,6 @@ bool firstPass(const char* fileName, bool firstPass)
             }
             else if (strcmp(token, ".extern") == 0) {
                 i += strlen(token);
-                char name[31] = {0};
 
                 token = strtok(NULL ," \t\n");      /* get label name after .extern declaration */
 
@@ -188,8 +203,8 @@ bool firstPass(const char* fileName, bool firstPass)
                     continue;
                 }
 
-                int ind = 0;
-                /* check if extern's label length is valid */
+                ind = 0;
+                /* check if externals label length is valid */
                 if (strlen(token) >= LABEL_LEN) {
                     isError = true;
                     printError(asFileName, LABEL_LIMIT_REACHED, lineNum);
@@ -204,7 +219,7 @@ bool firstPass(const char* fileName, bool firstPass)
                     continue;
                 }
                 /* extern label name is valid here create a label*/
-                tempLabel = LabelConstructor(tempLabel,token,0,NoneDataOrCode,Extern);
+                tempLabel = LabelConstructor(token,0,NoneDataOrCode,Extern);
 
                 addDataNode(*tempLabel);
                 memset(line,0,LINE_LENGTH);
@@ -225,14 +240,14 @@ bool firstPass(const char* fileName, bool firstPass)
             }
         } /* Checked too much, it's prefered we start over with the line */
         else {                          /* we have a label */
-            tempLabel = LabelConstructor(tempLabel,tName,IC,Code,NoneExtOrEnt);
+            tempLabel = LabelConstructor(tName,IC,Code,NoneExtOrEnt);
             addDataNode(*tempLabel);
             printf("labelName in tempLabel is: %s\n",tempLabel->name );
         }
 
         /* BUG: needs fixing */
         token = strtok(NULL, " \t\n");
-        int opCode = getOpcode(token);
+        opCode = getOpcode(token);
 
         if (opCode == -1) {
             isError = true;
@@ -240,13 +255,12 @@ bool firstPass(const char* fileName, bool firstPass)
             continue;
         }
 
-        int funct = getFunct(opCode, token);
+        funct = getFunct(opCode, token);
 
-        Word opcodeWord = {0};
         opcodeWord.code.opcode = opCode;
         opcodeWord.are = A;
 
-        addWordNode(wordsHead, opcodeWord, IC);
+        addWordNode(opcodeWord, IC);
         IC++;
 
         if (opCode < 5) { /* 2 args */
@@ -259,7 +273,7 @@ bool firstPass(const char* fileName, bool firstPass)
         clearLine(line);
     }
 
-    /* Need to save a final version of IC and DC here, idk where though */
+    /* Need to save a final version of IC and DC here, IDK where though */
 
     free(asFileName);
     free(tempLabel);

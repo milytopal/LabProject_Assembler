@@ -191,6 +191,7 @@ bool writeMacroToFile(pMacroNode macro ,FILE *file)
     }
     return true;
 }
+
 /* delete the list in the end of process to free memory */
 void deleteMacroList(pMacroNode head ) {
     pMacroNode nextMacro = NULL;
