@@ -21,7 +21,7 @@ typedef struct Argument {
 Label* LabelConstructor(char* name, int val, eDataType dType, eLocalizaion localize);
 
 bool firstPass(const char* fileName, bool firstPass);
-int isLabelCheck(char*);
+bool labelCheck(char*, char*, int);
 int getOpcode(char*);
 int getFunct(int, char*);
 Argument getArgument(char*); 

@@ -35,7 +35,7 @@ void addDataNode(const Label label) {
     } else {
         curr = labelsHead;
         while (curr->pNext != NULL) {
-            printf("\n %s ", curr->label.name);
+            printf(" %s ", curr->label.name);
             curr = curr->pNext;
         }
         curr->pNext = (pDataNode) calloc(1, sizeof(DataNode));
@@ -59,11 +59,12 @@ void deleteDataList(pDataNode list)
     labelsHead = NULL;
 }
 
-int contains(pDataNode list, char* contain) {
-    
-    pDataNode lp = NULL;
+int contains(pDataNode list, char* contain)
+{
+    int ind;
+    pDataNode lp;
     lp = labelsHead;
-    int ind = 0;
+    ind = 0;
     while (lp != NULL) {
         if (strcmp(lp->label.name, contain) == 0) {
             return ind;
