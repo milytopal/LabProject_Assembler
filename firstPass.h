@@ -11,6 +11,7 @@
 #include "dataLinkedList.h"
 #include "wordLinkedList.h"
 
+
 typedef struct Argument {
     int addressingMethod;
     int value;

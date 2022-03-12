@@ -8,7 +8,6 @@ void addWordNode( const Word word,const int address)
     if(wordsHead == NULL)
     {
         wordsHead = (pWordNode) calloc( sizeof(WordNode),1);
-        //memcpy(&(wordsHead->word), &word, sizeof(Word));
         wordsHead->word = word;
         wordsHead->word.address = address;
         wordsHead->pNext = NULL;
@@ -23,7 +22,6 @@ void addWordNode( const Word word,const int address)
             curr = curr->pNext;
         }
         curr->pNext = (pWordNode)calloc(sizeof(WordNode),1);
-        //memcpy(&(curr), &word, sizeof(Word));
         curr->word = word;
         curr->word.address = address;
         curr->pNext->pNext = NULL;
