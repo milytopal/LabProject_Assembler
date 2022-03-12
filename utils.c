@@ -4,6 +4,7 @@
 void printError(const char* currFileName, eErrorCode errCode, int lineNum)
 {
     switch (errCode) {
+        printf("[ERROR]: ");
         case MISSING_FILE_NAME:
             printf("Missing file Name  \n");
             break;
@@ -32,7 +33,7 @@ void printError(const char* currFileName, eErrorCode errCode, int lineNum)
             printf("in file: %s line: %d Missing label after .extern\n",currFileName,lineNum);
             break;
         case MISSING_PARAMETER:
-            printf("in file: %s line: %d No parameters after .data\n",currFileName,lineNum);
+            printf("in file: %s line: %d A parameter is missing!\n",currFileName,lineNum);
             break;
         case LABEL_ALREADY_EXISTS:
             printf("in file: %s line: %d Declared label was declared already\n",currFileName,lineNum);
@@ -45,6 +46,9 @@ void printError(const char* currFileName, eErrorCode errCode, int lineNum)
             break;
         case NUMBER_OUT_OF_BOUND:
             printf("in file: %s line: %d Given number is out of bounds -32767 < x < 32767\n",currFileName,lineNum);
+            break;
+        case INVALID_BRACKET_CONTENTS:
+            printf("in file: %s line: %d The bracket contents are invalid, must be a register between r10 and r15\n",currFileName,lineNum);
             break;
         
     }
