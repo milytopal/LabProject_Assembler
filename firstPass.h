@@ -11,14 +11,21 @@
 #include "dataLinkedList.h"
 #include "wordLinkedList.h"
 
+
+
+typedef struct Argument {
+    int addressingMethod;
+    int value;
+    bool isLabel;
+} Argument;
+
 Label* LabelConstructor(char* name, int val, eDataType dType, eLocalizaion localize);
 
 bool firstPass(const char* fileName, bool firstPass);
 int isLabelCheck(char*);
 int getOpcode(char*);
 int getFunct(int, char*);
-int getAddressingMethod(char*, int); 
+Argument getArgument(char*); 
 
-int isSpace(char);
 
 #endif

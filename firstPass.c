@@ -379,29 +379,55 @@ int getFunct(int opCode, char* operation) {
 
 
 /*
-A function to get the addressing method of an argumet.
-    - it will check 1 argument and return it's AM
-    - it will find errors in the AM's, will return negative ints for errors
+A function to get the addressing method and value of an argumet.
+    - it will check 1 argument and return it's AM and value
+    - it will find errors in the AM's, will return negative ints in addressingMethod for errors
     - use a switch when calling for this!
 */
-int getAddressingMethod(char* line, int startingInd) {
-    int ind = startingInd; 
+Argument getArgument(char* argAsStr) {
+    Argument arg;
+    arg.isLabel = false;
+    if (argAsStr[0] == '#') { /* Immediate */
+        arg.value = atoi(argAsStr+1);
+        if (arg.value != 0) {            /* PROBLEM: Check if aoti call was successful, will probably be problematic with value 0, is there a better way? */
+            arg.addressingMethod = 0;
+            return arg;
+        }
+        else {
+            arg.addressingMethod = -1; /* ERROR: Invalid number on immediate AM */
+            return arg;
+        }
+    }
 
+    if (argAsStr[0] == 'r') { /* MIGHT be register direct */
+        arg.value = atoi(argAsStr+1);
+        if (arg.value >= 0 && arg.value <= 15) {           /* PROBLEM: aoti returns 0 for unsuccessful convertion!!! */
+            arg.addressingMethod = 3;
+            return arg;
+        }
+        /* no error, it's probably a label */
+    }
 
+    char *firstBracket = strpbrk(argAsStr, '[');
+    if (firstBracket != NULL) { /* Index */
+        if (firstBracket[1] == 'r') { /* register? */
+            if (firstBracket[4] == ']') {/* closed brackets? */
+                arg.value = atoi(firstBracket+2);
+                if (arg.value >= 10 && arg.value <= 15) {
+                    arg.addressingMethod = 2;
+                    arg.isLabel = true;
+                    return arg;
+                }
+            } 
+        }
+        arg.addressingMethod = -21; /* ERROR: Invalid bracket contents on index AM */
+        return arg;
+    }
 
-
-
-
-}
-
-/*
-Replacement for isspace() method because isspace() counts '\n' as a space (which is end of line)
-*/
-int isSpace(char toCheck) { 
-    if (toCheck == ' ') return 1;
-    if (toCheck == '\t') return 2;
-    if (toCheck == '\v') return 3;
-    if (toCheck == '\f') return 4;
-    if (toCheck == '\r') return 5;
-    return 0;
+    else { /* Direct */
+        arg.addressingMethod = 1;
+        arg.value = 0;
+        arg.isLabel = true;
+        return arg;
+    }
 }
