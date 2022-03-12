@@ -388,7 +388,7 @@ Argument getArgument(char* argAsStr) {
     Argument arg;
     arg.isLabel = false;
     if (argAsStr[0] == '#') { /* Immediate */
-        arg.value = aoti(argAsStr+1);
+        arg.value = atoi(argAsStr+1);
         if (arg.value != 0) {            /* PROBLEM: Check if aoti call was successful, will probably be problematic with value 0, is there a better way? */
             arg.addressingMethod = 0;
             return arg;
@@ -400,7 +400,7 @@ Argument getArgument(char* argAsStr) {
     }
 
     if (argAsStr[0] == 'r') { /* MIGHT be register direct */
-        arg.value = aoti(argAsStr+1);
+        arg.value = atoi(argAsStr+1);
         if (arg.value >= 0 && arg.value <= 15) {           /* PROBLEM: aoti returns 0 for unsuccessful convertion!!! */
             arg.addressingMethod = 3;
             return arg;
@@ -408,11 +408,11 @@ Argument getArgument(char* argAsStr) {
         /* no error, it's probably a label */
     }
 
-    char *firstBracket = strpbrk(argAsStr, '[');
+    char *firstBracket = strpbrk(argAsStr, "[");
     if (firstBracket != NULL) { /* Index */
         if (firstBracket[1] == 'r') { /* register? */
             if (firstBracket[4] == ']') {/* closed brackets? */
-                arg.value = aoti(firstBracket+2);
+                arg.value = atoi(firstBracket+2);
                 if (arg.value >= 10 && arg.value <= 15) {
                     arg.addressingMethod = 2;
                     arg.isLabel = true;
