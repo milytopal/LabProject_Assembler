@@ -17,6 +17,7 @@
 
 #define STARTING_IC 100
 #define NUM_OF_CMD 16
+#define NUM_OF_REGS 16
 #define MACRO_STR "macro"
 
 typedef enum bool{false,true}bool;

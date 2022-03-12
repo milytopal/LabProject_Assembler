@@ -2,7 +2,7 @@
 
 int i;
 char* tName;
-
+char regList[]= {"r0","r1","r2","r3","r4","r5","r6","r7","r8","r9","r10","r11","r12","r13","r14","r15"};
 /*
 Construct a label 
 */
@@ -40,15 +40,12 @@ bool firstPass(const char* fileName, bool firstPass)
     int lineNum = 0;
     Word tempWord;
     Word opcodeWord;
-
+    Argument newArg = {0};
     char line[LINE_LENGTH] = {0};
     char arg[31] = {0};
 
-
     IC = STARTING_IC;
     DC = 0;
-
-
 
     tName = (char*)calloc(LABEL_LEN,sizeof(char));
     asFileName = (char*)calloc(strlen(fileName) + strlen(".am") + 1, sizeof(char));
@@ -70,53 +67,42 @@ bool firstPass(const char* fileName, bool firstPass)
 
     while (fgets(line, LINE_LENGTH, fp) != NULL)
     {
-        /*zero memory */
-        memset(firstToken,0,LINE_LENGTH);
+        memset(firstToken,0,LABEL_LEN); /*reset memory */
         token = NULL;
-
         lineNum++;
         i = 0;
         isLabel = false;
 
         if (isEmptyLine(line) == true || line[0] == ';') continue;
-
+        /* check for line length excited */
         if (line[LINE_LENGTH-2]!= '\0') {
             printError(asFileName, LINE_LIMIT_REACHED, lineNum);
-            return true; /* Can't actually check the line */
+            memset(line,0,LINE_LENGTH);
+            continue; /* Can't actually check the line */
         }
+        /* line ok ger first token */
         token = strtok(line, " \t\n");
         strcpy(firstToken,token);
 
-        switch (isLabelCheck(firstToken /*line*/)) {
-            case 0:
-                isLabel = true;
-                break;
-            case 1:
-                /* Should be false already */
-                break;
-            case 2:
-                isError = true;
-                printError(asFileName, LABEL_LIMIT_REACHED, lineNum);
-                continue;
-            case 3:
-                isError = true;
-                printError(asFileName, BAD_LABEL_NAME, lineNum);
-                continue;
-            case 4:
-                isError = true;
-                printError(asFileName, LABEL_ALREADY_EXISTS, lineNum);
-                continue;
-        }/* handle Label */
+        if(token[strlen(token)-1] == ':')   /* check if first token is a label */
+        {
+            isLabel = true;
+            if(isLabel) {
+                isError = labelCheck(asFileName, token, lineNum);
+                if (isError) {
+                    memset(line,0,LINE_LENGTH);
+                    continue;   /*if error found continue next line*/
+                }
 
-         while (isSpace(line[i]) != 0) {
-             i++;
-         }
+        /*if we found a label we want to continue to next argument */
+            token = strtok(NULL, " \t\n");
+            strcpy(firstToken,token);
+            }
+        }
+
         /* Check if .string .data .entry .extern and Handle*/
-         if (/*line[i]*/firstToken[0] == '.')
+         if (firstToken[0] == '.')
          {
-
-            /* token = strtok(NULL, " \t\n");*/         /*get next token ?*/
-
             isData = strcmp(token, ".data");
             isString = strcmp(token, ".string");
             if (isData == 0 || isString == 0) {
@@ -232,24 +218,19 @@ bool firstPass(const char* fileName, bool firstPass)
             printError(asFileName, INCOMPLETE_CODE, lineNum);
              memset(line,0,LINE_LENGTH);
              continue;
-         } /* Ending of handling .string .data .entry .extern */
-
-         /* everything else */
-        if (isLabel == false) {
-            i = 0;
-            while (isSpace(line[i]) != 0) {
-                i++;
-            }
-        } /* Checked too much, it's prefered we start over with the line */
-        else {                          /* we have a label */
+         } /* End of handling .string .data .entry .extern */
+         /* handle code */
+        if (isLabel == true) {
             tempLabel = LabelConstructor(tName,IC,Code,NoneExtOrEnt);
             addDataNode(*tempLabel);
             printf("labelName in tempLabel is: %s\n",tempLabel->name );
-        }
+        } /* Checked too much, it's prefered we start over with the line */
 
         /* BUG: needs fixing */
         token = strtok(NULL, " \t\n");
         opCode = getOpcode(token);
+        /* todo: remove later */char mov[] = "r3,W";
+        newArg = getArgument(mov);
 
         if (opCode == -1) {
             isError = true;
@@ -279,6 +260,9 @@ bool firstPass(const char* fileName, bool firstPass)
 
     free(asFileName);
     free(tempLabel);
+    free(tName);
+    free(firstToken);
+
     return isError;
 }
 
@@ -287,40 +271,54 @@ A function to check if the first word in the line is a label type, meaning:
     - it starts with an alpha
     - it's all alpha/num
 */
-int isLabelCheck(char* line) {
+bool labelCheck(char* asFileName, char* label, int lineNum) {
     int flag ,len ,j; /* We will use this to set what situation we're in */
-    char label[31] = {0};
-    len = strlen(line);
+
+    len = strlen(label);
     flag = 0;
     if(len > LABEL_LEN)
     {
-        return 2; /* label name too long */
+        printError(asFileName, LABEL_LIMIT_REACHED, lineNum);
+        return true; /* label name too long */
     }
-    if(line[0] == '.')
-        return 1;
 
-    if(line[len-1] == ':')
+/* consider leaving it here - clean ':' from label */
+    if(label[len-1] == ':')
     {
-        line[len-1] = '\0';
+        label[len-1] = '\0';
         len--;
     }
-
     for(j = 0; j < len; j++)
     {
-        if(isalnum(line[j]) == 0)
-            return 3;
+        if(isalnum(label[j]) == 0)
+        {
+            printError(asFileName, BAD_LABEL_NAME, lineNum);
+            return true;
+        }
+    }
+    /*check if label is with a saved word - mabe need to add a check if it's a register name */
+    printf(" label name: %s",label);
+    if (getOpcode(label) != -1) {
+        printError(asFileName, BAD_LABEL_NAME, lineNum);
+        return true; /* ERROR: Label can't be named that! */
+    }
+    for( j=0; j < NUM_OF_REGS ; j++) /* check if label is registers name */
+    {
+        if(strcmp(label,(regList+j)) == 0)
+        {
+            printError(asFileName, BAD_LABEL_NAME, lineNum);
+            return true; /* ERROR: Label can't be named that! */
+        }
+    }
+    /*check if label exists already */
+    if (contains(labelsHead, label) != -1) {
+        printError(asFileName, LABEL_ALREADY_EXISTS, lineNum);
+        return true;
+        /* ERROR: Label already exists */
     }
 
-    printf(" label name: %s",line);
-    if (getOpcode(line) != -1) {
-        return 3; /* ERROR: Label can't be named that! */
-    }
-
-    if (contains(labelsHead, line) != -1) {
-        return 4; /* ERROR: Label already exists */
-    }
-
-    strcpy(tName, line);
+/* label name valid - copy label name */
+    strcpy(tName, label);
     return 0;
 }
 

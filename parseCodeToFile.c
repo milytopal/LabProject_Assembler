@@ -32,36 +32,6 @@ bool parseCodeToFile(char *fileName, bool error)
         return true;
     }else
     {
-        pWordNode tempHead = NULL;
-        pWordNode t = (pWordNode) malloc(sizeof(pWordNode));
-        t->word.address = 500;
-        t->word.are = A;
-        t->word.code.operands.destAdd = 0x3;
-        t->word.code.operands.destReg = 0x4;
-        t->word.code.operands.funct = 0x3;
-        tempHead = t;
-        pWordNode t2 = (pWordNode) malloc(sizeof(WordNode));
-        t2->word.address = 501;
-        t2->word.are = R;
-        t2->word.code.operands.destAdd = 0x2;
-        t2->word.code.operands.destReg = 0x7;
-        t2->word.code.operands.funct = 0x9;
-        t2->word.code.operands.srcAdd = 0x1;
-        t2->word.code.operands.srcReg = 0x3;
-
-        tempHead->pNext = t2;
-
-        pWordNode t3 = (pWordNode) malloc(sizeof(WordNode));
-        t3->word.address = 502;
-        t3->word.are = E;
-        t3->word.code.operands.destAdd = 0x0;
-        t3->word.code.operands.destReg = 0x8;
-        t3->word.code.operands.funct = 0x2;
-        t3->word.code.operands.srcAdd = 0x1;
-        t3->word.code.operands.srcReg = 0x3;
-
-        tempHead->pNext->pNext = t3;
-        tempHead->pNext->pNext->pNext = NULL;
 
         printObjectFile(codeF);
         /* parseWordToBase(&testing); */
@@ -92,7 +62,6 @@ bool parseCodeToFile(char *fileName, bool error)
         /* todo: print to entry file */
     }
     fclose(entF);
-
     free(codeFileName);
     free(entFileName);
     free(extFileName);
@@ -105,9 +74,6 @@ void printExternalsFile(FILE *fp)
     if(labelsHead == NULL)
         return;
     line = (char*)calloc(LINE_LENGTH,sizeof(char));
-
-
-
 
 }
 void printEntriesFile(FILE *fp)
@@ -135,7 +101,7 @@ char *parseWordToBase(pWordNode word)
     int segments[5] = {0};
     Word tmpWord = {0};
     char* line = NULL;
-    line = (char*)calloc(30,sizeof(char));
+    line = (char*)calloc(LINE_LENGTH,sizeof(char));
     tmpWord = word->word;
 
     wValue = (tmpWord.are << 16) + tmpWord.code.opcode;
@@ -174,7 +140,7 @@ char uitoa(int n)
     }
     if(n > 9 && n < 16 )
     {
-        c = ('a' + (n-10));
+        c = ('a' + (n-0xA));
     }
         return c;
 }
