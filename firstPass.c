@@ -2,7 +2,7 @@
 
 int i;
 char* tName;
-char regList[]= {"r0","r1","r2","r3","r4","r5","r6","r7","r8","r9","r10","r11","r12","r13","r14","r15"};
+char* regList[]= {"r0","r1","r2","r3","r4","r5","r6","r7","r8","r9","r10","r11","r12","r13","r14","r15"};
 /*
 Construct a label 
 */
@@ -67,7 +67,7 @@ bool firstPass(const char* fileName, bool firstPass)
 
     while (fgets(line, LINE_LENGTH, fp) != NULL)
     {
-        memset(firstToken,0,LABEL_LEN); /*reset memory */
+        clearLine(firstToken); /*reset memory */
         token = NULL;
         lineNum++;
         i = 0;
@@ -77,7 +77,7 @@ bool firstPass(const char* fileName, bool firstPass)
         /* check for line length excited */
         if (line[LINE_LENGTH-2]!= '\0') {
             printError(asFileName, LINE_LIMIT_REACHED, lineNum);
-            memset(line,0,LINE_LENGTH);
+            clearLine(line);
             continue; /* Can't actually check the line */
         }
         /* line ok ger first token */
@@ -90,7 +90,7 @@ bool firstPass(const char* fileName, bool firstPass)
             if(isLabel) {
                 isError = labelCheck(asFileName, token, lineNum);
                 if (isError) {
-                    memset(line,0,LINE_LENGTH);
+                    clearLine(line);
                     continue;   /*if error found continue next line*/
                 }
 
@@ -114,7 +114,7 @@ bool firstPass(const char* fileName, bool firstPass)
                 if (line[i] == '\n') {
                     isError = true;
                     printError(asFileName, NO_ARGUMENTS, lineNum);
-                    memset(line,0,LINE_LENGTH);
+                    clearLine(line);
                     continue;
                 }
 
@@ -171,12 +171,12 @@ bool firstPass(const char* fileName, bool firstPass)
                     addWordNode(tempWord,(IC+DC));
                     DC++;
                 }
-                memset(line,0,LINE_LENGTH);
+                clearLine(line);
                 continue;
             }
             else if (strcmp(token, ".entry") == 0) {
                 /* Handled on secondPass ! ! */
-                memset(line,0,LINE_LENGTH);
+                clearLine(line);
                 continue;
             }
             else if (strcmp(token, ".extern") == 0) {
@@ -187,7 +187,7 @@ bool firstPass(const char* fileName, bool firstPass)
                 if (token == NULL) {
                     isError = true;
                     printError(asFileName, MISSING_LABEL, lineNum);
-                    memset(line,0,LINE_LENGTH);
+                    clearLine(line);
                     continue;
                 }
 
@@ -196,27 +196,27 @@ bool firstPass(const char* fileName, bool firstPass)
                 if (strlen(token) >= LABEL_LEN) {
                     isError = true;
                     printError(asFileName, LABEL_LIMIT_REACHED, lineNum);
-                    memset(line,0,LINE_LENGTH);
+                    clearLine(line);
                     continue;
                 }
                 /* check if extern label name is valid*/
                 if (isalpha(token[0]) == 0) {
                     isError = true;
                     printError(asFileName, BAD_LABEL_NAME, lineNum);
-                    memset(line,0,LINE_LENGTH);
+                    clearLine(line);
                     continue;
                 }
                 /* extern label name is valid here create a label*/
                 tempLabel = LabelConstructor(token,0,NoneDataOrCode,Extern);
 
                 addDataNode(*tempLabel);
-                memset(line,0,LINE_LENGTH);
+                clearLine(line);
                 continue;
             } /* not an extern */
 
             isError = true;
             printError(asFileName, INCOMPLETE_CODE, lineNum);
-             memset(line,0,LINE_LENGTH);
+             clearLine(line);
              continue;
          } /* End of handling .string .data .entry .extern */
          /* handle code */
@@ -227,22 +227,19 @@ bool firstPass(const char* fileName, bool firstPass)
         } /* Checked too much, it's prefered we start over with the line */
 
         /* BUG: needs fixing */
-        token = strtok(NULL, " \t\n");
         opCode = getOpcode(token);
         /* todo: remove later */char mov[] = "r3,W";
-        newArg = getArgument(mov);
-
         if (opCode == -1) {
             isError = true;
             printError(asFileName, UNKNOWN_OPERATION, lineNum);
             continue;
         }
-
         funct = getFunct(opCode, token);
-
         opcodeWord.code.opcode = opCode;
         opcodeWord.are = A;
+        token = strtok(NULL, " \t\n");
 
+        newArg = getArgument(mov);
         addWordNode(opcodeWord, IC);
         IC++;
 
@@ -252,7 +249,6 @@ bool firstPass(const char* fileName, bool firstPass)
         else if (opCode < 14) { /* 1 arg */
 
         }
-        memset(line,'\0',LINE_LENGTH);
         clearLine(line);
     }
 
@@ -304,7 +300,7 @@ bool labelCheck(char* asFileName, char* label, int lineNum) {
     }
     for( j=0; j < NUM_OF_REGS ; j++) /* check if label is registers name */
     {
-        if(strcmp(label,(regList+j)) == 0)
+        if(strcmp(label,(regList[j])) == 0)
         {
             printError(asFileName, BAD_LABEL_NAME, lineNum);
             return true; /* ERROR: Label can't be named that! */
