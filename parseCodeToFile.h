@@ -9,6 +9,8 @@ bool parseCodeToFile(char *fileName, bool error);
 char uitoa(int n);
 char *printByte(int index, int value);
 char *parseWordToBase(pWordNode word);
+char *ParseExternals(pDataNode);
+
 void printExternalsFile(FILE *fp);
 void printEntriesFile(FILE *fp);
 void printObjectFile(FILE *fp);

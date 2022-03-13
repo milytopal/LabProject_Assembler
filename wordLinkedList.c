@@ -11,7 +11,6 @@ void addWordNode( const Word word,const int address)
         wordsHead->word = word;
         wordsHead->word.address = address;
         wordsHead->pNext = NULL;
-        printf(" %ld ",(long)(wordsHead) );
         return;
     }else
     {
@@ -25,7 +24,6 @@ void addWordNode( const Word word,const int address)
         curr->word = word;
         curr->word.address = address;
         curr->pNext->pNext = NULL;
-        printf(" %d ",(int)(wordsHead->word.code.opcode) );
     }
 }
 

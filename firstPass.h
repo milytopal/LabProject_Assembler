@@ -18,7 +18,7 @@ typedef struct Argument {
     bool isLabel;
 } Argument;
 
-Label* LabelConstructor(char* name, int val, eDataType dType, eLocalizaion localize);
+Label LabelConstructor(char* name, int val, eDataType dType, eLocalizaion localize);
 
 bool firstPass(const char* fileName, bool firstPass);
 bool labelCheck(char*, char*, int);

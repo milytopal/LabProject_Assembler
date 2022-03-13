@@ -8,8 +8,6 @@
 void addDataNode(Label label);
 void deleteDataList(pDataNode);
 
-pDataNode getDataNode(pDataNode, int);
-int lengthDataNode(pDataNode);
 int contains(pDataNode, char*);
 
 

@@ -17,11 +17,11 @@ bool parseCodeToFile(char *fileName, bool error)
     extFileName = (char*)calloc(strlen(fileName) + strlen(".ext") + 1, sizeof(char));
     entFileName = (char*)calloc(strlen(fileName) + strlen(".ext") + 1, sizeof(char));
 
-    strcpy(codeFileName, fileName);
+    strncpy(codeFileName, fileName, strlen(fileName));
     strcat(codeFileName, ".ob");
-    strcpy(extFileName, fileName);
+    strncpy(extFileName, fileName, strlen(fileName));
     strcat(extFileName, ".ext");
-    strcpy(entFileName, fileName);
+    strncpy(entFileName, fileName, strlen(fileName));
     strcat(entFileName, ".ent");
 
     codeF = fopen(codeFileName, "w");        /* create the .obj file */
@@ -70,12 +70,29 @@ bool parseCodeToFile(char *fileName, bool error)
 }
 void printExternalsFile(FILE *fp)
 {
-    char* line = NULL;
-    if(labelsHead == NULL)
+    pDataNode curr = NULL;
+    char *toPrint = NULL;
+    curr = labelsHead;
+    if(labelsHead == NULL)          /* no labels in file */
         return;
+
+    while(curr !=NULL)
+    {
+        toPrint = ParseExternals(curr);
+        fprintf(fp,"%s",toPrint);
+        curr = curr->pNext;
+    }
+    free(toPrint);
+
+}
+
+char *ParseExternals(pDataNode node)
+{
+    char* line = NULL;
     line = (char*)calloc(LINE_LENGTH,sizeof(char));
 
 }
+
 void printEntriesFile(FILE *fp)
 {
 
@@ -84,7 +101,7 @@ void printEntriesFile(FILE *fp)
 void printObjectFile(FILE *fp)
 {
     pWordNode curr = NULL;
-     curr = wordsHead;
+    curr = wordsHead;
     char* toPrint = NULL;
     while(curr !=NULL)
     {
@@ -124,7 +141,7 @@ char *parseWordToBase(pWordNode word)
     strcat(line, "-");
     strcat(line, printByte(4,segments[0]));
 
- return line;
+    return line;
 
 
 }
@@ -142,7 +159,7 @@ char uitoa(int n)
     {
         c = ('a' + (n-0xA));
     }
-        return c;
+    return c;
 }
 
 char *printByte(int index, int value)

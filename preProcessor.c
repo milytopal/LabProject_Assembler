@@ -13,7 +13,7 @@ bool PreProcessPass(const char* fileName, bool firstPass)
     head = NULL;
     asFileName = (char*)calloc(strlen(fileName) + strlen(".as") + 1, sizeof(char));
     amFileName = (char*)calloc(strlen(fileName) + strlen(".am") + 1, sizeof(char));
-    strcpy(asFileName, fileName);
+    strncpy(asFileName, fileName, strlen(fileName));
     strcat(asFileName, ".as");
 
     if (getcwd(cwd, sizeof(cwd)) != NULL) {     /*todo : remove later*/
@@ -29,7 +29,7 @@ bool PreProcessPass(const char* fileName, bool firstPass)
         printf("couldnt open file: %s\n ",asFileName);
         return true;
     }
-    strcpy(amFileName, fileName);
+    strncpy(amFileName, fileName, strlen(fileName));
     strcat(amFileName, ".am");
     newFp = fopen(amFileName, "w");
 
@@ -81,7 +81,7 @@ bool foo(FILE *fp, FILE * newFp)
     while(fgets(line, LINE_LENGTH, fp) != NULL){
         if(line[LINE_LENGTH-2]!= '\0')
             continue;
-        strcpy(cpyLine, line);
+        strncpy(cpyLine, line, strlen(line));
 
         if(strstr(line, "endm") != NULL){
             insideMacro = false;
@@ -99,7 +99,7 @@ bool foo(FILE *fp, FILE * newFp)
             token = strtok(cpyLine, " \t\n");
             token = strtok(NULL, " \t\n");
             insideMacro = true;
-            strcpy(macro_name, token);
+            strncpy(macro_name, token, strlen(token));
             newMacro = addNewMacro(macro_name);
             clearLine(line);
             continue;
@@ -139,13 +139,13 @@ pMacroNode addNewMacro(const char* name)
     if(head == NULL) /* list is empty */
     {
         head = (pMacroNode) calloc(sizeof(MacroNode),1);
-        strcpy((head->macro.name),name);   /* todo: check if good practice */
+        strncpy((head->macro.name),name, strlen(name));   /* todo: check if good practice */
         head->macro.tokenList = NULL;
         head->pNext = NULL;
     }else {
         /* at start of list */
         curr = (pMacroNode) calloc(sizeof(MacroNode), 1);
-        strcpy((curr->macro.name), name);
+        strncpy((curr->macro.name), name, strlen(name));
         curr->pNext = head;
         curr->macro.tokenList = NULL;
         head = curr;
@@ -161,7 +161,7 @@ void addLineToMacro(pMacroNode macro, char* line){
     if(macro->macro.tokenList == NULL)
     {
         macro->macro.tokenList = (pTokenNode)calloc(LINE_LENGTH , sizeof (TokenNode));
-        strcpy(macro->macro.tokenList->token ,line);
+        strncpy(macro->macro.tokenList->token ,line, strlen(line));
     }
     else {
         curr = macro->macro.tokenList;
@@ -169,7 +169,7 @@ void addLineToMacro(pMacroNode macro, char* line){
             curr = macro->macro.tokenList->pNext;
         }
         curr->pNext = (pTokenNode) calloc (1 , sizeof (TokenNode));
-        strcpy(curr->pNext->token,line);
+        strncpy(curr->pNext->token,line,strlen(line));
         curr = curr->pNext;
         curr = NULL;
     }
