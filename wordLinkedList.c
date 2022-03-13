@@ -2,7 +2,7 @@
 #include "wordLinkedList.h"
 
 
-void addWordNode( const Word word,const int address,char* name)
+void addWordNode( const Word word,const int address,char* name,int lineN)
 {
     pWordNode curr = NULL;
     if(wordsHead == NULL)
@@ -10,7 +10,8 @@ void addWordNode( const Word word,const int address,char* name)
         wordsHead = (pWordNode) calloc( sizeof(WordNode),1);
         wordsHead->word = word;
         wordsHead->word.address = address;
-        strncpy((wordsHead->name),name,LABEL_LEN);
+        /*strncpy((wordsHead->word.name),name,LABEL_LEN);*/
+        wordsHead->word.lineNum = lineN;
         wordsHead->pNext = NULL;
         return;
     }else
@@ -24,7 +25,8 @@ void addWordNode( const Word word,const int address,char* name)
         curr->pNext = (pWordNode)calloc(sizeof(WordNode),1);
         curr->pNext->word = word;
         curr->pNext->word.address = address;
-        strncpy((curr->pNext->name),name,LABEL_LEN);
+        curr->pNext->word.lineNum = lineN;
+        /*strncpy((curr->pNext->name),name,LABEL_LEN);*/
         curr->pNext->pNext = NULL;
     }
 }

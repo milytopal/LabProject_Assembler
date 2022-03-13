@@ -5,10 +5,10 @@
 #include <string.h>
 #include "dataStructs.h"
 
-void addDataNode(Label label);
-void deleteDataList(pDataNode);
+void addDataNode(const char* name, int value, eDataType dataType, eLocalizaion locationType);
+void deleteDataList(pLabelNode);
 
-int contains(pDataNode, char*);
+int contains(pLabelNode, char*);
 
 
 #endif

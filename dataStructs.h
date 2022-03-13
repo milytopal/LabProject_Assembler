@@ -26,10 +26,12 @@ typedef enum eDataType{Data, Code, NoneDataOrCode}eDataType;
 typedef enum ARE{A=4,R=2,E=1}ARE ;
 typedef enum eCommands{MOV,CMP,ADD,SUB,LEA,CLR,NOT,INC,DEC,JMP,BNE,JSR,RED,PRN,RTS,STOP}eCommands;
 typedef enum eDirectives{DATA,STRING,ENTRY,EXTERN}eDirectives;
-typedef enum eErrorCode{MISSING_FILE_NAME,MISSING_FILE,LINE_LIMIT_REACHED, LABEL_LIMIT_REACHED, BAD_LABEL_NAME, FAILED_TO_CREATE, 
-                        NO_ARGUMENTS, INCOMPLETE_CODE,MISSING_LABEL, MISSING_PARAMETER,LABEL_ALREADY_EXISTS, UNKNOWN_OPERATION,
-                        INVALID_ARGUMENT,NUMBER_OUT_OF_BOUND, INVALID_BRACKET_CONTENTS }eErrorCode;
 typedef enum eAdrresMethod{IMMEDIATE=0,DIRECT,INDEX,DIRECT_REGISTER}eAdrresMethod;
+typedef enum eErrorCode { MISSING_FILE_NAME,MISSING_FILE,LINE_LIMIT_REACHED, LABEL_LIMIT_REACHED, BAD_LABEL_NAME, FAILED_TO_CREATE,
+    NO_ARGUMENTS, INCOMPLETE_CODE,MISSING_LABEL, MISSING_PARAMETER,
+    LABEL_ALREADY_EXISTS, UNKNOWN_OPERATION, INVALID_ARGUMENT,
+    NUMBER_OUT_OF_BOUND, INVALID_BRACKET_CONTENTS , TOO_MANY_ARGUMENTS,
+    INVALID_USE_OF_REGISTER , MISSING_BRACKETS }eErrorCode;
 
 /* the TokenNode is a node for linked list of commands inside a macro */
 typedef struct TokenNode *pTokenNode;
@@ -60,11 +62,11 @@ typedef struct Label{
     eDataType dataType;
 }Label;
 
-typedef struct DataNode *pDataNode;
-typedef struct DataNode{
+typedef struct LabelNode *pLabelNode;
+typedef struct LabelNode{
     Label label;
-    pDataNode pNext;
-}DataNode;
+    pLabelNode pNext;
+}LabelNode;
 
 typedef struct twoOperands
 {
@@ -77,7 +79,7 @@ typedef struct twoOperands
 
 /* Word structure:          |0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|
 *                           |0|A|R|E|          OPCODE               |
-*                           |0|A|R|E| FUNCT |DESTREG|<AM|DESTREG|<AM|
+*                           |0|A|R|E| FUNCT | SRCREG|<AM|DESTREG|<AM|
 * AM = ADDRESSING METHOD: 0 = IMMEDIATE ,1 = DIRECT , 2 = INDEX , 3 = REGISTER DIRECT */
 typedef struct Word{
     union {
@@ -86,6 +88,9 @@ typedef struct Word{
     } code;
     unsigned int are:ARE_FIELD_LEN;
     unsigned int address;
+    char name[LABEL_LEN];
+    int lineNum;
+    bool isLabel;
 }Word;
 
 
@@ -93,15 +98,14 @@ typedef struct Word{
 typedef struct WordNode* pWordNode;
 typedef struct WordNode{
     Word word;
-    char name[LABEL_LEN];
     pWordNode pNext;
 }WordNode;
 
 pWordNode wordsHead;
-pDataNode labelsHead;
+pLabelNode labelsHead;
 
 
-/*pDataNode labelsHead = NULL;
+/*pLabelNode labelsHead = NULL;
 pWordNode codeHead = NULL; */
 
 int IC;
