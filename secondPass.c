@@ -31,7 +31,9 @@ bool isInstruction(char *token)
     }
     return true;
 }
-
+/* first update entries table and than update the word list accordingly
+ * need to add to words the name of labels if there is a label
+ * idea: maybe change temporarily the ARE register to flag it as something that needs updating */
 bool isDeclaredEntry(char *token) {
     pLabelNode curr = NULL;
 
