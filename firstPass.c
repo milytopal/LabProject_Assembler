@@ -444,7 +444,7 @@ A function to get the addressing method and value of an argument.
     - it will check 1 argument and return it's Addressing Method and value
     - it will find errors in the Addressing Method, will return negative ints in addressingMethod for errors
 */
-Argument getArgument(char* asFileName, char* argAsStr, int lineNum) {
+Argument getArgument(const char* asFileName,const char* argAsStr, int lineNum) {
     Argument arg = {0};
     char *firstBracket = NULL;
     char* token = NULL;
