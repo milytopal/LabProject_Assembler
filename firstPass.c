@@ -235,7 +235,7 @@ bool firstPass(const char* fileName, bool firstPass)
         }
         funct = getFunct(opCode, token);
         opcodeWord.code.opcode = opCode;
-<<<<<<< HEAD
+
         opcodeWord.are = A;
         if(opCode == STOP)
         {                   /* no arguments to get */
@@ -248,12 +248,7 @@ bool firstPass(const char* fileName, bool firstPass)
             clearLine(line);
             continue;
         }
-        newArg = getArgument(token);
-=======
-
-        token = strtok(NULL, " \t\n,");
-
->>>>>>> f6342ffb21a36da82a22094c66f58d8c48a0a5bb
+        newArg = getArgument(fileName,token,lineNum);
         addWordNode(opcodeWord, IC);
         IC++;
 
