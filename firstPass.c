@@ -145,7 +145,7 @@ bool firstPass(const char* fileName, bool firstPass)
                             continue;
                         }
                         tempWord.code.opcode = ind;
-                        addWordNode(tempWord, (IC + DC));
+                        addWordNode(tempWord, (IC + DC),firstToken);
                         DC++;
 
                         token = strtok(NULL, ", \t\n");
@@ -158,7 +158,7 @@ bool firstPass(const char* fileName, bool firstPass)
                         tempWord.code.opcode = (unsigned int)token[i];
                         tempWord.are = A;
 
-                        addWordNode(tempWord, (IC));
+                        addWordNode(tempWord, (IC),firstToken);
                         DC++;
                         IC++;
                         i++;
@@ -166,7 +166,7 @@ bool firstPass(const char* fileName, bool firstPass)
                     /* Now we need to add '\0' to the string */
                     tempWord.code.opcode = 0;
 
-                    addWordNode(tempWord,(IC+DC));
+                    addWordNode(tempWord,(IC+DC),firstToken);
                     DC++;
                 }
                 clearLine(line);
@@ -224,7 +224,6 @@ bool firstPass(const char* fileName, bool firstPass)
             printf("labelName in tempLabel is: %s\n",tempLabel.name );
         } /* Checked too much, it's prefered we start over with the line */
 
-        /* BUG: needs fixing */
         opCode = getOpcode(token);
         
         if (opCode == -1) {
@@ -249,7 +248,7 @@ bool firstPass(const char* fileName, bool firstPass)
             continue;
         }
         newArg = getArgument(fileName,token,lineNum);
-        addWordNode(opcodeWord, IC);
+        addWordNode(opcodeWord, IC,firstToken);
         IC++;
 
         if (opCode < 5) { /* 2 args */
@@ -273,7 +272,7 @@ bool firstPass(const char* fileName, bool firstPass)
             tempWord.code.operands.srcAdd = newArg.addressingMethod;
             tempWord.code.operands.srcReg = newArg.value;
 
-            addWordNode(tempWord, IC);
+            addWordNode(tempWord, IC,firstToken);
             IC++;
             if (tempBool == true) {
                 IC += 2;
@@ -293,7 +292,7 @@ bool firstPass(const char* fileName, bool firstPass)
             tempWord.code.operands.destAdd = newArg.addressingMethod;
             tempWord.code.operands.destReg = newArg.value;
             
-            addWordNode(tempWord, IC);
+            addWordNode(tempWord, IC,firstToken);
             IC++;
             if (newArg.isLabel == true) { /* If a base and offset is needed */
                 IC += 2;
@@ -422,9 +421,9 @@ int getFunct(int opCode, char* operation) {
 
 
 /*
-A function to get the addressing method and value of an argumet.
-    - it will check 1 argument and return it's AM and value
-    - it will find errors in the AM's, will return negative ints in addressingMethod for errors
+A function to get the addressing method and value of an argument.
+    - it will check 1 argument and return it's Addressing Method and value
+    - it will find errors in the Addressing Method, will return negative ints in addressingMethod for errors
 */
 Argument getArgument(char* asFileName, char* argAsStr, int lineNum) {
     Argument arg;
@@ -472,7 +471,6 @@ Argument getArgument(char* asFileName, char* argAsStr, int lineNum) {
         printError(asFileName, INVALID_BRACKET_CONTENTS, lineNum);
         return arg;
     }
-
     else { /* Direct */
         arg.addressingMethod = DIRECT;
         arg.value = 0;

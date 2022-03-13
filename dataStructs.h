@@ -93,6 +93,7 @@ typedef struct Word{
 typedef struct WordNode* pWordNode;
 typedef struct WordNode{
     Word word;
+    char name[LABEL_LEN];
     pWordNode pNext;
 }WordNode;
 
