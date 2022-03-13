@@ -13,7 +13,7 @@
 
 
 typedef struct Argument {
-    int addressingMethod;
+    eAdrresMethod addressingMethod;
     int value;
     bool isLabel;
 } Argument;
@@ -22,8 +22,8 @@ Label LabelConstructor(char* name, int val, eDataType dType, eLocalizaion locali
 
 bool firstPass(const char* fileName, bool firstPass);
 bool labelCheck(char*, char*, int);
-int getOpcode(char*);
+eCommands getOpcode(char*);
 int getFunct(int, char*);
-Argument getArgument(char*); 
+Argument getArgument(char*, char*, int); 
 
 #endif

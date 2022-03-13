@@ -31,10 +31,13 @@ bool firstPass(const char* fileName, bool firstPass)
     int isData, isString, funct,ind , opCode;
     int lineNum = 0;
     Word tempWord;
+    tempWord.are = A; /* All firstPass words get A, so no need to set it every time */
     Word opcodeWord;
+    opcodeWord.are = A; /* All firstPass words get A, so no need to set it every time */
     Argument newArg = {0};
     char line[LINE_LENGTH] = {0};
     char arg[31] = {0};
+    bool tempBool = false;
 
     IC = STARTING_IC;
     DC = 0;
@@ -142,7 +145,6 @@ bool firstPass(const char* fileName, bool firstPass)
                             continue;
                         }
                         tempWord.code.opcode = ind;
-                        tempWord.are = A;
                         addWordNode(tempWord, (IC + DC));
                         DC++;
 
@@ -163,7 +165,6 @@ bool firstPass(const char* fileName, bool firstPass)
                     }
                     /* Now we need to add '\0' to the string */
                     tempWord.code.opcode = 0;
-                    tempWord.are = A;
 
                     addWordNode(tempWord,(IC+DC));
                     DC++;
@@ -225,7 +226,7 @@ bool firstPass(const char* fileName, bool firstPass)
 
         /* BUG: needs fixing */
         opCode = getOpcode(token);
-        /* todo: remove later */char mov[] = "r3,W";
+        
         if (opCode == -1) {
             isError = true;
             printError(asFileName, UNKNOWN_OPERATION, lineNum);
@@ -234,27 +235,74 @@ bool firstPass(const char* fileName, bool firstPass)
         }
         funct = getFunct(opCode, token);
         opcodeWord.code.opcode = opCode;
+<<<<<<< HEAD
         opcodeWord.are = A;
-        if(opCode == 15)
+        if(opCode == STOP)
         {                   /* no arguments to get */
             continue;
         }
         token = strtok(NULL, "\n");
-        if(token == NULL && (opCode != 15))
+        if(token == NULL && (opCode != STOP))
         {
             printError(asFileName,NO_ARGUMENTS,lineNum);
             clearLine(line);
             continue;
         }
         newArg = getArgument(token);
+=======
+
+        token = strtok(NULL, " \t\n,");
+
+>>>>>>> f6342ffb21a36da82a22094c66f58d8c48a0a5bb
         addWordNode(opcodeWord, IC);
         IC++;
 
         if (opCode < 5) { /* 2 args */
+            tempWord.code.operands.funct = funct;
 
+            if (token == NULL) {
+                printError(fileName, MISSING_PARAMETER,lineNum);
+                continue;
+            }
+            newArg = getArgument(asFileName, token, lineNum);
+            tempWord.code.operands.destAdd = newArg.addressingMethod;
+            tempWord.code.operands.destReg = newArg.value;
+            tempBool = newArg.isLabel;
+
+            token = strtok(NULL, " \t\n,");
+            if (token == NULL) {
+                printError(fileName, MISSING_PARAMETER,lineNum);
+                continue;
+            }
+            newArg = getArgument(asFileName, token, lineNum);
+            tempWord.code.operands.srcAdd = newArg.addressingMethod;
+            tempWord.code.operands.srcReg = newArg.value;
+
+            addWordNode(tempWord, IC);
+            IC++;
+            if (tempBool == true) {
+                IC += 2;
+            }
+            if (newArg.isLabel == true) {
+                IC += 2;
+            }
         }
         else if (opCode < 14) { /* 1 arg */
+            tempWord.code.operands.funct = funct;
 
+            if (token == NULL) {
+                printError(fileName, MISSING_PARAMETER,lineNum);
+                continue;
+            }
+            newArg = getArgument(asFileName, token, lineNum);
+            tempWord.code.operands.destAdd = newArg.addressingMethod;
+            tempWord.code.operands.destReg = newArg.value;
+            
+            addWordNode(tempWord, IC);
+            IC++;
+            if (newArg.isLabel == true) { /* If a base and offset is needed */
+                IC += 2;
+            }
         }
         clearLine(line);
     }
@@ -328,24 +376,24 @@ bool labelCheck(char* asFileName, char* label, int lineNum) {
 Get the opcode of an operation.
     - will return 0 if the given operation in unknown
 */
-int getOpcode(char* op) {
+eCommands getOpcode(char* op) {
     if(op == NULL) return -1;
-    if (strcmp(op, "mov") == 0) return 0;
-    if (strcmp(op, "cmp") == 0) return 1;
-    if (strcmp(op, "add") == 0) return 2;
-    if (strcmp(op, "sub") == 0) return 2;
-    if (strcmp(op, "lea") == 0) return 4;
-    if (strcmp(op, "clr") == 0) return 5;
-    if (strcmp(op, "not") == 0) return 5;
-    if (strcmp(op, "inc") == 0) return 5;
-    if (strcmp(op, "dec") == 0) return 5;
-    if (strcmp(op, "jmp") == 0) return 9;
-    if (strcmp(op, "bne") == 0) return 9;
-    if (strcmp(op, "jsr") == 0) return 9;
-    if (strcmp(op, "red") == 0) return 12;
-    if (strcmp(op, "prn") == 0) return 13;
-    if (strcmp(op, "rts") == 0) return 14;
-    if (strcmp(op, "stop") == 0) return 15;
+    if (strcmp(op, "mov") == 0) return MOV;
+    if (strcmp(op, "cmp") == 0) return CMP;
+    if (strcmp(op, "add") == 0) return ADD;
+    if (strcmp(op, "sub") == 0) return SUB;
+    if (strcmp(op, "lea") == 0) return LEA;
+    if (strcmp(op, "clr") == 0) return CLR;
+    if (strcmp(op, "not") == 0) return NOT;
+    if (strcmp(op, "inc") == 0) return INC;
+    if (strcmp(op, "dec") == 0) return DEC;
+    if (strcmp(op, "jmp") == 0) return JMP;
+    if (strcmp(op, "bne") == 0) return BNE;
+    if (strcmp(op, "jsr") == 0) return JSR;
+    if (strcmp(op, "red") == 0) return RED;
+    if (strcmp(op, "prn") == 0) return PRN;
+    if (strcmp(op, "rts") == 0) return RTS;
+    if (strcmp(op, "stop") == 0) return STOP;
     return -1;
 }
 
@@ -382,20 +430,24 @@ int getFunct(int opCode, char* operation) {
 A function to get the addressing method and value of an argumet.
     - it will check 1 argument and return it's AM and value
     - it will find errors in the AM's, will return negative ints in addressingMethod for errors
-    - use a switch when calling for this!
 */
-Argument getArgument(char* argAsStr) {
+Argument getArgument(char* asFileName, char* argAsStr, int lineNum) {
     Argument arg;
     char *firstBracket;
     arg.isLabel = false;
     if (argAsStr[0] == '#') { /* Immediate */
         arg.value = atoi(argAsStr+1);
         if (arg.value != 0) {            /* PROBLEM: Check if aoti call was successful, will probably be problematic with value 0, is there a better way? */
-            arg.addressingMethod = 0;
+            if (arg.value < -32767 || arg.value > 32767) {
+                printError(asFileName, NUMBER_OUT_OF_BOUND, lineNum);
+                arg.value = 0;
+            }
+            arg.addressingMethod = IMMEDIATE;
             return arg;
         }
         else {
             arg.addressingMethod = -1; /* ERROR: Invalid number on immediate AM */
+            printError(asFileName, INVALID_ARGUMENT, lineNum);
             return arg;
         }
     }
@@ -403,7 +455,7 @@ Argument getArgument(char* argAsStr) {
     if (argAsStr[0] == 'r') { /* MIGHT be register direct */
         arg.value = atoi(argAsStr+1);
         if (arg.value >= 0 && arg.value <= 15) {           /* PROBLEM: aoti returns 0 for unsuccessful convertion!!! */
-            arg.addressingMethod = 3;
+            arg.addressingMethod = DIRECT_REGISTER;
             return arg;
         }
         /* no error, it's probably a label */
@@ -415,18 +467,19 @@ Argument getArgument(char* argAsStr) {
             if (firstBracket[4] == ']') {/* closed brackets? */
                 arg.value = atoi(firstBracket+2);
                 if (arg.value >= 10 && arg.value <= 15) {
-                    arg.addressingMethod = 2;
+                    arg.addressingMethod = INDEX;
                     arg.isLabel = true;
                     return arg;
                 }
             } 
         }
         arg.addressingMethod = -21; /* ERROR: Invalid bracket contents on index AM */
+        printError(asFileName, INVALID_BRACKET_CONTENTS, lineNum);
         return arg;
     }
 
     else { /* Direct */
-        arg.addressingMethod = 1;
+        arg.addressingMethod = DIRECT;
         arg.value = 0;
         arg.isLabel = true;
         return arg;
