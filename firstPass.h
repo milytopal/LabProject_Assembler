@@ -24,6 +24,6 @@ bool firstPass(const char* fileName, bool firstPass);
 bool labelCheck(char*, char*, int);
 eCommands getOpcode(char*);
 int getFunct(int, char*);
-Argument getArgument(char*, char*, int); 
+Argument getArgument(const char*, char*, int); 
 
 #endif
