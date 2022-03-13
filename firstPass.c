@@ -3,18 +3,28 @@
 int i;
 char* tName;
 char* regList[]= {"r0","r1","r2","r3","r4","r5","r6","r7","r8","r9","r10","r11","r12","r13","r14","r15"};
-/* Construct a label */
-Label LabelConstructor(char* name, int val, eDataType dType, eLocalizaion localize)
+/* for debug functions remove later */
+void printLabels()
 {
-    Label newL = {0};
-    strncpy((newL.name), name, strlen(name));
-    newL.value = val;
-    newL.offset = (val % 16);
-    newL.address = (val - (newL.offset));
-    newL.dataType = dType;
-    newL.locationType = localize;
-
-    return newL;
+    pLabelNode curr = NULL;
+    curr = labelsHead;
+    printf("\n labels head address: %ld \n B = BASE: O = OFFSET:\n",&labelsHead);
+    while(curr!= NULL)
+    {
+        printf(" %s V:%d B:%d O:%d-> ",(curr->label.name),curr->label.value,curr->label.address,curr->label.offset);
+        curr = curr->pNext;
+    }
+}
+void printWords()
+{
+    pWordNode curr = NULL;
+    curr = wordsHead;
+    printf("\n words head address: %ld \n",&wordsHead);
+    while(curr!=NULL)
+    {
+        printf("  %d -> ",(curr->word.lineNum));
+        curr = curr->pNext;
+    }
 }
 
 bool firstPass(const char* fileName, bool firstPass)
@@ -24,20 +34,20 @@ bool firstPass(const char* fileName, bool firstPass)
     /* Important variables for the loop */
     char *token = NULL;
     char *firstToken = NULL;
-    Label tempLabel;
-
+    char *strTolPtr = NULL;
     bool isError = false;
     bool isLabel;
     int isData, isString, funct,ind , opCode;
     int lineNum = 0;
-    Word tempWord;
-    tempWord.are = A; /* All firstPass words get A, so no need to set it every time */
-    Word opcodeWord;
-    opcodeWord.are = A; /* All firstPass words get A, so no need to set it every time */
     Argument newArg = {0};
     char line[LINE_LENGTH] = {0};
     char arg[31] = {0};
     bool tempBool = false;
+    Word tempWord;
+    Word opcodeWord;
+    tempWord.are = A; /* All firstPass words get A, so no need to set it every time */
+    opcodeWord.are = A; /* All firstPass words get A, so no need to set it every time */
+
 
     IC = STARTING_IC;
     DC = 0;
@@ -82,18 +92,15 @@ bool firstPass(const char* fileName, bool firstPass)
 
         if(token[strlen(token)-1] == ':')   /* check if first token is a label */
         {
+            isError = labelCheck(asFileName, token, lineNum);
+            if (isError) {
+                clearLine(line);
+                continue;   /*if error found continue next line*/
+            }
             isLabel = true;
-            if(isLabel) {
-                isError = labelCheck(asFileName, token, lineNum);
-                if (isError) {
-                    clearLine(line);
-                    continue;   /*if error found continue next line*/
-                }
-
-        /*if we found a label we want to continue to next argument */
+            /*if we found a label we want to continue to next argument */
             token = strtok(NULL, " \t\n");
             strncpy(firstToken ,token, strlen(token));
-            }
         }
 
         /* Check if .string .data .entry .extern and Handle*/
@@ -103,18 +110,12 @@ bool firstPass(const char* fileName, bool firstPass)
             isString = strcmp(token, ".string");
             if (isData == 0 || isString == 0) {
                 if (isLabel == true) {
-                    tempLabel = LabelConstructor(tName,IC,Data,NoneExtOrEnt);
-                    addDataNode(tempLabel);
-
-                }
-                if (line[i] == '\n') {
-                    isError = true;
-                    printError(asFileName, NO_ARGUMENTS, lineNum);
-                    clearLine(line);
-                    continue;
+                    addDataNode(tName ,IC ,Data ,NoneExtOrEnt);
+                    /*DC++;     needed??? */
                 }
 
-                if (isData == 0) {
+                if (isData == 0)
+                {
                     /* get argument data */
                     token = strtok(NULL, ", \t\n");
                     if(token == NULL)
@@ -126,9 +127,20 @@ bool firstPass(const char* fileName, bool firstPass)
                     }
 
                     while(token != NULL) {
-
-                        if (isdigit(token[0]) == 0 ||token[0] == '+'|| token[0] == '-') {
+                        if (isdigit(token[0]) != 0 ||token[0] == '+'|| token[0] == '-')
+                        {
                             strncpy(arg,token,strlen(token));
+                            ind = (int)strtol(arg, &strTolPtr, 10);
+                            if(ind < -32767 || ind > 32767)
+                            {
+                                printError(fileName, NUMBER_OUT_OF_BOUND,lineNum);
+                                isError = true;
+                                continue;
+                            }
+                            tempWord.code.opcode = ind;
+                            addWordNode(tempWord, (IC + DC),firstToken,lineNum);
+                            DC++;
+                            printf("\n%s  in IC: %d in DC: %d total IC+SC:%d", arg,IC,DC,(IC+DC));
                         }
                         else
                         {
@@ -137,36 +149,24 @@ bool firstPass(const char* fileName, bool firstPass)
                             clearLine(line);
                             break;
                         }
-                        ind = atoi(arg);
-                        if(ind < -32767 || ind > 32767)
-                        {
-                            printError(fileName, NUMBER_OUT_OF_BOUND,lineNum);
-                            isError = true;
-                            continue;
-                        }
-                        tempWord.code.opcode = ind;
-                        addWordNode(tempWord, (IC + DC),firstToken);
-                        DC++;
-
                         token = strtok(NULL, ", \t\n");
+                        memset(arg,'\0', strlen(arg)); /* reset memory*/
                     }
                 }
                 else { /* isString == 0 */
                     i=0;
-                    token = strtok(NULL, " \"\t\n");
+                    token = strtok(NULL, " \"\t\n"); /* get string data*/
                     while (token[i] != '\0') {
                         tempWord.code.opcode = (unsigned int)token[i];
                         tempWord.are = A;
 
-                        addWordNode(tempWord, (IC),firstToken);
+                        addWordNode(tempWord, (IC + DC),firstToken,lineNum);
                         DC++;
-                        IC++;
                         i++;
                     }
                     /* Now we need to add '\0' to the string */
                     tempWord.code.opcode = 0;
-
-                    addWordNode(tempWord,(IC+DC),firstToken);
+                    addWordNode(tempWord,(IC + DC),firstToken,lineNum);
                     DC++;
                 }
                 clearLine(line);
@@ -205,9 +205,7 @@ bool firstPass(const char* fileName, bool firstPass)
                     continue;
                 }
                 /* extern label name is valid here create a label*/
-                tempLabel = LabelConstructor(token,0,NoneDataOrCode,Extern);
-
-                addDataNode(tempLabel);
+                addDataNode(token,0,NoneDataOrCode,Extern);
                 clearLine(line);
                 continue;
             } /* not an extern */
@@ -217,92 +215,116 @@ bool firstPass(const char* fileName, bool firstPass)
              clearLine(line);
              continue;
          } /* End of handling .string .data .entry .extern */
+
          /* handle code */
         if (isLabel == true) {
-            tempLabel = LabelConstructor(tName,IC,Code,NoneExtOrEnt);
-            addDataNode(tempLabel);
-            printf("labelName in tempLabel is: %s\n",tempLabel.name );
+            addDataNode(tName,IC,Code,NoneExtOrEnt);
         } /* Checked too much, it's prefered we start over with the line */
 
         opCode = getOpcode(token);
-        
+
         if (opCode == -1) {
             isError = true;
             printError(asFileName, UNKNOWN_OPERATION, lineNum);
             clearLine(line);
             continue;
         }
-        funct = getFunct(opCode, token);
-        opcodeWord.code.opcode = opCode;
 
+        opcodeWord.code.opcode = opCode;
         opcodeWord.are = A;
+        addWordNode(opcodeWord, IC,firstToken,lineNum);
+        IC++;
+        funct = getFunct(opCode, token);
+
+        token = strtok(NULL, ", \t\n");
         if(opCode == STOP)
-        {                   /* no arguments to get */
-            continue;
-        }
-        token = strtok(NULL, "\n");
-        if(token == NULL && (opCode != STOP))
         {
-            printError(asFileName,NO_ARGUMENTS,lineNum);
+            if(token != NULL) /* no arguments expected */
+            {
+                printError(asFileName, TOO_MANY_ARGUMENTS , lineNum);
+                isError = true;
+                clearLine(line);
+            }
+            /* no arguments to get */
+            continue;
+        }else{ /* opcode is not for stop */
+            if(token == NULL) /* arguments expected but was not received */
+            {
+                printError(asFileName,NO_ARGUMENTS,lineNum);
+                clearLine(line);
+                isError = true;
+                continue;
+            }
+        }
+
+        /*---------------- expected first argument ------------------*/
+        newArg = getArgument(fileName,token, lineNum);
+if(newArg.isError == true) {
+isError = true;
+/* printing the error was handled in the getArgument function */
+    clearLine(line);
+continue;
+}
+        tempWord.code.operands.funct = funct;
+        tempWord.code.operands.destAdd = newArg.addressingMethod;
+        tempWord.code.operands.destReg = newArg.value;
+        tempWord.code.operands.srcReg = 0;
+        tempWord.code.operands.srcAdd = 0;
+        tempWord.isLabel = newArg.isLabel;
+        if(tempWord.isLabel == true)
+            strncpy((tempWord.name),token,LABEL_LEN);
+        tempBool = newArg.isLabel;
+        addWordNode(tempWord, IC,firstToken,lineNum);
+        IC++;
+
+        /*--------------- expected second argument -----------------*/
+        if(opCode < 5 && opCode > -1)
+        {
+            token = strtok(NULL, ", \t\n");
+            if (token == NULL) {
+                printError(fileName, MISSING_PARAMETER,lineNum);
+                isError = true;
+                clearLine(line);
+                continue;
+            }
+            newArg = getArgument(asFileName, token, lineNum);
+            if(newArg.isError == true) {
+                isError = true;
+                /* printing the error was handled in the getArgument function */
+                clearLine(line);
+                continue;
+            }
+
+            tempWord.code.operands.srcAdd = newArg.addressingMethod;
+            tempWord.code.operands.srcReg = newArg.value;
+            tempWord.isLabel = newArg.isLabel;
+            if(tempWord.isLabel == true)
+                strncpy((tempWord.name),token,LABEL_LEN);
+            tempBool = newArg.isLabel;
+            addWordNode(tempWord, IC,firstToken,lineNum);
+            IC++;
+        }
+        if (tempWord.isLabel == true) {
+            IC += 1;    /*why??*/
+        }
+        /* no arguments expected */
+        token = strtok(NULL, ", \t\n");
+        if(token != NULL) /* no arguments expected */
+        {
+            printError(asFileName, TOO_MANY_ARGUMENTS , lineNum);
+            isError = true;
             clearLine(line);
             continue;
         }
-        newArg = getArgument(fileName,token,lineNum);
-        addWordNode(opcodeWord, IC,firstToken);
-        IC++;
 
-        if (opCode < 5) { /* 2 args */
-            tempWord.code.operands.funct = funct;
-
-            if (token == NULL) {
-                printError(fileName, MISSING_PARAMETER,lineNum);
-                continue;
-            }
-            newArg = getArgument(asFileName, token, lineNum);
-            tempWord.code.operands.destAdd = newArg.addressingMethod;
-            tempWord.code.operands.destReg = newArg.value;
-            tempBool = newArg.isLabel;
-
-            token = strtok(NULL, " \t\n,");
-            if (token == NULL) {
-                printError(fileName, MISSING_PARAMETER,lineNum);
-                continue;
-            }
-            newArg = getArgument(asFileName, token, lineNum);
-            tempWord.code.operands.srcAdd = newArg.addressingMethod;
-            tempWord.code.operands.srcReg = newArg.value;
-
-            addWordNode(tempWord, IC,firstToken);
-            IC++;
-            if (tempBool == true) {
-                IC += 2;
-            }
-            if (newArg.isLabel == true) {
-                IC += 2;
-            }
-        }
-        else if (opCode < 14) { /* 1 arg */
-            tempWord.code.operands.funct = funct;
-
-            if (token == NULL) {
-                printError(fileName, MISSING_PARAMETER,lineNum);
-                continue;
-            }
-            newArg = getArgument(asFileName, token, lineNum);
-            tempWord.code.operands.destAdd = newArg.addressingMethod;
-            tempWord.code.operands.destReg = newArg.value;
-            
-            addWordNode(tempWord, IC,firstToken);
-            IC++;
-            if (newArg.isLabel == true) { /* If a base and offset is needed */
-                IC += 2;
-            }
-        }
         clearLine(line);
     }
 
     /* Need to save a final version of IC and DC here, IDK where though */
-
+    printf("\n");
+    printWords();
+    printf("\n");
+    printLabels();
     free(asFileName);
     free(tName);
     free(firstToken);
@@ -341,19 +363,17 @@ bool labelCheck(char* asFileName, char* label, int lineNum) {
         }
     }
     /*check if label is with a saved word - mabe need to add a check if it's a register name */
-    printf(" label name: %s",label);
     if (getOpcode(label) != -1) {
         printError(asFileName, BAD_LABEL_NAME, lineNum);
         return true; /* ERROR: Label can't be named that! */
     }
-    for( j=0; j < NUM_OF_REGS ; j++) /* check if label is registers name */
+    /* check if label is registers name */
+    if(isRegName(label))
     {
-        if(strcmp(label,(regList[j])) == 0)
-        {
-            printError(asFileName, BAD_LABEL_NAME, lineNum);
-            return true; /* ERROR: Label can't be named that! */
-        }
+        printError(asFileName, BAD_LABEL_NAME, lineNum);
+        return true; /* ERROR: Label can't be named that! */
     }
+
     /*check if label exists already */
     if (contains(labelsHead, label) != -1) {
         printError(asFileName, LABEL_ALREADY_EXISTS, lineNum);
@@ -426,55 +446,93 @@ A function to get the addressing method and value of an argument.
     - it will find errors in the Addressing Method, will return negative ints in addressingMethod for errors
 */
 Argument getArgument(const char* asFileName, char* argAsStr, int lineNum) {
-    Argument arg;
-    char *firstBracket;
+    Argument arg = {0};
+    char *firstBracket = NULL;
+    char* token = NULL;
     arg.isLabel = false;
+    arg.isError = false;
     if (argAsStr[0] == '#') { /* Immediate */
-        arg.value = atoi(argAsStr+1);
-        if (arg.value != 0) {            /* PROBLEM: Check if aoti call was successful, will probably be problematic with value 0, is there a better way? */
+        arg.value = strtol(argAsStr+1, &firstBracket, 10);
+        {
             if (arg.value < -32767 || arg.value > 32767) {
                 printError(asFileName, NUMBER_OUT_OF_BOUND, lineNum);
                 arg.value = 0;
+                arg.isError = true;
+                return arg;
             }
             arg.addressingMethod = IMMEDIATE;
             return arg;
         }
-        else {
-            arg.addressingMethod = -1; /* ERROR: Invalid number on immediate AM */
-            printError(asFileName, INVALID_ARGUMENT, lineNum);
-            return arg;
-        }
     }
 
-    if (argAsStr[0] == 'r') { /* MIGHT be register direct */
-        arg.value = atoi(argAsStr+1);
-        if (arg.value >= 0 && arg.value <= 15) {           /* PROBLEM: aoti returns 0 for unsuccessful convertion!!! */
+    if (isRegName(argAsStr)) { /* register direct */
+        arg.value = getRegNum(argAsStr);
             arg.addressingMethod = DIRECT_REGISTER;
             return arg;
-        }
-        /* no error, it's probably a label */
     }
 
+    /* no error, handling a label  */
     firstBracket = strpbrk(argAsStr, "[");
     if (firstBracket != NULL) { /* Index */
-        if (firstBracket[1] == 'r') { /* register? */
-            if (firstBracket[4] == ']') {/* closed brackets? */
-                arg.value = atoi(firstBracket+2);
-                if (arg.value >= 10 && arg.value <= 15) {
-                    arg.addressingMethod = INDEX;
-                    arg.isLabel = true;
-                    return arg;
-                }
-            } 
+        firstBracket = strpbrk(argAsStr, "]"); /* find closing brackets */
+        if(firstBracket == NULL) {
+            printError(asFileName, MISSING_BRACKETS, lineNum);
+            arg.isError = true;
+            return arg;
         }
-        arg.addressingMethod = -21; /* ERROR: Invalid bracket contents on index AM */
-        printError(asFileName, INVALID_BRACKET_CONTENTS, lineNum);
-        return arg;
-    }
-    else { /* Direct */
-        arg.addressingMethod = DIRECT;
-        arg.value = 0;
+        /* strip label from brackets and store it */
+        token = strtok(argAsStr,"[\n");
         arg.isLabel = true;
+        strncpy(arg.labelName,token,LABEL_LEN); /* store label name */
+        token = strtok(NULL," ]\t\n");
+        if(isRegName(token)== true) /* the index points to register*/
+        {
+            arg.value = getRegNum(token);
+            if (arg.value >= 0 && arg.value <= 10) {
+                printError(asFileName, INVALID_USE_OF_REGISTER, lineNum);
+                arg.isError = true;
+            }
+            /* if register ligal continue to next step */
+        }else { /* must have a register name in brackets */
+            printError(asFileName, INVALID_BRACKET_CONTENTS, lineNum);
+            arg.isError = true;
+            return arg;
+        }
+        /* here the brackets content is valid */
+        arg.addressingMethod = INDEX;
         return arg;
+
+        } else { /* Direct */
+            arg.addressingMethod = DIRECT;
+            arg.value = 0;
+            arg.isLabel = true;
+            strncpy(arg.labelName,argAsStr,LABEL_LEN);
+            return arg;
+        }
+}
+
+bool isRegName(const char *label)
+{
+    int j;
+    for( j=0; j < NUM_OF_REGS ; j++) /* check if label is registers name */
+    {
+        if(strcmp(label,(regList[j])) == 0)
+        {
+            return true; /* ERROR: Label can't be named that! */
+        }
     }
+    return false;
+}
+
+int getRegNum(const char *label)
+{
+    int j;
+    for( j=0; j < NUM_OF_REGS ; j++) /* check if label is registers name */
+    {
+        if(strcmp(label,(regList[j])) == 0)
+        {
+            return j; /* ERROR: Label can't be named that! */
+        }
+    }
+    return -1;
 }

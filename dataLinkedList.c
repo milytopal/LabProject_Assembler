@@ -1,31 +1,39 @@
 
 #include "dataLinkedList.h"
 
-void addDataNode(const Label label) {
+void addDataNode(const char* name,const int value, eDataType dataType, eLocalizaion locationType) {
 
-    pDataNode curr = NULL;
+    pLabelNode curr = NULL;
     if (labelsHead == NULL) {
-        labelsHead = (pDataNode) calloc(1, sizeof(DataNode));
-        labelsHead->label = label;
+        labelsHead = (pLabelNode) calloc(1, sizeof(LabelNode));
+        labelsHead->label.value = value;
+        labelsHead->label.offset = (value % 16);
+        labelsHead->label.address = (value - (value % 16));
+        labelsHead->label.dataType = dataType;
+        labelsHead->label.locationType = locationType;
+        strncpy(labelsHead->label.name, name, strlen(name));
         labelsHead->pNext = NULL;
-        printf("%s", labelsHead->label.name);
         return;
     } else {
         curr = labelsHead;
         while (curr->pNext != NULL) {
-            printf(" %s ", curr->label.name);
             curr = curr->pNext;
         }
-        curr->pNext = (pDataNode) calloc(1, sizeof(DataNode));
-        curr->pNext->label = label;
-        curr->pNext->pNext = NULL;
-
+        curr->pNext = (pLabelNode) calloc(1, sizeof(LabelNode));
+        curr = curr->pNext;
+        curr->label.value = value;
+        curr->label.offset = (value % 16);
+        curr->label.address = (value - (value % 16));
+        curr->label.dataType = dataType;
+        curr->label.locationType = locationType;
+        strncpy(curr->label.name, name, strlen(name));
+        curr->pNext = NULL;
     }
 }
 
-void deleteDataList(pDataNode list)
+void deleteDataList(pLabelNode list)
 {
-    pDataNode nextNode = NULL;
+    pLabelNode nextNode = NULL;
     while(labelsHead != NULL)
     {
         nextNode = labelsHead->pNext;
@@ -35,10 +43,10 @@ void deleteDataList(pDataNode list)
     labelsHead = NULL;
 }
 
-int contains(pDataNode list, char* contain)
+int contains(pLabelNode list, char* contain)
 {
     int ind;
-    pDataNode lp;
+    pLabelNode lp;
     lp = labelsHead;
     ind = 0;
     while (lp != NULL) {

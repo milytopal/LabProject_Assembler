@@ -33,7 +33,7 @@ bool isInstruction(char *token)
 }
 
 bool isDeclaredEntry(char *token) {
-    pDataNode curr = NULL;
+    pLabelNode curr = NULL;
 
     if (token == NULL)
         return false;

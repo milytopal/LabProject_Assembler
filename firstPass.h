@@ -16,14 +16,17 @@ typedef struct Argument {
     eAdrresMethod addressingMethod;
     int value;
     bool isLabel;
+    char labelName[LABEL_LEN];
+    bool isError;
 } Argument;
-
-Label LabelConstructor(char* name, int val, eDataType dType, eLocalizaion localize);
 
 bool firstPass(const char* fileName, bool firstPass);
 bool labelCheck(char*, char*, int);
+bool isRegName(const char *label);
+int getRegNum(const char *label);
+
 eCommands getOpcode(char*);
 int getFunct(int, char*);
-Argument getArgument(const char*, char*, int); 
+Argument getArgument(const char*, char*, int);
 
 #endif

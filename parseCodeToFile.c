@@ -70,7 +70,7 @@ bool parseCodeToFile(char *fileName, bool error)
 }
 void printExternalsFile(FILE *fp)
 {
-    pDataNode curr = NULL;
+    pLabelNode curr = NULL;
     char *toPrint = NULL;
     curr = labelsHead;
     if(labelsHead == NULL)          /* no labels in file */
@@ -86,7 +86,7 @@ void printExternalsFile(FILE *fp)
 
 }
 
-char *ParseExternals(pDataNode node)
+char *ParseExternals(pLabelNode node)
 {
     char* line = NULL;
     line = (char*)calloc(LINE_LENGTH,sizeof(char));
