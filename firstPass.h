@@ -13,7 +13,7 @@
 
 
 typedef struct Argument {
-    eAdrresMethod addressingMethod;
+    eAddrresMethod addressingMethod;
     int value;
     bool isLabel;
     char labelName[LABEL_LEN];
@@ -27,6 +27,6 @@ int getRegNum(const char *label);
 
 eCommands getOpcode(char*);
 int getFunct(int, char*);
-Argument fillOutArguments(const char*, char*,unsigned int ,int );
+void fillOutArguments(const char*, char*,unsigned int ,int );
 
 #endif
