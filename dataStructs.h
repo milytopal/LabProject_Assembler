@@ -14,7 +14,8 @@
 #define ARE_FIELD_LEN 4
 
 #define LINE_LENGTH 83
-
+#define LABEL_DEST_B 'B'    /*marking what data is missing*/
+#define LABEL_DEST_O 'O'    /*marking what data is missing*/
 #define STARTING_IC 100
 #define NUM_OF_CMD 16
 #define NUM_OF_REGS 16
@@ -31,7 +32,8 @@ typedef enum eErrorCode { MISSING_FILE_NAME,MISSING_FILE,LINE_LIMIT_REACHED, LAB
     NO_ARGUMENTS, INCOMPLETE_CODE,MISSING_LABEL, MISSING_PARAMETER,
     LABEL_ALREADY_EXISTS, UNKNOWN_OPERATION, INVALID_ARGUMENT,
     NUMBER_OUT_OF_BOUND, INVALID_BRACKET_CONTENTS , TOO_MANY_ARGUMENTS,
-    INVALID_USE_OF_REGISTER , MISSING_BRACKETS }eErrorCode;
+    INVALID_USE_OF_REGISTER , MISSING_BRACKETS ,
+    LABEL_IS_ALREADY_EXTERN, LABEL_DOSNT_EXIST}eErrorCode;
 
 /* the TokenNode is a node for linked list of commands inside a macro */
 typedef struct TokenNode *pTokenNode;
@@ -89,6 +91,7 @@ typedef struct Word{
     unsigned int are:ARE_FIELD_LEN;
     unsigned int address;
     char name[LABEL_LEN];
+    char labelDest;
     int lineNum;
     bool isLabel;
 }Word;
@@ -103,6 +106,7 @@ typedef struct WordNode{
 
 pWordNode wordsHead;
 pLabelNode labelsHead;
+pWordNode datasHead;
 
 
 /*pLabelNode labelsHead = NULL;

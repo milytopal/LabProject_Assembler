@@ -1,7 +1,7 @@
 
 #include "dataLinkedList.h"
 
-void addDataNode(const char* name,const int value, eDataType dataType, eLocalizaion locationType) {
+void addLabelNode(const char* name, const int value, eDataType dataType, eLocalizaion locationType) {
 
     pLabelNode curr = NULL;
     if (labelsHead == NULL) {
@@ -31,7 +31,7 @@ void addDataNode(const char* name,const int value, eDataType dataType, eLocaliza
     }
 }
 
-void deleteDataList(pLabelNode list)
+void deleteLabelList(pLabelNode list)
 {
     pLabelNode nextNode = NULL;
     while(labelsHead != NULL)

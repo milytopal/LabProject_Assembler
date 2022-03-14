@@ -8,10 +8,10 @@ void printLabels()
 {
     pLabelNode curr = NULL;
     curr = labelsHead;
-    printf("\n labels head address: %ld \n B = BASE: O = OFFSET:\n",&labelsHead);
+    printf("\n labels head address: %ld \n B = BASE: O = OFFSET:\n",(long)labelsHead);
     while(curr!= NULL)
     {
-        printf(" %s V:%d B:%d O:%d-> ",(curr->label.name),curr->label.value,curr->label.address,curr->label.offset);
+        printf(" %s V:%d B:%d O:%d-> \n",(curr->label.name),curr->label.value,curr->label.address,curr->label.offset);
         curr = curr->pNext;
     }
 }
@@ -19,14 +19,26 @@ void printWords()
 {
     pWordNode curr = NULL;
     curr = wordsHead;
-    printf("\n words head address: %ld \n",&wordsHead);
+    printf("\n words head address: %ld \n",wordsHead);
     while(curr!=NULL)
     {
-        printf(" %s %d -> ",(curr->word.name),(curr->word.lineNum));
+        printf("label name: %s \tline: %d\tIC: %d \t dest: %c-> \n",(curr->word.name),
+               (curr->word.lineNum),curr->word.address, curr->word.labelDest);
         curr = curr->pNext;
     }
 }
-
+void printData()
+{
+    pWordNode curr = NULL;
+    curr = datasHead;
+    printf("\n data head address: %ld \n",wordsHead);
+    while(curr!=NULL)
+    {
+        printf(" %s \tline: %d\tDC: %d \t data: %d-> \n",(curr->word.name),
+               (curr->word.lineNum),curr->word.address, (int)curr->word.code.opcode);
+        curr = curr->pNext;
+    }
+}
 bool firstPass(const char* fileName, bool firstPass)
 {
     FILE *fp = NULL;
@@ -70,6 +82,7 @@ bool firstPass(const char* fileName, bool firstPass)
     /* Making sure we can start giving our lists labels and words */
     labelsHead = NULL;
     wordsHead = NULL;
+    datasHead = NULL;
 
     while (fgets(line, LINE_LENGTH, fp) != NULL)
     {
@@ -100,7 +113,7 @@ bool firstPass(const char* fileName, bool firstPass)
                 continue;   /*if error found continue next line*/
             }
             isLabel = true;
-            //strncpy(labelName ,token, strlen(token));          /* remember label name */
+            strncpy(labelName,token,strlen(token));
             /*if we found a label we want to continue to next argument */
             token = strtok(NULL, " \t\n");
             strncpy(firstToken ,token, strlen(token));
@@ -113,8 +126,8 @@ bool firstPass(const char* fileName, bool firstPass)
             isString = strcmp(token, ".string");
             if (isData == 0 || isString == 0) {
                 if (isLabel == true) {
-                    addDataNode(tName ,IC ,Data ,NoneExtOrEnt);
-                    /*DC++;     needed??? */
+                    addLabelNode(tName, IC, Data, NoneExtOrEnt);
+                    DC++;
                 }
 
                 if (isData == 0)
@@ -141,7 +154,7 @@ bool firstPass(const char* fileName, bool firstPass)
                                 continue;
                             }
                             tempWord.code.opcode = ind;
-                            addWordNode(tempWord, (IC + DC),labelName,lineNum);
+                            addWordNodeToData(tempWord, (DC),labelName,lineNum);
                             DC++;
                             printf("\n%s  in IC: %d in DC: %d total IC+SC:%d", arg,IC,DC,(IC+DC));
                         }
@@ -163,13 +176,13 @@ bool firstPass(const char* fileName, bool firstPass)
                         tempWord.code.opcode = (unsigned int)token[i];
                         tempWord.are = A;
 
-                        addWordNode(tempWord, (IC + DC),labelName,lineNum);
+                        addWordNodeToData(tempWord, (DC),labelName,lineNum);
                         DC++;
                         i++;
                     }
                     /* Now we need to add '\0' to the string */
                     tempWord.code.opcode = 0;
-                    addWordNode(tempWord,(IC + DC),labelName,lineNum);
+                    addWordNodeToData(tempWord,(DC),labelName,lineNum);
                     DC++;
                 }
                 clearLine(line);
@@ -181,7 +194,7 @@ bool firstPass(const char* fileName, bool firstPass)
                 continue;
             }
             else if (strcmp(token, ".extern") == 0) {
-                i += strlen(token);
+                //i += strlen(token);
 
                 token = strtok(NULL ," \t\n");      /* get label name after .extern declaration */
 
@@ -208,21 +221,21 @@ bool firstPass(const char* fileName, bool firstPass)
                     continue;
                 }
                 /* extern label name is valid here create a label*/
-                addDataNode(token,0,NoneDataOrCode,Extern);
+                addLabelNode(token, 0, NoneDataOrCode, Extern);
                 clearLine(line);
                 continue;
             } /* not an extern */
 
-            isError = true;
+            isError = true; /* TODO: change error type*/
             printError(asFileName, INCOMPLETE_CODE, lineNum);
             clearLine(line);
             continue;
         } /* End of handling .string .data .entry .extern */
 
-        /* handle code */
+        /*----------------- handle code ----------------*/
         if (isLabel == true) {
-            addDataNode(tName,IC,Code,NoneExtOrEnt);
-        } /* Checked too much, it's prefered we start over with the line */
+            addLabelNode(tName, IC, Code, NoneExtOrEnt);
+        }
 
         opCode = getOpcode(token);
 
@@ -233,12 +246,11 @@ bool firstPass(const char* fileName, bool firstPass)
             continue;
         }
 
-        opcodeWord.code.opcode = opCode;
+        opcodeWord.code.opcode = opCode;        /* set first word of every command */
         opcodeWord.are = A;
-        addWordNode(opcodeWord, IC,tName,lineNum);
+        addWordNodeToCode(opcodeWord, IC, 0, lineNum);
         IC++;
         funct = getFunct(opCode, token);
-
         token = strtok(NULL, ", \t\n");
         if(opCode == STOP)
         {
@@ -263,8 +275,7 @@ bool firstPass(const char* fileName, bool firstPass)
         /*---------------- expected first argument ------------------*/
         newArg = getArgument(fileName,token, lineNum);
         if(newArg.isError == true) {
-            isError = true;
-/* printing the error was handled in the getArgument function */
+            isError = true;    /* printing the error was handled in the getArgument function */
             clearLine(line);
             continue;
         }
@@ -274,12 +285,16 @@ bool firstPass(const char* fileName, bool firstPass)
         tempWord.code.operands.srcReg = 0;
         tempWord.code.operands.srcAdd = 0;
         tempWord.isLabel = newArg.isLabel;
-        if(tempWord.isLabel == true)
-            strncpy((tempWord.name),token,LABEL_LEN);
-        tempBool = newArg.isLabel;
-        addWordNode(tempWord, IC,tName,lineNum);
+        addWordNodeToCode(tempWord, IC, 0, lineNum);
         IC++;
-
+        if(tempWord.isLabel == true) {
+            /*tempWord.labelDest = LABEL_DEST_B;*/
+            strncpy((tempWord.name), token, LABEL_LEN);
+            addWordNodeToCode(tempWord, IC, LABEL_DEST_B, lineNum);
+            IC++;
+            addWordNodeToCode(tempWord, IC, LABEL_DEST_O, lineNum);
+            IC++;
+        }
         /*--------------- expected second argument -----------------*/
         if(opCode < 5 && opCode > -1)
         {
@@ -297,18 +312,25 @@ bool firstPass(const char* fileName, bool firstPass)
                 clearLine(line);
                 continue;
             }
-
             tempWord.code.operands.srcAdd = newArg.addressingMethod;
             tempWord.code.operands.srcReg = newArg.value;
             tempWord.isLabel = newArg.isLabel;
-            if(tempWord.isLabel == true)
-                strncpy((tempWord.name),token,LABEL_LEN);
-            tempBool = newArg.isLabel;
-            addWordNode(tempWord, IC,tName,lineNum);
-            IC++;
+            if(tempWord.isLabel == true) {
+                /*tempWord.labelDest = LABEL_DEST_B;*/
+                strncpy((tempWord.name), token, LABEL_LEN);
+                addWordNodeToCode(tempWord, IC, LABEL_DEST_B, lineNum);
+                IC++;
+                addWordNodeToCode(tempWord, IC, LABEL_DEST_O, lineNum);
+                IC++;
+            }
+            else{
+                addWordNodeToCode(tempWord, IC, 0, lineNum);
+                IC++;
+            }
+
         }
         if (tempWord.isLabel == true) {
-            IC += 1;    /*why??*/
+            //IC += 1;    /*why??*/
         }
         /* no arguments expected */
         token = strtok(NULL, ", \t\n");
@@ -326,6 +348,8 @@ bool firstPass(const char* fileName, bool firstPass)
     /* Need to save a final version of IC and DC here, IDK where though */
     printf("\n");
     printWords();
+    printf("\n");
+    printData();
     printf("\n");
     printLabels();
     free(asFileName);
@@ -454,6 +478,7 @@ Argument getArgument(const char* asFileName, char* argAsStr, int lineNum) {
     char* token = NULL;
     arg.isLabel = false;
     arg.isError = false;
+    memset(arg.labelName,0,strlen(argAsStr));
     if (argAsStr[0] == '#') { /* Immediate */
         arg.value = strtol(argAsStr+1, &firstBracket, 10);
         {
@@ -487,6 +512,7 @@ Argument getArgument(const char* asFileName, char* argAsStr, int lineNum) {
         token = strtok(argAsStr,"[\n");
         arg.isLabel = true;
         strncpy(arg.labelName,token,LABEL_LEN); /* store label name */
+        fprintf(stderr,"%s \n" ,arg.labelName);
         token = strtok(NULL," ]\t\n");
         if(isRegName(token)== true) /* the index points to register*/
         {
@@ -510,6 +536,8 @@ Argument getArgument(const char* asFileName, char* argAsStr, int lineNum) {
         arg.value = 0;
         arg.isLabel = true;
         strncpy(arg.labelName,argAsStr,LABEL_LEN);
+        fprintf(stderr,"%s \n" ,arg.labelName);
+
         return arg;
     }
 }
@@ -539,3 +567,12 @@ int getRegNum(const char *label)
     }
     return -1;
 }
+
+/*
+
+if(isLabel){                        */
+/* if label came before code we want to save the label *//*
+
+opcodeWord.isLabel = true;
+strncpy(opcodeWord.name,labelName, strlen(labelName));
+}*/

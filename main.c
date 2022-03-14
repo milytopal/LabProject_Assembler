@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
         }
         /* todo: reset linked listst and everything*/
         deleteWordList(wordsHead);      /* checked - works */
-        deleteDataList(labelsHead);
+        deleteLabelList(labelsHead);
     }
 
     return 0;

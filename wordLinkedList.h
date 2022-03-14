@@ -5,9 +5,10 @@
 #include <stdlib.h>
 
 
-/*void addWordNode(pWordNode, pWordNode);*/
-void addWordNode(Word word,int val, const char* name , int lineN);
+/*void addWordNodeToCode(pWordNode, pWordNode);*/
+void addWordNodeToCode(Word word, int val, char labelDest , int lineN);
 void deleteWordList(pWordNode);
+void addWordNodeToData(Word word, int val, char labelDest , int lineN);
 
 
 #endif
