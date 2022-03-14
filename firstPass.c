@@ -126,7 +126,7 @@ bool firstPass(const char* fileName, bool firstPass)
             isString = strcmp(token, ".string");
             if (isData == 0 || isString == 0) {
                 if (isLabel == true) {
-                    addLabelNode(tName, IC, Data, NoneExtOrEnt);
+                    addLabelNode(labelName, IC, Data, NoneExtOrEnt);
                     DC++;
                 }
 
@@ -251,7 +251,7 @@ bool firstPass(const char* fileName, bool firstPass)
         addWordNodeToCode(opcodeWord, IC, 0, lineNum);
         IC++;
         funct = getFunct(opCode, token);
-        token = strtok(NULL, ", \t\n");
+        token = strtok(NULL, " \t\n");              /* get the rest of line after the command */
         if(opCode == STOP)
         {
             if(token != NULL) /* no arguments expected */
@@ -273,9 +273,9 @@ bool firstPass(const char* fileName, bool firstPass)
         }
 
         /*---------------- expected first argument ------------------*/
-        newArg = getArgument(fileName,token, lineNum);
+        newArg = fillOutArguments(fileName, token, lineNum);
         if(newArg.isError == true) {
-            isError = true;    /* printing the error was handled in the getArgument function */
+            isError = true;    /* printing the error was handled in the fillOutArguments function */
             clearLine(line);
             continue;
         }
@@ -305,10 +305,10 @@ bool firstPass(const char* fileName, bool firstPass)
                 clearLine(line);
                 continue;
             }
-            newArg = getArgument(asFileName, token, lineNum);
+            newArg = fillOutArguments(asFileName, token, lineNum);
             if(newArg.isError == true) {
                 isError = true;
-                /* printing the error was handled in the getArgument function */
+                /* printing the error was handled in the fillOutArguments function */
                 clearLine(line);
                 continue;
             }
@@ -365,16 +365,13 @@ A function to check if the first word in the line is a label type, meaning:
     - it's all alpha/num
 */
 bool labelCheck(char* asFileName, char* label, int lineNum) {
-    int flag ,len ,j; /* We will use this to set what situation we're in */
-    char temp[LABEL_LEN]={0};
+    int  len ,j; /* We will use this to set what situation we're in */
     len = strlen(label);
-    flag = 0;
     if(len > LABEL_LEN)
     {
         printError(asFileName, LABEL_LIMIT_REACHED, lineNum);
         return true; /* label name too long */
     }
-
 /* consider leaving it here - clean ':' from label */
     if(label[len-1] == ':')
     {
@@ -472,14 +469,18 @@ A function to get the addressing method and value of an argument.
     - it will check 1 argument and return it's Addressing Method and value
     - it will find errors in the Addressing Method, will return negative ints in addressingMethod for errors
 */
-Argument getArgument(const char* asFileName, char* argAsStr, int lineNum) {
+Argument fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int funct, int lineNum) {
     Argument arg = {0};
     char *firstBracket = NULL;
-    char* token = NULL;
+    char *token = NULL;
+    Word tempWord = {0};
     arg.isLabel = false;
     arg.isError = false;
+    tempWord.code.operands.funct = funct;
+
     memset(arg.labelName,0,strlen(argAsStr));
-    if (argAsStr[0] == '#') { /* Immediate */
+    token = strtok(argAsStr,", \t\n");
+    if (token[0] == '#') { /* Immediate */
         arg.value = strtol(argAsStr+1, &firstBracket, 10);
         {
             if (arg.value < -32767 || arg.value > 32767) {
@@ -491,9 +492,7 @@ Argument getArgument(const char* asFileName, char* argAsStr, int lineNum) {
             arg.addressingMethod = IMMEDIATE;
             return arg;
         }
-    }
-
-    if (isRegName(argAsStr)) { /* register direct */
+    }else if (isRegName(argAsStr)) { /* register direct */
         arg.value = getRegNum(argAsStr);
         arg.addressingMethod = DIRECT_REGISTER;
         return arg;

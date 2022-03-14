@@ -27,6 +27,6 @@ int getRegNum(const char *label);
 
 eCommands getOpcode(char*);
 int getFunct(int, char*);
-Argument getArgument(const char*, char*, int);
+Argument fillOutArguments(const char*, char*,unsigned int ,int );
 
 #endif
