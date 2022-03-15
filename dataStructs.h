@@ -17,9 +17,7 @@
 #define LABEL_DEST_B 'B'    /*marking what data is missing*/
 #define LABEL_DEST_O 'O'    /*marking what data is missing*/
 #define STARTING_IC 100
-#define NUM_OF_CMD 16
 #define NUM_OF_REGS 16
-#define MACRO_STR "macro"
 
 typedef enum bool{false,true}bool;
 typedef enum eLocalizaion{Extern, Entry, NoneExtOrEnt}eLocalizaion;
@@ -104,6 +102,8 @@ typedef struct WordNode{
     pWordNode pNext;
 }WordNode;
 
+/* three lists designed as single occurrence
+ * meaning there cannot be another label list in the code*/
 pWordNode wordsHead;
 pLabelNode labelsHead;
 pWordNode datasHead;

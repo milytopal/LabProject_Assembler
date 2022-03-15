@@ -3,7 +3,7 @@
 #include "dataStructs.h"
 #include "utils.h"
 
-bool parseCodeToFile(char *fileName, bool error);
+bool parseCodeToFile(char *fileName, const int *ICF, const int *DCF);
 
 /* convert unsigned int to ascii*/
 char uitoa(int n);
@@ -12,8 +12,8 @@ char *parseWordToBase(pWordNode word);
 char *ParseExternals(pLabelNode);
 
 void printExternalsFile(FILE *fp);
-void printEntriesFile(FILE *fp);
-void printObjectFile(FILE *fp);
+void printEntriesFile(FILE *extF,FILE *entF);
+void printObjectFile(FILE *fp,const int *ICF,const int *DCF);
 
 
 #endif

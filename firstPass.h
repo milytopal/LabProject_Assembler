@@ -20,13 +20,13 @@ typedef struct Argument {
     bool isError;
 } Argument;
 
-bool firstPass(const char* fileName, bool firstPass);
+bool firstPass(const char* fileName, int *ICF, int *DCF);
 bool labelCheck(char*, char*, int);
 bool isRegName(const char *label);
 int getRegNum(const char *label);
 
 eCommands getOpcode(char*);
 int getFunct(int, char*);
-void fillOutArguments(const char*, char*,unsigned int ,int );
+bool fillOutArguments(const char*, char*,unsigned int ,int );
 
 #endif

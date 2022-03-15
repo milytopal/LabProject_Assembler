@@ -34,13 +34,13 @@ void addLabelNode(const char* name, const int value, eDataType dataType, eLocali
 void deleteLabelList(pLabelNode list)
 {
     pLabelNode nextNode = NULL;
-    while(labelsHead != NULL)
+    while(list != NULL)
     {
-        nextNode = labelsHead->pNext;
-        free(labelsHead);
-        labelsHead = nextNode;
+        nextNode = list->pNext;
+        free(list);
+        list = nextNode;
     }
-    labelsHead = NULL;
+    list = NULL;
 }
 
 int contains(pLabelNode list, char* contain)

@@ -9,7 +9,7 @@
 
 bool readFile(FILE* fp,const char* fileName);        /* reading file */
 
-bool secondPass(const char* fileName, bool firstPass);
+bool secondPass(const char* fileName, int *ICF, int *DCF);
 
 bool isEntryInstruction(char *token); /* Input: pointer to string.
                                   * Output: is the string is code instraction or not.
@@ -20,5 +20,7 @@ bool isLabel(char *token);          /* checks if a given token is a label */
 
 bool addEntryAttribute(const char* fileName, char* label, int lineNum);
 
+
+void UpdateLabelsAddress();
 
 #endif

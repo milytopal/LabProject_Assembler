@@ -1,7 +1,7 @@
 #include "secondPass.h"
 
 
-bool secondPass(const char* fileName, bool firstPass)
+bool secondPass(const char* fileName, int *ICF, int *DCF)
 {
     FILE *fp = NULL;
     char* asFileName;
@@ -20,7 +20,6 @@ bool secondPass(const char* fileName, bool firstPass)
     }
 
     free(asFileName);
-
     return false;
 }
 
@@ -59,6 +58,7 @@ bool readFile(FILE* fp, const char* fileName)
 
     /* Making sure we can start giving our lists labels and words */
 
+
     while (fgets(line, LINE_LENGTH, fp) != NULL) {
         memset(firstToken, '\0', LABEL_LEN); /*reset memory */
         memset(labelName, '\0', LABEL_LEN); /*reset memory */
@@ -85,12 +85,13 @@ bool readFile(FILE* fp, const char* fileName)
         if (token[0] == '.') {
             if(isEntryInstruction(token))
             {
+                token = strtok(NULL, " \t\n");
                 isError = addEntryAttribute(fileName,token,lineNum);
             }else
             {
                 continue;
             }
-/* handle binary operands here */
+            /* handle binary operands here */
 
 
 
@@ -98,13 +99,60 @@ bool readFile(FILE* fp, const char* fileName)
 
 
     }
+    UpdateLabelsAddress();
 
+free(firstToken);
+free(labelName);
+
+return isError;
+}
+pLabelNode getLabel(char *label)
+{
+    pLabelNode curr = NULL;
+    curr = labelsHead;
+    while(curr !=NULL)
+    {
+        if(strcmp(curr->label.name,label) == 0)
+            return curr;
+        curr=curr->pNext;
+    }
+    return NULL;
+}
+void UpdateDataListNodes()
+{
 
 }
-
-
-
-
+void UpdateWordsListNodes()
+{
+    pWordNode curr = NULL;
+    pLabelNode pLabel = NULL;
+    curr = wordsHead;
+    while(curr != NULL)
+    {
+        if(curr->word.isLabel == true)
+        {
+            if(strlen(curr->word.name) >0)
+                pLabel = getLabel(curr->word.name);
+            if(pLabel == NULL) /* there is no label */
+            {
+                curr = curr->pNext;
+                continue;
+            } else {
+                if(curr->word.labelDest == LABEL_DEST_B) {
+                    curr->word.code.opcode = pLabel->label.address;
+                }else if(curr->word.labelDest == LABEL_DEST_O) {
+                    curr->word.code.opcode = pLabel->label.offset;
+                }
+            }
+        }
+        curr = curr->pNext;
+    }
+}
+void UpdateLabelsAddress()
+{
+    UpdateDataListNodes();
+    UpdateWordsListNodes();
+}
 bool addEntryAttribute(const char* fileName, char* label, int lineNum)
 {
     pLabelNode curr = NULL;
@@ -124,6 +172,7 @@ bool addEntryAttribute(const char* fileName, char* label, int lineNum)
             printError(fileName, LABEL_IS_ALREADY_EXTERN, lineNum);
             return false;
         }
+        curr->label.locationType = Entry;
     }
         return true;
 }

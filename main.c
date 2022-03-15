@@ -13,28 +13,38 @@ bool isErrorFound; /* global variable - represents if error found in current fil
 
 int main(int argc, char *argv[]) {
     int i;
-
+    int ICF,DCF;
+    ICF = 0;
+    DCF = 0;
     isErrorFound = false;
-    if(argc < 2)
+    if(argc < 1)
     {
-
+        fprintf(stderr, "Missing Arguments for Assembler \n ");
     }
-    for(i=2; i<argc ; i++)
+
+/* todo: check if assembler is another argument or it is the name of the program */
+   /* if(strcmp(argv[1],"assembler") != 0)
+    {
+        fprintf(stderr, "Invalid Operation! %s is Unknown Process \n",argv[1]);
+    }*/
+    for(i=2; i < argc ; i++)
     {
         PreProcessPass(argv[i],false);
-        /* todo: startFirstPass(*argv, firstPass:true);*/
         if(isErrorFound == false)
         {
-            firstPass(argv[i],false);
-            /* todo: startFirstPass(*argv, firstPass:false);*/
+            isErrorFound = firstPass(argv[i],&ICF, &DCF);
         }
         if(isErrorFound == false)
         {
-            parseCodeToFile(argv[i],false);
-            /* todo: parseCodeToFiles */
+            isErrorFound = secondPass(argv[i], &ICF,&DCF);
         }
-        /* todo: reset linked listst and everything*/
-        deleteWordList(wordsHead);      /* checked - works */
+        if(isErrorFound == false)
+        {
+            isErrorFound = parseCodeToFile(argv[i], &ICF,&DCF);
+        }
+        /* todo: reset linked lists and everything before next file*/
+        deleteWordList(wordsHead);
+        //deleteWordList(datasHead);
         deleteLabelList(labelsHead);
     }
 

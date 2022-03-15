@@ -1,7 +1,7 @@
 #include <unistd.h>
 #include "parseCodeToFile.h"
 
-bool parseCodeToFile(char *fileName, bool error)
+bool parseCodeToFile(char *fileName, const int *ICF,const int *DCF)
 {
     FILE *entF = NULL;
     FILE *extF = NULL;
@@ -10,8 +10,8 @@ bool parseCodeToFile(char *fileName, bool error)
     char* extFileName;
     char* entFileName;
     char cwd[LINE_LENGTH];      /*todo : remove later*/
-    if(error == true)
-        return true;
+//    if(error == true)           /* todo: check if we need to check if error accured before*/
+//        return true;
 
     codeFileName = (char*)calloc(strlen(fileName) + strlen(".ob") + 1, sizeof(char));
     extFileName = (char*)calloc(strlen(fileName) + strlen(".ext") + 1, sizeof(char));
@@ -33,7 +33,7 @@ bool parseCodeToFile(char *fileName, bool error)
     }else
     {
 
-        printObjectFile(codeF);
+        printObjectFile(codeF, ICF,DCF);
         /* parseWordToBase(&testing); */
         /* todo: print to code file */
     }
@@ -49,7 +49,7 @@ bool parseCodeToFile(char *fileName, bool error)
     {
         /* todo: print to externals file */
     }
-    fclose(extF);
+
 
     entF = fopen(entFileName, "w");        /* create the .ent file */
 
@@ -59,8 +59,16 @@ bool parseCodeToFile(char *fileName, bool error)
         return true;
     }else
     {
-        /* todo: print to entry file */
+        printEntriesFile(extF, entF);
     }
+    /* todo: ask bar if its better to print simultaneously
+     * to externals file and entries file or to separate
+     *
+     * and maybe to separate the externals and entries lists? */
+
+
+
+    fclose(extF);
     fclose(entF);
     free(codeFileName);
     free(entFileName);
@@ -68,14 +76,62 @@ bool parseCodeToFile(char *fileName, bool error)
 
     return false;
 }
+
+char *ParseEntries(pLabelNode node)
+{
+    char* line = NULL;
+    line = (char*)calloc(2*LINE_LENGTH,sizeof(char));
+    if(node != NULL)
+        sprintf(line, "%s,%d,%d",
+                node->label.name,node->label.address,node->label.offset);
+    return line;
+}
+
+char *ParseExternals(pLabelNode node)
+{
+    char* line = NULL;
+    line = (char*)calloc(2*LINE_LENGTH,sizeof(char));
+    if(node != NULL)
+    sprintf(line, "%s BASE %d \n%s OFFSET %d\n",
+            node->label.name,node->label.address,
+            node->label.name,node->label.offset);
+    return line;
+}
+
+void printEntriesFile(FILE *extF,FILE *entF)
+{
+    pLabelNode curr = NULL;
+    char* entPrint = NULL;
+    char* extPrint = NULL;
+    curr = labelsHead;
+    if(labelsHead == NULL)          /* no labels in file */
+        return;                     /* no point to even enter the loop */
+    while(curr !=NULL)
+    {
+        if(curr->label.locationType == Entry) {
+            entPrint = ParseEntries(curr);
+            fprintf(entF,"%s\n",entPrint);
+        }
+        if(curr->label.locationType == Extern){
+            extPrint = ParseExternals(curr);
+            fprintf(extF,"%s",extPrint);
+        }
+        curr = curr->pNext;
+    }
+    free(entPrint);
+    free(extPrint);
+}
+
+/*
 void printExternalsFile(FILE *fp)
 {
     pLabelNode curr = NULL;
     char *toPrint = NULL;
     curr = labelsHead;
-    if(labelsHead == NULL)          /* no labels in file */
-        return;
+    if(labelsHead == NULL)          */
+/* no labels in file *//*
 
+        return;
     while(curr !=NULL)
     {
         toPrint = ParseExternals(curr);
@@ -83,26 +139,15 @@ void printExternalsFile(FILE *fp)
         curr = curr->pNext;
     }
     free(toPrint);
-
 }
+*/
 
-char *ParseExternals(pLabelNode node)
-{
-    char* line = NULL;
-    line = (char*)calloc(LINE_LENGTH,sizeof(char));
-
-}
-
-void printEntriesFile(FILE *fp)
-{
-
-
-}
-void printObjectFile(FILE *fp)
+void printObjectFile(FILE *fp ,const int *ICF,const int *DCF)
 {
     pWordNode curr = NULL;
-    curr = wordsHead;
     char* toPrint = NULL;
+    curr = wordsHead;
+    fprintf(fp,"\t\t\t\t%d\t%d",*ICF,*DCF);
     while(curr !=NULL)
     {
         toPrint = parseWordToBase(curr);
@@ -121,7 +166,7 @@ char *parseWordToBase(pWordNode word)
     line = (char*)calloc(LINE_LENGTH,sizeof(char));
     tmpWord = word->word;
 
-    wValue = (tmpWord.are << 16) + tmpWord.code.opcode;
+    wValue = ((int)tmpWord.are << 16) + (int)tmpWord.code.opcode;
 
     sprintf(line,"\n%04d",word->word.address);
     strcat(line,"\t");                  /* adding tab to format */
@@ -140,10 +185,7 @@ char *parseWordToBase(pWordNode word)
     strcat(line, printByte(3,segments[1]));
     strcat(line, "-");
     strcat(line, printByte(4,segments[0]));
-
     return line;
-
-
 }
 /* convert unsigned int to ascii in hex base*/
 char uitoa(int n)
@@ -153,11 +195,11 @@ char uitoa(int n)
         return '0';
     if(n >= 0 && n < 10)
     {
-        c = ('0'+ n);
+        c = (char)('0'+ n);
     }
     if(n > 9 && n < 16 )
     {
-        c = ('a' + (n-0xA));
+        c = (char)('a' + (n-0xA));
     }
     return c;
 }

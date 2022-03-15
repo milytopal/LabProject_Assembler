@@ -5,7 +5,7 @@
 #include <string.h>
 #include "dataStructs.h"
 
-void addLabelNode(const char* name, const int value, eDataType dataType, eLocalizaion locationType);
+void addLabelNode(const char* name, int value, eDataType dataType, eLocalizaion locationType);
 void deleteLabelList(pLabelNode list);
 
 int contains(pLabelNode, char*);
