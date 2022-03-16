@@ -50,6 +50,21 @@ void printError(const char* currFileName, eErrorCode errCode, int lineNum)
         case INVALID_BRACKET_CONTENTS:
             printf("in file: %s line: %d The bracket contents are invalid, must be a register between r10 and r15\n",currFileName,lineNum);
             break;
+        case TOO_MANY_ARGUMENTS:
+            printf("in file: %s line: %d Too many arguments were given to this operation\n",currFileName,lineNum);
+            break;
+        case INVALID_USE_OF_REGISTER:
+            printf("in file: %s line: %d Given register is out of bounds in this context, 10 >= r >= 15\n",currFileName,lineNum);
+            break;
+        case MISSING_BRACKETS:
+            printf("in file: %s line: %d Missing brackets\n",currFileName,lineNum);
+            break;
+        case LABEL_IS_ALREADY_EXTERN:
+            printf("in file: %s line: %d Label is already extern\n",currFileName,lineNum);
+            break;
+        case LABEL_DOSNT_EXIST:
+            printf("in file: %s line: %d Given label doesn't exist!\n",currFileName,lineNum);
+            break;
         
     }
 }
