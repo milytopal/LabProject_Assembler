@@ -153,15 +153,15 @@ bool addEntryAttribute(const char* fileName, char* label, int lineNum)
     if (curr == NULL)            /* reached end of labels list */
     {
         printError(fileName,LABEL_DOSNT_EXIST, lineNum);
-        return false;
+        return true;
     }else {
         if (curr->label.locationType == Extern) {
             printError(fileName, LABEL_IS_ALREADY_EXTERN, lineNum);
-            return false;
+            return true;
         }
         curr->label.locationType = Entry;
     }
-        return true;
+        return false;
 }
 
 

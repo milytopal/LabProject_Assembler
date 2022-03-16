@@ -124,7 +124,7 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
             isString = strcmp(token, ".string");
             if (isData == 0 || isString == 0) {
                 if (isLabel == true) {
-                    addLabelNode(labelName, IC, Data, NoneExtOrEnt); /* remembered label from before*/
+                    addLabelNode(labelName, IC + DC, Data, NoneExtOrEnt); /* remembered label from before*/
                     /* strncpy(tempWord.name,labelName,strlen(labelName)); */
                 }
 
@@ -154,6 +154,7 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
                             tempWord.code.opcode = ind;
 
                             addWordNodeToData(tempWord, DC+IC,0,lineNum);
+                            printf(" \n%d , %d",DC,DC+IC);
                             DC++;
                             }
                         else
@@ -175,6 +176,7 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
                         tempWord.are = A;
 
                         addWordNodeToData(tempWord, DC+IC,0,lineNum);
+                        printf(" \n%d , %d",DC,DC+IC);
                         DC++;
                         i++;
                     }
@@ -182,6 +184,7 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
                     tempWord.code.opcode = 0;
 
                     addWordNodeToData(tempWord,DC+IC,0,lineNum);
+                    printf(" \n%d , %d",DC,DC+IC);
                     DC++;
                 }
                 clearLine(line);
@@ -229,7 +232,7 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
 
         /*----------------- handle code ----------------*/
         if (isLabel == true) {
-            addLabelNode(/*labelName */tName, IC, Code, NoneExtOrEnt);
+            addLabelNode(/*labelName */tName, IC + DC, Code, NoneExtOrEnt);
         }
 
         opCode = getOpcode(token);
@@ -529,28 +532,28 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
     }
 return isError;
 }
-
+/* check if label is registers name */
 bool isRegName(const char *label)
 {
     int j;
-    for( j=0; j < NUM_OF_REGS ; j++) /* check if label is registers name */
+    for( j=0; j < NUM_OF_REGS ; j++)
     {
         if(strcmp(label,(regList[j])) == 0)
         {
-            return true; /* ERROR: Label can't be named that! */
+            return true;
         }
     }
     return false;
 }
-
+/* check if label is registers name */
 int getRegNum(const char *label)
 {
     int j;
-    for( j=0; j < NUM_OF_REGS ; j++) /* check if label is registers name */
+    for( j=0; j < NUM_OF_REGS ; j++)
     {
         if(strcmp(label,(regList[j])) == 0)
         {
-            return j; /* ERROR: Label can't be named that! */
+            return j;
         }
     }
     return -1;
