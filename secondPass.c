@@ -20,31 +20,19 @@ bool secondPass(const char* fileName, int *ICF, int *DCF)
     }
 
     free(asFileName);
-    return false;
+    return isError;
 }
 
 bool readFile(FILE* fp, const char* fileName)
 {
-    char* asFileName;
     /* Important variables for the loop */
     char *token = NULL;
     char *firstToken = NULL;            /* check if needed*/
     char *labelName = NULL;
     bool isError = false;
-    bool isLabel;
-    int isData, isString, funct,ind , opCode;
     int lineNum = 0;
     char line[LINE_LENGTH] = {0};
 
-    pWordNode currCode = NULL;
-    pWordNode currData = NULL;
-    Word tempWord;
-    Word opcodeWord;
-    tempWord.are = A; /* All firstPass words get A, so no need to set it every time */
-    opcodeWord.are = A; /* All firstPass words get A, so no need to set it every time */
-
-    currCode = wordsHead;
-    currData = datasHead;
 /*
     tName = (char*)calloc(LABEL_LEN,sizeof(char));
 */
@@ -65,12 +53,11 @@ bool readFile(FILE* fp, const char* fileName)
 
         token = NULL;
         lineNum++;
-        isLabel = false;
 
         if (isEmptyLine(line) == true || line[0] == ';') continue;
         /* check for line length excited */
         if (line[LINE_LENGTH - 2] != '\0') {
-            printError(asFileName, LINE_LIMIT_REACHED, lineNum);
+            printError(fileName, LINE_LIMIT_REACHED, lineNum);
             clearLine(line);
             continue; /* Can't actually check the line */
         }

@@ -155,9 +155,7 @@ pMacroNode addNewMacro(const char* name)
 /* add new token the tokens list of a given macro */
 void addLineToMacro(pMacroNode macro, char* line){
 
-    pTokenNode addLine = NULL;
     pTokenNode curr = NULL;
-    addLine = (pTokenNode)calloc(1 , sizeof (TokenNode));
     if(macro->macro.tokenList == NULL)
     {
         macro->macro.tokenList = (pTokenNode)calloc(LINE_LENGTH , sizeof (TokenNode));

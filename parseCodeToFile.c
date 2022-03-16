@@ -9,7 +9,6 @@ bool parseCodeToFile(char *fileName, const int *ICF,const int *DCF)
     char* codeFileName;
     char* extFileName;
     char* entFileName;
-    char cwd[LINE_LENGTH];      /*todo : remove later*/
 /*    if(error == true)*/           /* todo: check if we need to check if error accured before*/
 /*        return true; */
 
@@ -158,8 +157,7 @@ void printObjectFile(FILE *fp ,const int *ICF,const int *DCF)
 }
 char *parseWordToBase(pWordNode word)
 {
-    pWordNode tmp = NULL;
-    int index ,val, i, wValue,opcode;
+    int i, wValue;
     int segments[5] = {0};
     Word tmpWord = {0};
     char* line = NULL;
