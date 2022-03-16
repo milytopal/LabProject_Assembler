@@ -10,8 +10,8 @@ bool parseCodeToFile(char *fileName, const int *ICF,const int *DCF)
     char* extFileName;
     char* entFileName;
     char cwd[LINE_LENGTH];      /*todo : remove later*/
-//    if(error == true)           /* todo: check if we need to check if error accured before*/
-//        return true;
+/*    if(error == true)*/           /* todo: check if we need to check if error accured before*/
+/*        return true; */
 
     codeFileName = (char*)calloc(strlen(fileName) + strlen(".ob") + 1, sizeof(char));
     extFileName = (char*)calloc(strlen(fileName) + strlen(".ext") + 1, sizeof(char));

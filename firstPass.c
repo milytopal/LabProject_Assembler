@@ -45,7 +45,7 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
     char* asFileName;
     /* Important variables for the loop */
     char *token = NULL;
- //   char *firstToken = NULL;            /* check if needed*/
+ /*   char *firstToken = NULL;  */          /* check if needed*/
     char *strTolPtr = NULL;
     char *labelName = NULL;
     bool isError = false;
@@ -65,7 +65,7 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
 
     tName = (char*)calloc(LABEL_LEN,sizeof(char));
     asFileName = (char*)calloc(strlen(fileName) + strlen(".am") + 1, sizeof(char));
-   // firstToken = (char*) calloc(LABEL_LEN,sizeof(char));
+   /* firstToken = (char*) calloc(LABEL_LEN,sizeof(char)); */
     labelName = (char*) calloc(LABEL_LEN,sizeof(char));
 
     strncpy(asFileName, fileName, strlen(fileName));
@@ -84,7 +84,7 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
 
     while (fgets(line, LINE_LENGTH, fp) != NULL)
     {
-//        memset(firstToken, '\0',LABEL_LEN); /*reset memory */
+/*        memset(firstToken, '\0',LABEL_LEN); */ /*reset memory */
         memset(tName, '\0',LABEL_LEN);
         memset(labelName, '\0',LABEL_LEN); /*reset memory */
         token = NULL;
@@ -101,7 +101,7 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
         }
         /* line ok ger first token */
         token = strtok(line, " \t\n");
-//        strncpy(firstToken, token, strlen(token));
+/*        strncpy(firstToken, token, strlen(token)); */
 
         if(token[strlen(token)-1] == ':')   /* check if first token is a label */
         {
@@ -114,7 +114,7 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
             strncpy(labelName,token,strlen(token));
             /*if we found a label we want to continue to next argument */
             token = strtok(NULL, " \t\n");
-//            strncpy(firstToken ,token, strlen(token));
+/*            strncpy(firstToken ,token, strlen(token)); */
         }
 
         /* Check if .string .data .entry .extern and Handle*/
@@ -125,7 +125,7 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
             if (isData == 0 || isString == 0) {
                 if (isLabel == true) {
                     addLabelNode(labelName, IC, Data, NoneExtOrEnt); /* remembered label from before*/
-                    //strncpy(tempWord.name,labelName,strlen(labelName));
+                    /* strncpy(tempWord.name,labelName,strlen(labelName)); */
                 }
 
                 if (isData == 0)
@@ -283,7 +283,7 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
     printLabels();
     free(asFileName);
     free(tName);
-   // free(firstToken);
+   /* free(firstToken); */
 
     return isError;
 }

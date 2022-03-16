@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
         }
         /* todo: reset linked lists and everything before next file*/
         deleteWordList(wordsHead);
-        //deleteWordList(datasHead);
+        /* deleteWordList(datasHead); */
         deleteLabelList(labelsHead);
     }
 
