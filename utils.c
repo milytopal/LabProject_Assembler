@@ -3,8 +3,8 @@
 
 void printError(const char* currFileName, eErrorCode errCode, int lineNum)
 {
+    printf("[ERROR]: ");
     switch (errCode) {
-        printf("[ERROR]: ");
         case MISSING_FILE_NAME:
             printf("Missing file Name  \n");
             break;
