@@ -1,31 +1,32 @@
 #include "secondPass.h"
 
 
-bool secondPass(const char* fileName, int *ICF, int *DCF)
+bool secondPass(char* fileName, int *ICF, int *DCF)
 {
     FILE *fp = NULL;
-    char* asFileName;
+    char* asFileName = NULL;
     bool isError;
-    asFileName = (char*)calloc(strlen(fileName) + strlen(".am") + 1, sizeof(char));
-    strncpy(asFileName, fileName, LABEL_LEN);
+    asFileName = (char*)calloc((strlen(fileName) + strlen(".am") + 1) ,sizeof(char));
+    fprintf(stderr," <<<<<<<<<<<<<<<<<< after memset \n");
+    strcpy(asFileName, fileName);
     strcat(asFileName, ".am");
     fp = fopen(asFileName, "r");
-
+    fprintf(stderr," %s \n",fileName);
     if (fp == NULL){
         printError(asFileName, MISSING_FILE, 0);
         free(asFileName);
-        fclose(fp);
         return true;
     }else {
         /* reading file here */
         isError = readFile(fp,fileName);
     }
+
     fclose(fp);
     free(asFileName);
     return isError;
 }
 
-bool readFile(FILE* fp, const char* fileName)
+bool readFile(FILE* fp, char* fileName)
 {
     /* Important variables for the loop */
     char *token = NULL;

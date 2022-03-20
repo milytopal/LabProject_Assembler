@@ -43,6 +43,7 @@ int main(int argc, char *argv[]) {
         deleteWordList(wordsHead);
         deleteWordList(datasHead);
         deleteLabelList(labelsHead);
+
     }
 
     return 0;
