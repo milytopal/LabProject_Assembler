@@ -297,7 +297,6 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
 
     *ICF = (IC - STARTING_IC);
     *DCF = DC;
-   /* Need to save a final version of IC and DC here, IDK where though */
     printf("\n");
     printWords();
     printf("\n");

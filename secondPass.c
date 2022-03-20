@@ -7,11 +7,9 @@ bool secondPass(char* fileName, int *ICF, int *DCF)
     char* asFileName = NULL;
     bool isError;
     asFileName = (char*)calloc((strlen(fileName) + strlen(".am") + 1) ,sizeof(char));
-    fprintf(stderr," <<<<<<<<<<<<<<<<<< after memset \n");
     strcpy(asFileName, fileName);
     strcat(asFileName, ".am");
     fp = fopen(asFileName, "r");
-    fprintf(stderr," %s \n",fileName);
     if (fp == NULL){
         printError(asFileName, MISSING_FILE, 0);
         free(asFileName);

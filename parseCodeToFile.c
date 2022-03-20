@@ -65,13 +65,9 @@ bool parseCodeToFile(const char *fileName, const int *ICF,const int *DCF)
 
     fclose(extF);
     fclose(entF);
-fprintf(stderr," after <<<<<<<<<<<<<<<< fclose() \n");
     free(codeFileName);
-fprintf(stderr," after <<<<<<<<<<<<<<<< free(codeFileName); \n");
     free(entFileName);
-fprintf(stderr," after <<<<<<<<<<<<<<<< free(entFileName); \n");
     free(extFileName);
-fprintf(stderr," after <<<<<<<<<<<<<<<< free(extFileName); \n");
 
     return false;
 }
