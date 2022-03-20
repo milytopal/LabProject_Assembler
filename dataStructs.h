@@ -35,7 +35,7 @@ typedef enum eDirectives{DATA,STRING,ENTRY,EXTERN }eDirectives;
 
 typedef enum eAddrresMethod{ NA = -1, IMMEDIATE=0,DIRECT,INDEX,DIRECT_REGISTER }eAddrresMethod;
 
-typedef enum eErrorCode { MISSING_FILE_NAME,MISSING_FILE,LINE_LIMIT_REACHED, LABEL_LIMIT_REACHED, BAD_LABEL_NAME, FAILED_TO_CREATE,
+typedef enum eErrorCode { FAILED_TO_OPEN = 0 , MISSING_FILE_NAME,MISSING_FILE,LINE_LIMIT_REACHED, LABEL_LIMIT_REACHED, BAD_LABEL_NAME, FAILED_TO_CREATE,
     NO_ARGUMENTS, INCOMPLETE_CODE,MISSING_LABEL, MISSING_PARAMETER,
     LABEL_ALREADY_EXISTS, UNKNOWN_OPERATION, INVALID_ARGUMENT,
     NUMBER_OUT_OF_BOUND, INVALID_BRACKET_CONTENTS , TOO_MANY_ARGUMENTS,
@@ -60,8 +60,6 @@ typedef enum eCommands{MOV = 1,            /* 2^0 = 1*/
     RTS = 16384,        /* 2^14 = 16384*/
     STOP = 32768        /* 2^15 = 32768*/
 }eCommands;
-
-
 
 /* the TokenNode is a node for linked list of commands inside a macro */
 typedef struct TokenNode *pTokenNode;

@@ -18,6 +18,7 @@ bool isRegName(const char *label);
 int getRegNum(const char *label);
 int getNumOfExpectedArguments(eCommands command);
 char* getLabelFromIndexAddressing(char* token);
+
 eCommands getOpcode(char*);
 int getFunct(int, char*);
 bool fillOutArguments(const char*, char*,unsigned int ,int ,int );

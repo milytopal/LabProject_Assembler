@@ -26,7 +26,6 @@ bool PreProcessPass(const char* fileName)
 
     if (fp == NULL){
         printError(asFileName, MISSING_FILE, 0);
-        printf("couldnt open file: %s\n ",asFileName);
         return true;
     }
     strncpy(amFileName, fileName, strlen(fileName));
@@ -34,41 +33,29 @@ bool PreProcessPass(const char* fileName)
     newFp = fopen(amFileName, "w");
 
     if(newFp == NULL){
-        printError(NULL, MISSING_FILE, 0);
+        printError(amFileName, FAILED_TO_OPEN, 0);
         fclose(fp);
         return true;
     }
 
-    foo(fp, newFp);
+    ParseMacros(fp, newFp);
     fclose(fp);
     fclose(newFp);
-
+    free(amFileName);
     free(asFileName);
     return false;
-}
-
-int cleanLine(char* line)
-{
-    int i = 0;
-    while(isspace(line[i]) == 0)
-    {
-        i++;
-    }
-    return i;
 }
 
 bool isMacro(char *line, int i){
     if(strncmp(line, "macro", 5) == 0){
         return true;
     }
-
     return false;
 }
 
-bool foo(FILE *fp, FILE * newFp)
+bool ParseMacros(FILE *fp, FILE * newFp)
 {
     char line[LINE_LENGTH] = {0};
-    /* char cpyLine[LINE_LENGTH] = {0}; */
     char* cpyLine = NULL;
     char macro_name[31] = {0};
     char* token = NULL;
@@ -116,7 +103,6 @@ bool foo(FILE *fp, FILE * newFp)
         clearLine(line);
     }
     deleteMacroList(head);
-    /* todo delete list of macros? */
     return true;
 }
 
@@ -194,20 +180,16 @@ bool writeMacroToFile(pMacroNode macro ,FILE *file)
 void deleteMacroList(pMacroNode head ) {
     pMacroNode nextMacro = NULL;
     pTokenNode nextToken = NULL;
-    /* nextMacro = head; */
     while(head != NULL)
     {
         nextMacro = head->pNext;
-
         /* delete token list in the macro */
         while(head->macro.tokenList != NULL) {
             nextToken=head->macro.tokenList->pNext;
             free(head->macro.tokenList);
             head->macro.tokenList = nextToken;
         }
-
         free(head);
         head = nextMacro;
-
     }
 }

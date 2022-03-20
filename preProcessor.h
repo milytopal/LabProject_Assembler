@@ -20,7 +20,7 @@ pMacroNode addNewMacro(const char* name);
 /* add new token the tokens list of a given macro */
 void addLineToMacro(pMacroNode macro, char* line);
 /* read source file and process data acording to the command lines */
-bool foo(FILE *fp, FILE * newFp);
+bool ParseMacros(FILE *fp, FILE * newFp);
 /* write all the tokens in the token list of the macro from head to end */
 bool writeMacroToFile(pMacroNode macro, FILE *file);
 /* delete the list in the end of process to free memory */

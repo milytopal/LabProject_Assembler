@@ -73,7 +73,7 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
     fp = fopen(asFileName, "r");
 
     if (fp == NULL){
-        printError(NULL, MISSING_FILE, 0);
+        printError(fileName, MISSING_FILE, 0);
         return true;
     }
 
@@ -172,6 +172,14 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
                 else { /* isString == 0 */
                     i=0;
                     token = strtok(NULL, " \"\t\n"); /* get string data*/
+                    if(token == NULL)
+                    {
+                        printError(fileName, MISSING_PARAMETER,lineNum);
+                        isError = true;
+                        clearLine(line);
+                        continue;
+                    }
+
                     while (token[i] != '\0') {
                         tempWord.code.opcode = (unsigned int)token[i];
                         tempWord.are = A;

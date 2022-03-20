@@ -7,12 +7,12 @@ bool secondPass(const char* fileName, int *ICF, int *DCF)
     char* asFileName;
     bool isError;
     asFileName = (char*)calloc(strlen(fileName) + strlen(".am") + 1, sizeof(char));
-    strcpy(asFileName, fileName);
+    strncpy(asFileName, fileName, LABEL_LEN);
     strcat(asFileName, ".am");
     fp = fopen(asFileName, "r");
 
     if (fp == NULL){
-        printError(NULL, MISSING_FILE, 0);
+        printError(asFileName, MISSING_FILE, 0);
         return true;
     }else {
         /* reading file here */

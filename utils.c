@@ -8,8 +8,11 @@ void printError(const char* currFileName, eErrorCode errCode, int lineNum)
         case MISSING_FILE_NAME:
             printf("Missing file Name  \n");
             break;
+        case FAILED_TO_OPEN:
+            printf("The File \"%s\" Was Not Found\n", currFileName);
+            break;
         case MISSING_FILE:
-            printf("The File \"%s\" Was Not Found\n",currFileName);
+            printf("The File \"%s\" Was Not Found\n", currFileName);
             break;
         case LINE_LIMIT_REACHED:
             printf("in file: %s, line: %d - Line Limit Reached Over 80 Chars\n",currFileName,lineNum);
@@ -68,9 +71,11 @@ void printError(const char* currFileName, eErrorCode errCode, int lineNum)
         case MISSING_ARGUMENTS:
             printf("in file: %s, line: %d - less arguments were given to than expected\n",currFileName,lineNum);
             break;
-        
+        default:
+            break;
     }
 }
+
 bool isEmptyLine(char *line)
 {
     int i, len;
@@ -103,3 +108,4 @@ int isSpace(char toCheck) {
     if (toCheck == '\r') return 5;
     return 0;
 }
+

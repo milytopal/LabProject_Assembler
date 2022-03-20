@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
     {
         fprintf(stderr, "Invalid Operation! %s is Unknown Process \n",argv[1]);
     }*/
-    for(i=2; i < argc ; i++)
+    for(i=1; i < argc ; i++)
     {
         /* error will occur only if file is missing or failed to open file */
         isErrorFound = PreProcessPass(argv[i]);
