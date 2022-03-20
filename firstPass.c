@@ -504,20 +504,27 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
 
     /*create the second word with the new data*/
     tempWord.are = A;
-    tempWord.code.operands.srcAdd = Ad[0];
-    if(Ad[0] == DIRECT_REGISTER)
+
+    if(numOfExpectedArgs == 1)          /* only one argument in command - operates as destination */
     {
-        tempWord.code.operands.srcReg = val[0];
-    } else {
-        tempWord.code.operands.srcReg = 0;
-    }
-    if(numOfExpectedArgs == 1)          /* only one argument in command */
-    {
+        tempWord.code.operands.destAdd = Ad[0];
+        if(Ad[0] == DIRECT_REGISTER || Ad[0] == INDEX)
+        {
+            tempWord.code.operands.destReg = val[0];
+        } else {
+            tempWord.code.operands.destReg = 0;
+        }
         addWordNodeToCode(tempWord, IC, 0, lineNum);
         IC++;
-    } else {
+    }else  if(numOfExpectedArgs == 2) {
+        tempWord.code.operands.srcAdd = Ad[0];
+        if (Ad[0] == DIRECT_REGISTER || Ad[0] == INDEX) {
+            tempWord.code.operands.srcReg = val[0];
+        } else {
+            tempWord.code.operands.srcReg = 0;
+        }
         tempWord.code.operands.destAdd = Ad[1];
-        if (Ad[1] == DIRECT_REGISTER) {
+        if (Ad[1] == DIRECT_REGISTER || Ad[1] == INDEX) {
             tempWord.code.operands.destReg = val[1];
         } else {
             tempWord.code.operands.destReg = 0;
@@ -525,6 +532,7 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
         addWordNodeToCode(tempWord, IC, 0, lineNum);
         IC++;
     }
+
     if(Ad[0] == DIRECT_REGISTER && Ad[1] == DIRECT_REGISTER)        /*no words to add*/
         return isError;
 
