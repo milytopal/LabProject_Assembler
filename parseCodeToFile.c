@@ -6,21 +6,19 @@ bool parseCodeToFile(char *fileName, const int *ICF,const int *DCF)
     FILE *entF = NULL;
     FILE *extF = NULL;
     FILE *codeF = NULL;
-    char* codeFileName;
-    char* extFileName;
-    char* entFileName;
-/*    if(error == true)*/           /* todo: check if we need to check if error accured before*/
-/*        return true; */
+    char* codeFileName = NULL;
+    char* extFileName = NULL;
+    char* entFileName = NULL;
 
     codeFileName = (char*)calloc(strlen(fileName) + strlen(".ob") + 1, sizeof(char));
     extFileName = (char*)calloc(strlen(fileName) + strlen(".ext") + 1, sizeof(char));
-    entFileName = (char*)calloc(strlen(fileName) + strlen(".ext") + 1, sizeof(char));
+    entFileName = (char*)calloc(strlen(fileName) + strlen(".ent") + 1, sizeof(char));
 
-    strncpy(codeFileName, fileName, strlen(fileName));
+    strncpy(codeFileName, fileName, strlen(codeFileName));
     strcat(codeFileName, ".ob");
-    strncpy(extFileName, fileName, strlen(fileName));
+    strncpy(extFileName, fileName, strlen(extFileName));
     strcat(extFileName, ".ext");
-    strncpy(entFileName, fileName, strlen(fileName));
+    strncpy(entFileName, fileName, strlen(entFileName));
     strcat(entFileName, ".ent");
 
     codeF = fopen(codeFileName, "w");        /* create the .obj file */
