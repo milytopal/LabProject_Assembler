@@ -40,7 +40,7 @@ bool readFile(FILE* fp, const char* fileName)
     labelName = (char*) calloc(LABEL_LEN,sizeof(char));
 
     if (fp == NULL){
-        printError(NULL, MISSING_FILE, 0);
+        printError(fileName, MISSING_FILE, 0);
         return true;
     }
 
