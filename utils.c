@@ -9,7 +9,7 @@ void printError(const char* currFileName, eErrorCode errCode, int lineNum)
             printf("Missing file Name  \n");
             break;
         case MISSING_FILE:
-            printf("The File \"%s\" is Was Not Found\n",currFileName);
+            printf("The File \"%s\" Was Not Found\n",currFileName);
             break;
         case LINE_LIMIT_REACHED:
             printf("in file: %s, line: %d - Line Limit Reached Over 80 Chars\n",currFileName,lineNum);

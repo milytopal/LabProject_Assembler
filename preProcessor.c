@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <limits.h>
 #include "preProcessor.h"
-bool PreProcessPass(const char* fileName, bool firstPass)
+bool PreProcessPass(const char* fileName)
 {
     FILE *fp = NULL;
     FILE *newFp = NULL;
@@ -25,7 +25,7 @@ bool PreProcessPass(const char* fileName, bool firstPass)
     fp = fopen(asFileName, "r");
 
     if (fp == NULL){
-        printError(NULL, MISSING_FILE, 0);
+        printError(asFileName, MISSING_FILE, 0);
         printf("couldnt open file: %s\n ",asFileName);
         return true;
     }

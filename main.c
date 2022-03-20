@@ -29,7 +29,9 @@ int main(int argc, char *argv[]) {
     }*/
     for(i=2; i < argc ; i++)
     {
-        PreProcessPass(argv[i],false);
+        /* error will occur only if file is missing or failed to open file */
+        isErrorFound = PreProcessPass(argv[i]);
+
         if(isErrorFound == false)
         {
             isErrorFound = firstPass(argv[i],&ICF, &DCF);

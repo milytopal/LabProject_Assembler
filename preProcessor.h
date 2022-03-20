@@ -14,7 +14,7 @@ pMacroNode head;
 
 /*--------------- functions ----------------*/
 /* the preprocess pass parsing the macros and placing them in the new file .am*/
-bool PreProcessPass(const char* fileName, bool firstPass);
+bool PreProcessPass(const char* fileName);
 /* add a new macro to list */
 pMacroNode addNewMacro(const char* name);
 /* add new token the tokens list of a given macro */
