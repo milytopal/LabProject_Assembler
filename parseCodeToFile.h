@@ -3,7 +3,7 @@
 #include "dataStructs.h"
 #include "utils.h"
 
-bool parseCodeToFile(char *fileName, const int *ICF, const int *DCF);
+bool parseCodeToFile(const char *fileName, const int *ICF, const int *DCF);
 
 /* convert unsigned int to ascii*/
 char uitoa(int n);

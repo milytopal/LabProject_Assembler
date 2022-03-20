@@ -1,7 +1,7 @@
 #include <unistd.h>
 #include "parseCodeToFile.h"
 
-bool parseCodeToFile(char *fileName, const int *ICF,const int *DCF)
+bool parseCodeToFile(const char *fileName, const int *ICF,const int *DCF)
 {
     FILE *entF = NULL;
     FILE *extF = NULL;
@@ -9,50 +9,50 @@ bool parseCodeToFile(char *fileName, const int *ICF,const int *DCF)
     char* codeFileName = NULL;
     char* extFileName = NULL;
     char* entFileName = NULL;
-
-    codeFileName = (char*)calloc(strlen(fileName) + strlen(".ob") + 1, sizeof(char));
-    extFileName = (char*)calloc(strlen(fileName) + strlen(".ext") + 1, sizeof(char));
-    entFileName = (char*)calloc(strlen(fileName) + strlen(".ent") + 1, sizeof(char));
-
+    if(fileName == NULL)
+        return true;
+    codeFileName = (char*)calloc((strlen(fileName) + strlen(".ob") + 1), sizeof(char));
     strncpy(codeFileName, fileName, strlen(codeFileName));
     strcat(codeFileName, ".ob");
-    strncpy(extFileName, fileName, strlen(extFileName));
-    strcat(extFileName, ".ext");
+
+    entFileName = (char*)calloc((strlen(fileName) + strlen(".ent") + 1), sizeof(char));
     strncpy(entFileName, fileName, strlen(entFileName));
     strcat(entFileName, ".ent");
+
+    extFileName = (char*)calloc((strlen(fileName) + strlen(".ext") + 1), sizeof(char));
+    strncpy(extFileName, fileName, strlen(extFileName));
+    strcat(extFileName, ".ext");
 
     codeF = fopen(codeFileName, "w");        /* create the .obj file */
 
     if (codeF == NULL){
         printError(codeFileName, FAILED_TO_CREATE, 0);
-        printf("couldnt open file: %s\n ",codeFileName);            /* todo:  remove line */
+        free(codeFileName);
+        free(entFileName);
+        free(extFileName);
         return true;
     }else
     {
-
         printObjectFile(codeF, ICF,DCF);
-        /* parseWordToBase(&testing); */
-        /* todo: print to code file */
     }
     fclose(codeF);
-
+    entF = fopen(entFileName, "w");        /* create the .ent file */
     extF = fopen(extFileName, "w");        /* create the .ext file */
-
     if (extF == NULL){
         printError(extFileName, FAILED_TO_CREATE, 0);
-        printf("couldnt open file: %s\n ",extFileName);     /* todo:  remove line */
+        free(codeFileName);
+        free(entFileName);
+        free(extFileName);
+        fclose(codeF);
         return true;
-    }else
-    {
-        /* todo: print to externals file */
     }
-
-
-    entF = fopen(entFileName, "w");        /* create the .ent file */
-
-    if (entF == NULL){
+    if (entF == NULL ){
         printError(entFileName, FAILED_TO_CREATE, 0);
-        printf("couldnt open file: %s\n ",entFileName);      /* todo:  remove line */
+        free(codeFileName);
+        free(entFileName);
+        free(extFileName);
+        fclose(codeF);
+        fclose(extF);
         return true;
     }else
     {

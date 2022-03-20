@@ -16,3 +16,5 @@ dataLinkedList.o: dataLinkedList.c dataLinkedList.h
 	gcc -c -ansi -Wall -g dataLinkedList.c -o dataLinkedList.o
 wordLinkedList.o: wordLinkedList.c wordLinkedList.h
 	gcc -c -ansi -Wall -g wordLinkedList.c -o wordLinkedList.o
+clean:
+	rm -f *.o *.ext *.am *.ob *.ent assembler
