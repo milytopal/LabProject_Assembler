@@ -12,15 +12,15 @@ bool parseCodeToFile(const char *fileName, const int *ICF,const int *DCF)
     if(fileName == NULL)
         return true;
     codeFileName = (char*)calloc((strlen(fileName) + strlen(".ob") + 1), sizeof(char));
-    strncpy(codeFileName, fileName, strlen(codeFileName));
+    strncpy(codeFileName, fileName, strlen(fileName));
     strcat(codeFileName, ".ob");
 
     entFileName = (char*)calloc((strlen(fileName) + strlen(".ent") + 1), sizeof(char));
-    strncpy(entFileName, fileName, strlen(entFileName));
+    strncpy(entFileName, fileName, strlen(fileName));
     strcat(entFileName, ".ent");
 
     extFileName = (char*)calloc((strlen(fileName) + strlen(".ext") + 1), sizeof(char));
-    strncpy(extFileName, fileName, strlen(extFileName));
+    strncpy(extFileName, fileName, strlen(fileName));
     strcat(extFileName, ".ext");
 
     codeF = fopen(codeFileName, "w");        /* create the .obj file */
@@ -65,9 +65,13 @@ bool parseCodeToFile(const char *fileName, const int *ICF,const int *DCF)
 
     fclose(extF);
     fclose(entF);
+fprintf(stderr," after <<<<<<<<<<<<<<<< fclose() \n");
     free(codeFileName);
+fprintf(stderr," after <<<<<<<<<<<<<<<< free(codeFileName); \n");
     free(entFileName);
+fprintf(stderr," after <<<<<<<<<<<<<<<< free(entFileName); \n");
     free(extFileName);
+fprintf(stderr," after <<<<<<<<<<<<<<<< free(extFileName); \n");
 
     return false;
 }

@@ -33,6 +33,7 @@ void addLabelNode(const char* name, const int value, eDataType dataType, eLocali
 
 void deleteLabelList(pLabelNode list)
 {
+
     pLabelNode nextNode = NULL;
     while(list != NULL)
     {

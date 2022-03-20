@@ -38,16 +38,24 @@ int main(int argc, char *argv[]) {
         }
         if(isErrorFound == false)
         {
+        fprintf(stderr, " befpre <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< secondPass \n ");
             isErrorFound = secondPass(argv[i], &ICF,&DCF);
-        }
+	fprintf(stderr, " after <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< secondPass \n ");        
+	}
         if(isErrorFound == false)
         {
+ 	fprintf(stderr, " before <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< parseCodeToFile \n ");
             isErrorFound = parseCodeToFile(argv[i], &ICF,&DCF);
-        }
+	 fprintf(stderr, " after <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< parseCodeToFile \n ");        
+	}
         /* todo: reset linked lists and everything before next file*/
         deleteWordList(wordsHead);
+fprintf(stderr, "deleteWordList(wordsHead) in main\n ");
         deleteWordList(datasHead);
+fprintf(stderr, "deleteWordList(datasHead) in main \n ");
         deleteLabelList(labelsHead);
+fprintf(stderr, "deleteLabelList(datasHead) in main \n ");
+
     }
 
     return 0;
