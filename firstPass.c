@@ -4,41 +4,7 @@ int i;
 char* tName;
 char* regList[]= {"r0","r1","r2","r3","r4","r5","r6","r7","r8","r9","r10","r11","r12","r13","r14","r15"};
 /* for debug functions remove later */
-void printLabels()
-{
-    pLabelNode curr = NULL;
-    curr = labelsHead;
-    printf("\n labels head address: %ld \n B = BASE: O = OFFSET:\n",(long)labelsHead);
-    while(curr!= NULL)
-    {
-        printf(" %s V:%d B:%d O:%d-> \n",(curr->label.name),curr->label.value,curr->label.address,curr->label.offset);
-        curr = curr->pNext;
-    }
-}
-void printWords()
-{
-    pWordNode curr = NULL;
-    curr = wordsHead;
-    printf("\n words head address: %ld \n",wordsHead);
-    while(curr!=NULL)
-    {
-        printf("label name: %s \tline: %d\tIC: %d \t dest: %c-> \n",(curr->word.name),
-               (curr->word.lineNum),curr->word.address, curr->word.labelDest);
-        curr = curr->pNext;
-    }
-}
-void printData()
-{
-    pWordNode curr = NULL;
-    curr = datasHead;
-    printf("\n data head address: %ld \n",datasHead);
-    while(curr!=NULL)
-    {
-        printf(" %s \tline: %d\tDC: %d \t data: %d-> \n",(curr->word.name),
-               (curr->word.lineNum),curr->word.address, (int)curr->word.code.opcode);
-        curr = curr->pNext;
-    }
-}
+
 bool firstPass(const char* fileName, int *ICF, int *DCF)
 {
     FILE *fp = NULL;
@@ -49,7 +15,7 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
     char *strTolPtr = NULL;
     char *labelName = NULL;
     bool isError = false;
-    bool isLabel;
+    bool isLabel, returnStatus;
     int isData, isString, funct,ind , opCode, numOfExpectedArgs;
     int lineNum = 0;
     char line[LINE_LENGTH] = {0};
@@ -80,7 +46,7 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
     labelsHead = NULL;
     wordsHead = NULL;
     datasHead = NULL;
-
+    returnStatus = false;
     while (fgets(line, LINE_LENGTH, fp) != NULL)
     {
 /*        memset(firstToken, '\0',LABEL_LEN); */ /*reset memory */
@@ -105,8 +71,8 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
 
         if(token[strlen(token)-1] == ':')   /* check if first token is a label */
         {
-            isError = labelCheck(asFileName, token, lineNum);
-            if (isError) {
+            returnStatus = labelCheck(asFileName, token, lineNum);
+            if (returnStatus == true) {
                 clearLine(line);
                 continue;   /*if error found continue next line*/
             }
@@ -288,21 +254,24 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
         {
             printError(fileName, UNKNOWN_OPERATION,lineNum);
             isError = true;
+            clearLine(line);
             continue;
         }
-        isError = fillOutArguments(fileName, token, funct, lineNum , numOfExpectedArgs);
+        returnStatus = fillOutArguments(fileName, token, funct, lineNum , numOfExpectedArgs);
+        if(returnStatus == true)
+        {
+            /* error report handled in function */
+            isError = true;
+            clearLine(line);
+            continue;
+        }
 
         clearLine(line);
     }
 
     *ICF = (IC - STARTING_IC);
     *DCF = DC;
-    printf("\n");
-    printWords();
-    printf("\n");
-    printData();
-    printf("\n");
-    printLabels();
+
     free(asFileName);
     free(tName);
     free(labelName);
@@ -329,6 +298,11 @@ bool labelCheck(char* asFileName, char* label, int lineNum) {
     {
         label[len-1] = '\0';
         len--;
+    }
+    if(isalpha(label[0]) == 0)
+    {
+        printError(asFileName,BAD_LABEL_NAME,lineNum);
+        return true;
     }
     for(j = 0; j < len; j++)
     {
@@ -424,13 +398,14 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
 
     char labelName[LABEL_LEN];
     int index;
-    bool isError;
+    bool isError = false;
     int val[] = {0,0};
     bool isLabel[] = {0,0};
     eAddrresMethod Ad[] = {-1,-1};
     char labels[2][LABEL_LEN];
     int argCount = 0;
     char *firstBracket = NULL;
+    char *secondBracket = NULL;
     char *token = NULL;
     char reg[4] = {0};
     char* temp;
@@ -460,14 +435,20 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
             if (firstBracket != NULL) { /* Index */
                 Ad[index] = INDEX;
                 /* store reg name for furthur parsing*/
-                strncpy(reg,firstBracket+1, strlen(firstBracket)-2);
+                /* here stores with closing bracket, witch will be striped later*/
+                strncpy(reg,firstBracket+1, 4);
 
                 /*check if ther is closing bracket */
-                firstBracket = strpbrk(argAsStr, "]"); /* find closing brackets */
-                if (firstBracket == NULL)
+                secondBracket = strpbrk(argAsStr, "]"); /* find closing brackets */
+                if (secondBracket == NULL)
                 {
                     printError(asFileName, MISSING_BRACKETS, lineNum);
                     isError = true;
+                    //return isError;
+                }else
+                {
+                    /*there is closing bracket*/
+                    reg[secondBracket - firstBracket - 1] = '\0';
                 }
 
                 /* strip label from brackets and store it */

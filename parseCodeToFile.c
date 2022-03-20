@@ -56,12 +56,6 @@ bool parseCodeToFile(const char *fileName, const int *ICF,const int *DCF)
     {
         printLabelTableToFiles(extF, entF);
     }
-    /* todo: ask bar if its better to print simultaneously
-     * to externals file and entries file or to separate
-     *
-     * and maybe to separate the externals and entries lists? */
-
-
 
     fclose(extF);
     fclose(entF);

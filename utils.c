@@ -72,6 +72,8 @@ void printError(const char* currFileName, eErrorCode errCode, int lineNum)
             printf("in file: %s, line: %d - less arguments were given to than expected\n",currFileName,lineNum);
             break;
         default:
+            printf("in file: %s, line: %d - unkown error code\n",currFileName,lineNum);
+
             break;
     }
 }

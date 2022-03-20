@@ -84,7 +84,7 @@ bool readFile(FILE* fp, char* fileName)
         }
 
     }
-    UpdateLabelsAddress();
+    UpdateWordsListNodes();
 
 free(firstToken);
 free(labelName);
@@ -103,10 +103,7 @@ pLabelNode getLabel(char *label)
     }
     return NULL;
 }
-void UpdateDataListNodes()
-{
 
-}
 void UpdateWordsListNodes()
 {
     pWordNode curr = NULL;
@@ -144,11 +141,8 @@ void UpdateWordsListNodes()
         curr = curr->pNext;
     }
 }
-void UpdateLabelsAddress()
-{
-    UpdateDataListNodes();
-    UpdateWordsListNodes();
-}
+
+
 bool addEntryAttribute(const char* fileName, char* label, int lineNum)
 {
     pLabelNode curr = NULL;
@@ -183,37 +177,6 @@ bool isEntryInstruction(char *token)
     }
     return true;
 }
-
-
-/* first update entries table and than update the word list accordingly
- * need to add to words the name of labels if there is a label
- * idea: maybe change temporarily the ARE register to flag it as something that needs updating */
-/*bool isDeclaredEntry(char *token) {
-    pLabelNode curr = NULL;
-
-    if (token == NULL)
-        return false;
-    *//*curr = labelsHead;*//*
-    while ((curr != NULL) && (strcmp(curr->label.name, token) != 0)) {
-        curr = curr->pNext;
-    }
-    if (curr == NULL)            *//* reached end of labels list *//*
-    {
-        return false;
-    }else{
-        *//* reached label name same as token *//*
-        return true;
-    }
-}*/
-
-bool isLabel(char *token)
-{
-    if(strchr(token,':')!= NULL)
-        return true;
-    return false;
-
-}
-
 
 
 
