@@ -65,6 +65,9 @@ void printError(const char* currFileName, eErrorCode errCode, int lineNum)
         case LABEL_DOSNT_EXIST:
             printf("in file: %s, line: %d - Given label doesn't exist!\n",currFileName,lineNum);
             break;
+        case MISSING_ARGUMENTS:
+            printf("in file: %s, line: %d - less arguments were given to than expected\n",currFileName,lineNum);
+            break;
         
     }
 }

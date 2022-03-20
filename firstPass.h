@@ -12,21 +12,14 @@
 #include "wordLinkedList.h"
 
 
-typedef struct Argument {
-    eAddrresMethod addressingMethod;
-    int value;
-    bool isLabel;
-    char labelName[LABEL_LEN];
-    bool isError;
-} Argument;
-
 bool firstPass(const char* fileName, int *ICF, int *DCF);
 bool labelCheck(char*, char*, int);
 bool isRegName(const char *label);
 int getRegNum(const char *label);
-
+int getNumOfExpectedArguments(eCommands command);
+char* getLabelFromIndexAddressing(char* token);
 eCommands getOpcode(char*);
 int getFunct(int, char*);
-bool fillOutArguments(const char*, char*,unsigned int ,int );
+bool fillOutArguments(const char*, char*,unsigned int ,int ,int );
 
 #endif

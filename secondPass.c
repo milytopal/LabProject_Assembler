@@ -125,10 +125,21 @@ void UpdateWordsListNodes()
                 curr = curr->pNext;
                 continue;
             } else {
-                if(curr->word.labelDest == LABEL_DEST_B) {
-                    curr->word.code.opcode = pLabel->label.address;
-                }else if(curr->word.labelDest == LABEL_DEST_O) {
-                    curr->word.code.opcode = pLabel->label.offset;
+                if(pLabel->label.locationType == Extern)
+                {
+                    if(curr->word.labelDest == LABEL_DEST_B) {
+                        pLabel->label.address = curr->word.address;
+                        /*curr->word.code.opcode = pLabel->label.address;*/
+                    }else if(curr->word.labelDest == LABEL_DEST_O) {
+                        pLabel->label.offset = (int)(curr->word.address);          /* for extern labels need to print base and address*/
+                        /*curr->word.code.opcode = pLabel->label.offset;*/
+                    }
+                }else {
+                    if (curr->word.labelDest == LABEL_DEST_B) {
+                        curr->word.code.opcode = pLabel->label.address;
+                    } else if (curr->word.labelDest == LABEL_DEST_O) {
+                        curr->word.code.opcode = pLabel->label.offset;
+                    }
                 }
             }
         }
@@ -179,23 +190,23 @@ bool isEntryInstruction(char *token)
 /* first update entries table and than update the word list accordingly
  * need to add to words the name of labels if there is a label
  * idea: maybe change temporarily the ARE register to flag it as something that needs updating */
-bool isDeclaredEntry(char *token) {
+/*bool isDeclaredEntry(char *token) {
     pLabelNode curr = NULL;
 
     if (token == NULL)
         return false;
-    /*curr = labelsHead;*/
+    *//*curr = labelsHead;*//*
     while ((curr != NULL) && (strcmp(curr->label.name, token) != 0)) {
         curr = curr->pNext;
     }
-    if (curr == NULL)            /* reached end of labels list */
+    if (curr == NULL)            *//* reached end of labels list *//*
     {
         return false;
     }else{
-        /* reached label name same as token */
+        *//* reached label name same as token *//*
         return true;
     }
-}
+}*/
 
 bool isLabel(char *token)
 {

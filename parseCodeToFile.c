@@ -58,7 +58,7 @@ bool parseCodeToFile(char *fileName, const int *ICF,const int *DCF)
         return true;
     }else
     {
-        printEntriesFile(extF, entF);
+        printLabelTableToFiles(extF, entF);
     }
     /* todo: ask bar if its better to print simultaneously
      * to externals file and entries file or to separate
@@ -97,7 +97,7 @@ char *ParseExternals(pLabelNode node)
     return line;
 }
 
-void printEntriesFile(FILE *extF,FILE *entF)
+void printLabelTableToFiles(FILE *extF, FILE *entF)
 {
     pLabelNode curr = NULL;
     char* entPrint = NULL;
@@ -121,25 +121,6 @@ void printEntriesFile(FILE *extF,FILE *entF)
     free(extPrint);
 }
 
-/*
-void printExternalsFile(FILE *fp)
-{
-    pLabelNode curr = NULL;
-    char *toPrint = NULL;
-    curr = labelsHead;
-    if(labelsHead == NULL)          */
-/* no labels in file *//*
-
-        return;
-    while(curr !=NULL)
-    {
-        toPrint = ParseExternals(curr);
-        fprintf(fp,"%s",toPrint);
-        curr = curr->pNext;
-    }
-    free(toPrint);
-}
-*/
 
 void printObjectFile(FILE *fp ,const int *ICF,const int *DCF)
 {
@@ -147,7 +128,14 @@ void printObjectFile(FILE *fp ,const int *ICF,const int *DCF)
     char* toPrint = NULL;
     curr = wordsHead;
     fprintf(fp,"\t\t\t\t%d\t%d",*ICF,*DCF);
-    while(curr !=NULL)
+    while(curr != NULL)
+    {
+        toPrint = parseWordToBase(curr);
+        fprintf(fp,"%s",toPrint);
+        curr = curr->pNext;
+    }
+    curr = datasHead;
+    while(curr != NULL)
     {
         toPrint = parseWordToBase(curr);
         fprintf(fp,"%s",toPrint);

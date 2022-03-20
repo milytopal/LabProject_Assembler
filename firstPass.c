@@ -50,12 +50,12 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
     char *labelName = NULL;
     bool isError = false;
     bool isLabel;
-    int isData, isString, funct,ind , opCode;
+    int isData, isString, funct,ind , opCode, numOfExpectedArgs;
     int lineNum = 0;
     char line[LINE_LENGTH] = {0};
     char arg[31] = {0};
-    Word tempWord;
-    Word opcodeWord;
+    Word tempWord = {0};
+    Word opcodeWord = {0};
     tempWord.are = A; /* All firstPass words get A, so no need to set it every time */
     opcodeWord.are = A; /* All firstPass words get A, so no need to set it every time */
 
@@ -89,6 +89,7 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
         memset(labelName, '\0',LABEL_LEN); /*reset memory */
         token = NULL;
         lineNum++;
+        numOfExpectedArgs = 0;
         i = 0;
         isLabel = false;
 
@@ -270,7 +271,14 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
             }
         }
 
-        isError = fillOutArguments(fileName, token, funct, lineNum);
+        numOfExpectedArgs = getNumOfExpectedArguments(opCode);
+        if(numOfExpectedArgs == -1)
+        {
+            printError(fileName, UNKNOWN_OPERATION,lineNum);
+            isError = true;
+            continue;
+        }
+        isError = fillOutArguments(fileName, token, funct, lineNum , numOfExpectedArgs);
 
         clearLine(line);
     }
@@ -373,17 +381,17 @@ Get the funct of an operation.
 */
 int getFunct(int opCode, char* operation) {
     switch (opCode) {
-        case 2:
+        case ADD:                                       /* covers sub */
             if (strcmp(operation, "add") == 0) return 10;
             if (strcmp(operation, "sub") == 0) return 10;
             break;
-        case 5:
+        case CLR:                                       /*covers not, inc, dec */
             if (strcmp(operation, "clr") == 0) return 10;
             if (strcmp(operation, "not") == 0) return 11;
             if (strcmp(operation, "inc") == 0) return 12;
             if (strcmp(operation, "dec") == 0) return 13;
             break;
-        case 9:
+        case JMP:                                       /*covers bne, jsr*/
             if (strcmp(operation, "jmp") == 0) return 10;
             if (strcmp(operation, "bne") == 0) return 11;
             if (strcmp(operation, "jsr") == 0) return 12;
@@ -400,7 +408,7 @@ A function to get the addressing method and value of an argument.
     - it will check 1 argument and return it's Addressing Method and value
     - it will find errors in the Addressing Method, will return negative ints in addressingMethod for errors
 */
-bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int funct, int lineNum) {
+bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int funct, int lineNum, int numOfExpectedArgs) {
 
     char labelName[LABEL_LEN];
     int index;
@@ -409,18 +417,20 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
     bool isLabel[] = {0,0};
     eAddrresMethod Ad[] = {-1,-1};
     char labels[2][LABEL_LEN];
-
+    int argCount = 0;
     char *firstBracket = NULL;
     char *token = NULL;
+    char reg[4] = {0};
+    char* temp;
     Word tempWord = {0};
     tempWord.code.operands.funct = funct;
     token = strtok(argAsStr, ", \t\n");
-
     index = 0;
 
     while (token != NULL && index < 2){
         memset(labelName, 0, strlen(argAsStr));
         if (token[0] == '#') { /* Immediate */
+            argCount++;
             Ad[index] = IMMEDIATE;
             val[index] = (int) strtol(token + 1, &firstBracket, 10);
             if (val[index] < -32767 || val[index] > 32767) {
@@ -431,12 +441,16 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
         } else if (isRegName(token)) { /* register direct */
             Ad[index] = DIRECT_REGISTER;
             val[index] = getRegNum(token);
+            argCount++;
         } else {
             /* no error, handling a label  */
             firstBracket = strpbrk(argAsStr, "[");
             if (firstBracket != NULL) { /* Index */
                 Ad[index] = INDEX;
-                /*check for error*/
+                /* store reg name for furthur parsing*/
+                strncpy(reg,firstBracket+1, strlen(firstBracket)-2);
+
+                /*check if ther is closing bracket */
                 firstBracket = strpbrk(argAsStr, "]"); /* find closing brackets */
                 if (firstBracket == NULL)
                 {
@@ -445,14 +459,14 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
                 }
 
                 /* strip label from brackets and store it */
-                token = strtok(argAsStr, "[\n");
                 isLabel[index] = true;
-                strncpy(labels[index], token, LABEL_LEN); /* store label name */
-                token = strtok(NULL, " ]\t\n");
-                if (isRegName(token) == true) /* the index points to register*/
+                temp = getLabelFromIndexAddressing(token);
+                strncpy(labels[index], temp, LABEL_LEN); /* store label name */
+
+                if (isRegName(reg) == true) /* the index points to register*/
                 {
-                    val[index] = getRegNum(token);
-                    if (val[index] >= 0 && val[index] <= 10)
+                    val[index] = getRegNum(reg);
+                    if (val[index] >= 0 && val[index] < 10)
                     {
                         printError(asFileName, INVALID_USE_OF_REGISTER, lineNum);
                         isError = true;
@@ -473,27 +487,44 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
             }
         }
         index++;
-        token = strtok(NULL,", \t\n");
+        token = strtok(NULL,"], \t\n");
+    }
+
+    if(index < numOfExpectedArgs)
+    {
+        printError(asFileName, MISSING_ARGUMENTS, lineNum);
+        isError = true;
+        return isError;
+    }else if((index > numOfExpectedArgs) && token != NULL && token[0] != ';') /* if there is extra text after expected argument and it isn't a comment*/
+    {
+        printError(asFileName, TOO_MANY_ARGUMENTS, lineNum);
+        isError = true;
+        return isError;
     }
 
     /*create the second word with the new data*/
-
-    tempWord.code.operands.destAdd = Ad[0];
-    tempWord.code.operands.srcAdd = Ad[1];
+    tempWord.are = A;
+    tempWord.code.operands.srcAdd = Ad[0];
     if(Ad[0] == DIRECT_REGISTER)
     {
-        tempWord.code.operands.destReg = val[0];
-    } else {
-        tempWord.code.operands.destReg = 0;
-    }
-    if(Ad[1] == DIRECT_REGISTER)
-    {
-        tempWord.code.operands.srcReg = val[1];
+        tempWord.code.operands.srcReg = val[0];
     } else {
         tempWord.code.operands.srcReg = 0;
     }
-    addWordNodeToCode(tempWord, IC, 0, lineNum);
-    IC++;
+    if(numOfExpectedArgs == 1)          /* only one argument in command */
+    {
+        addWordNodeToCode(tempWord, IC, 0, lineNum);
+        IC++;
+    } else {
+        tempWord.code.operands.destAdd = Ad[1];
+        if (Ad[1] == DIRECT_REGISTER) {
+            tempWord.code.operands.destReg = val[1];
+        } else {
+            tempWord.code.operands.destReg = 0;
+        }
+        addWordNodeToCode(tempWord, IC, 0, lineNum);
+        IC++;
+    }
     if(Ad[0] == DIRECT_REGISTER && Ad[1] == DIRECT_REGISTER)        /*no words to add*/
         return isError;
 
@@ -504,14 +535,7 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
         tempWord.code.opcode = val[0];
         addWordNodeToCode(tempWord, IC, 0, lineNum);
         IC++;
-    } else if(Ad[1] == IMMEDIATE)           /* cant have too immediate */
-    {
-        tempWord.are = A;
-        tempWord.code.opcode = val[1];
-        addWordNodeToCode(tempWord, IC, 0, lineNum);
-        IC++;
-    }
-    if(Ad[0]==DIRECT || Ad[0] == INDEX)
+    } else if(Ad[0]==DIRECT || Ad[0] == INDEX)
     {
         tempWord.are = R;
         tempWord.isLabel = isLabel[0];
@@ -520,7 +544,16 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
         IC++;
         addWordNodeToCode(tempWord,IC,LABEL_DEST_O,lineNum);
         IC++;
-    }else if(Ad[1] == DIRECT || Ad[1] == INDEX)
+    }
+
+    if(Ad[1] == IMMEDIATE)           /* cant have too immediate */
+    {
+        tempWord.are = A;
+        tempWord.code.opcode = val[1];
+        addWordNodeToCode(tempWord, IC, 0, lineNum);
+        IC++;
+    }
+     if(Ad[1] == DIRECT || Ad[1] == INDEX)
     {
         tempWord.are = R;
         tempWord.isLabel = isLabel[1];
@@ -532,6 +565,7 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
     }
 return isError;
 }
+
 /* check if label is registers name */
 bool isRegName(const char *label)
 {
@@ -557,4 +591,33 @@ int getRegNum(const char *label)
         }
     }
     return -1;
+}
+int getNumOfExpectedArguments(eCommands command)
+{
+    switch(command)
+    {
+        case MOV:
+        case CMP:
+        case ADD:           /* covers also the case: SUB */
+        case LEA:
+            return EXPECTED_TWO_ARGS;
+        case CLR:           /* covers also the cases: NOT, INC, DEC */
+        case JMP:           /* covers also the cases: BNE, JSR */
+        case RED:
+        case PRN:
+            return EXPECTED_ONE_ARG;
+        case RTS:                   /* covers also the cases: STOP */
+            return NO_ARGS_EXPECTED;
+        default:
+            return -1;
+    }
+
+}
+
+char* getLabelFromIndexAddressing(char* token)
+{
+    char * firstBracket = NULL;
+    firstBracket = strpbrk(token, "[");
+    *firstBracket = '\0';
+    return token;
 }

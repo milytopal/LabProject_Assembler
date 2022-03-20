@@ -19,19 +19,49 @@
 #define STARTING_IC 100
 #define NUM_OF_REGS 16
 
+#define NO_ARGS_EXPECTED 0
+#define EXPECTED_ONE_ARG 1
+#define EXPECTED_TWO_ARGS 2
+
 typedef enum bool{false,true}bool;
-typedef enum eLocalizaion{Extern, Entry, NoneExtOrEnt}eLocalizaion;
-typedef enum eDataType{Data, Code, NoneDataOrCode}eDataType;
-typedef enum ARE{A=4,R=2,E=1}ARE ;
-typedef enum eCommands{MOV,CMP,ADD,SUB,LEA,CLR,NOT,INC,DEC,JMP,BNE,JSR,RED,PRN,RTS,STOP}eCommands;
-typedef enum eDirectives{DATA,STRING,ENTRY,EXTERN}eDirectives;
-typedef enum eAddrresMethod{IMMEDIATE=0,DIRECT,INDEX,DIRECT_REGISTER}eAddrresMethod;
+
+typedef enum eLocalizaion{Extern, Entry, NoneExtOrEnt }eLocalizaion;
+
+typedef enum eDataType{Data, Code, NoneDataOrCode }eDataType;
+
+typedef enum ARE{A=4,R=2,E=1 }ARE ;
+
+typedef enum eDirectives{DATA,STRING,ENTRY,EXTERN }eDirectives;
+
+typedef enum eAddrresMethod{ NA = -1, IMMEDIATE=0,DIRECT,INDEX,DIRECT_REGISTER }eAddrresMethod;
+
 typedef enum eErrorCode { MISSING_FILE_NAME,MISSING_FILE,LINE_LIMIT_REACHED, LABEL_LIMIT_REACHED, BAD_LABEL_NAME, FAILED_TO_CREATE,
     NO_ARGUMENTS, INCOMPLETE_CODE,MISSING_LABEL, MISSING_PARAMETER,
     LABEL_ALREADY_EXISTS, UNKNOWN_OPERATION, INVALID_ARGUMENT,
     NUMBER_OUT_OF_BOUND, INVALID_BRACKET_CONTENTS , TOO_MANY_ARGUMENTS,
     INVALID_USE_OF_REGISTER , MISSING_BRACKETS ,
-    LABEL_IS_ALREADY_EXTERN, LABEL_DOSNT_EXIST}eErrorCode;
+    LABEL_IS_ALREADY_EXTERN, LABEL_DOSNT_EXIST,MISSING_ARGUMENTS}eErrorCode;
+
+/* in each opcode only one bit is set to '1' */
+typedef enum eCommands{MOV = 1,            /* 2^0 = 1*/
+    CMP = 2,            /* 2^1 = 2*/
+    ADD = 4,            /* 2^2 = 4*/
+    SUB = 4,            /* 2^2 = 4*/
+    LEA = 16,           /* 2^4 = 16*/
+    CLR = 32,           /* 2^5 = 32*/
+    NOT = 32,           /* 2^5 = 32*/
+    INC = 32,           /* 2^5 = 32*/
+    DEC = 32,           /* 2^5 = 32*/
+    JMP = 512,          /* 2^9 = 512*/
+    BNE = 512,          /* 2^9 = 512*/
+    JSR = 512,          /* 2^9 = 512*/
+    RED = 4096,         /* 2^12 = 4096*/
+    PRN = 8192,         /* 2^13 = 8192*/
+    RTS = 16384,        /* 2^14 = 16384*/
+    STOP = 32768        /* 2^15 = 32768*/
+}eCommands;
+
+
 
 /* the TokenNode is a node for linked list of commands inside a macro */
 typedef struct TokenNode *pTokenNode;
@@ -107,10 +137,6 @@ typedef struct WordNode{
 pWordNode wordsHead;
 pLabelNode labelsHead;
 pWordNode datasHead;
-
-
-/*pLabelNode labelsHead = NULL;
-pWordNode codeHead = NULL; */
 
 int IC;
 int DC;
