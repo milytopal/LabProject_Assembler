@@ -13,12 +13,14 @@ bool secondPass(const char* fileName, int *ICF, int *DCF)
 
     if (fp == NULL){
         printError(asFileName, MISSING_FILE, 0);
+        free(asFileName);
+        fclose(fp);
         return true;
     }else {
         /* reading file here */
         isError = readFile(fp,fileName);
     }
-
+    fclose(fp);
     free(asFileName);
     return isError;
 }
@@ -80,10 +82,7 @@ bool readFile(FILE* fp, const char* fileName)
             }
             /* handle binary operands here */
 
-
-
         }
-
 
     }
     UpdateLabelsAddress();

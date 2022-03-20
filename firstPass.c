@@ -116,6 +116,13 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
             /*if we found a label we want to continue to next argument */
             token = strtok(NULL, " \t\n");
 /*            strncpy(firstToken ,token, strlen(token)); */
+            if(token == NULL)
+            {
+                printError(fileName, MISSING_PARAMETER,lineNum);
+                isError = true;
+                clearLine(line);
+                continue;
+            }
         }
 
         /* Check if .string .data .entry .extern and Handle*/
@@ -179,11 +186,9 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
                         clearLine(line);
                         continue;
                     }
-
                     while (token[i] != '\0') {
                         tempWord.code.opcode = (unsigned int)token[i];
                         tempWord.are = A;
-
                         addWordNodeToData(tempWord, DC+IC,0,lineNum);
                         printf(" \n%d , %d",DC,DC+IC);
                         DC++;
@@ -302,6 +307,7 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
     printLabels();
     free(asFileName);
     free(tName);
+    free(labelName);
    /* free(firstToken); */
 
     return isError;

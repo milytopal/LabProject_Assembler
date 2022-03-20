@@ -43,7 +43,6 @@ bool parseCodeToFile(const char *fileName, const int *ICF,const int *DCF)
         free(codeFileName);
         free(entFileName);
         free(extFileName);
-        fclose(codeF);
         return true;
     }
     if (entF == NULL ){
@@ -51,7 +50,6 @@ bool parseCodeToFile(const char *fileName, const int *ICF,const int *DCF)
         free(codeFileName);
         free(entFileName);
         free(extFileName);
-        fclose(codeF);
         fclose(extF);
         return true;
     }else

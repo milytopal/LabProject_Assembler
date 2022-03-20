@@ -11,7 +11,6 @@ char *printByte(int index, int value);
 char *parseWordToBase(pWordNode word);
 char *ParseExternals(pLabelNode);
 
-void printExternalsFile(FILE *fp);
 void printLabelTableToFiles(FILE *extF, FILE *entF);
 void printObjectFile(FILE *fp,const int *ICF,const int *DCF);
 

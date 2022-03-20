@@ -15,6 +15,8 @@ bool PreProcessPass(const char* fileName)
     amFileName = (char*)calloc(strlen(fileName) + strlen(".am") + 1, sizeof(char));
     strncpy(asFileName, fileName, strlen(fileName));
     strcat(asFileName, ".as");
+    strncpy(amFileName, fileName, strlen(fileName));
+    strcat(amFileName, ".am");
 
     if (getcwd(cwd, sizeof(cwd)) != NULL) {     /*todo : remove later*/
         printf("Current working dir: %s\n", cwd);
@@ -26,15 +28,18 @@ bool PreProcessPass(const char* fileName)
 
     if (fp == NULL){
         printError(asFileName, MISSING_FILE, 0);
+        free(amFileName);
+        free(asFileName);
         return true;
     }
-    strncpy(amFileName, fileName, strlen(fileName));
-    strcat(amFileName, ".am");
+
     newFp = fopen(amFileName, "w");
 
     if(newFp == NULL){
         printError(amFileName, FAILED_TO_OPEN, 0);
         fclose(fp);
+        free(amFileName);
+        free(asFileName);
         return true;
     }
 
@@ -103,6 +108,7 @@ bool ParseMacros(FILE *fp, FILE * newFp)
         clearLine(line);
     }
     deleteMacroList(head);
+    free(cpyLine);
     return true;
 }
 
