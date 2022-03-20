@@ -59,7 +59,6 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
     tempWord.are = A; /* All firstPass words get A, so no need to set it every time */
     opcodeWord.are = A; /* All firstPass words get A, so no need to set it every time */
 
-
     IC = STARTING_IC;
     DC = 0;
 
