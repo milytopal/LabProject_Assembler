@@ -22,11 +22,6 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "Missing Arguments for Assembler \n ");
     }
 
-/* todo: check if assembler is another argument or it is the name of the program */
-   /* if(strcmp(argv[1],"assembler") != 0)
-    {
-        fprintf(stderr, "Invalid Operation! %s is Unknown Process \n",argv[1]);
-    }*/
     for(i=1; i < argc ; i++)
     {
         /* error will occur only if file is missing or failed to open file */
@@ -44,7 +39,7 @@ int main(int argc, char *argv[]) {
         {
             isErrorFound = parseCodeToFile(argv[i], &ICF,&DCF);
         }
-        /* todo: reset linked lists and everything before next file*/
+
         deleteWordList(wordsHead);
         deleteWordList(datasHead);
         deleteLabelList(labelsHead);
