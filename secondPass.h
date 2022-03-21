@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "utils.h"
+#include "dataLinkedList.h"
 #include "dataStructs.h"
 
 bool readFile(FILE* fp, char* fileName);        /* reading file */

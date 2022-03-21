@@ -103,7 +103,7 @@ void printLabelTableToFiles(FILE *extF, FILE *entF)
         }
         if(curr->label.locationType == Extern){
             extPrint = ParseExternals(curr);
-            fprintf(extF,"%s",extPrint);
+            fprintf(extF,"%s\n",extPrint);
         }
         curr = curr->pNext;
     }

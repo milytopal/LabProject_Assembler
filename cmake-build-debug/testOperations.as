@@ -7,7 +7,7 @@ add    r3, LIST            ;Doesn't have an error
 nope #1, #2
 add #0, r0
 bne END[r10]
-bne END[r10
+bne END[r16
 bne END[r9]
 bne END[r16]
 bne END[13]

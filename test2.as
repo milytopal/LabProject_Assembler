@@ -10,6 +10,9 @@ LOOP: prn #48
         mov r3, W
       endm
       lea STR, r6
+;fortest
+      cmp val1,#-8
+      mov r3, W
       m1
       sub r1,r4
       bne END

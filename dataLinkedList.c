@@ -30,6 +30,26 @@ void addLabelNode(const char* name, const int value, eDataType dataType, eLocali
         curr->pNext = NULL;
     }
 }
+pLabelNode duplicateExternLabelNode(pLabelNode prevLabel, pLabelNode nextLabel, int address)
+{
+    pLabelNode curr = NULL;
+    pLabelNode temp = NULL;
+    if(prevLabel == NULL || nextLabel == NULL)
+        return NULL;
+
+    curr = labelsHead;
+    while (curr  != NULL && curr != prevLabel) {          /* walk on list until the get to the prevlabel*/
+        curr = curr->pNext;
+    }
+    temp = (pLabelNode) calloc(1, sizeof(LabelNode));
+    strncpy(temp->label.name,prevLabel->label.name,strlen(prevLabel->label.name));
+    temp->label.value = address;
+    temp->label.address = address;
+    temp->label.offset = address +1;
+    temp->pNext = nextLabel;
+    curr->pNext = temp;
+    return temp;
+    }
 
 void deleteLabelList(pLabelNode list)
 {

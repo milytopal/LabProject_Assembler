@@ -583,7 +583,8 @@ CMakeFiles/Project_maman14.dir/secondPass.c.o: ../secondPass.c \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/_ctype.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/runetype.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/sys/_types/_wint_t.h \
-  ../dataStructs.h
+  ../dataStructs.h \
+  ../dataLinkedList.h
 
 CMakeFiles/Project_maman14.dir/utils.c.o: ../utils.c \
   ../utils.h \

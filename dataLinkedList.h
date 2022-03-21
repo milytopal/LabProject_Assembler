@@ -9,6 +9,7 @@ void addLabelNode(const char* name, int value, eDataType dataType, eLocalizaion 
 void deleteLabelList(pLabelNode list);
 
 int contains(pLabelNode, char*);
+pLabelNode duplicateExternLabelNode(pLabelNode prevLabel, pLabelNode nextLabel, int address);
 
 
 #endif
