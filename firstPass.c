@@ -444,7 +444,7 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
                 {
                     printError(asFileName, MISSING_BRACKETS, lineNum);
                     isError = true;
-                    //return isError;
+                    /*return isError;*/
                 }else
                 {
                     /*there is closing bracket*/
