@@ -173,7 +173,6 @@ CMakeFiles/Project_maman14.dir/firstPass.c.o: ../firstPass.c \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/sys/_types/_wint_t.h \
   ../utils.h \
   ../dataStructs.h \
-  ../extrnVariables.h \
   ../dataLinkedList.h \
   ../wordLinkedList.h
 
@@ -266,7 +265,6 @@ CMakeFiles/Project_maman14.dir/main.c.o: ../main.c \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/sys/_types/_wint_t.h \
   ../preProcessor.h \
   ../firstPass.h \
-  ../extrnVariables.h \
   ../dataLinkedList.h \
   ../wordLinkedList.h \
   ../secondPass.h \
@@ -825,6 +823,10 @@ CMakeFiles/Project_maman14.dir/wordLinkedList.c.o: ../wordLinkedList.c \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/sys/_types/_dev_t.h:
 
+/Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/sys/_types/_u_int64_t.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/unistd.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/malloc/_malloc.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/sys/_types/_fd_isset.h:
@@ -877,8 +879,6 @@ CMakeFiles/Project_maman14.dir/wordLinkedList.c.o: ../wordLinkedList.c \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/mach/arm/_structs.h:
 
-../extrnVariables.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/sys/_types/_errno_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/sys/_types/_off_t.h:
@@ -930,10 +930,6 @@ CMakeFiles/Project_maman14.dir/wordLinkedList.c.o: ../wordLinkedList.c \
 /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/sys/_types/_uintptr_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/sys/wait.h:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/unistd.h:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/sys/_types/_u_int64_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/sys/_types/_wchar_t.h:
 
