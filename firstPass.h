@@ -7,7 +7,6 @@
 #include <ctype.h>
 #include "utils.h"
 #include "dataStructs.h"
-#include "extrnVariables.h"
 #include "dataLinkedList.h"
 #include "wordLinkedList.h"
 

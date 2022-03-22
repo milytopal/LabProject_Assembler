@@ -43,7 +43,8 @@ typedef enum eErrorCode { FAILED_TO_OPEN = 0 , MISSING_FILE_NAME,MISSING_FILE,LI
     LABEL_IS_ALREADY_EXTERN, LABEL_DOSNT_EXIST,MISSING_ARGUMENTS}eErrorCode;
 
 /* in each opcode only one bit is set to '1' */
-typedef enum eCommands{MOV = 1,            /* 2^0 = 1*/
+typedef enum eCommands{
+    MOV = 1,            /* 2^0 = 1*/
     CMP = 2,            /* 2^1 = 2*/
     ADD = 4,            /* 2^2 = 4*/
     SUB = 4,            /* 2^2 = 4*/
@@ -131,7 +132,7 @@ typedef struct WordNode{
 }WordNode;
 
 /* three lists designed as single occurrence
- * meaning there cannot be another label list in the code*/
+ * meaning there  label list in the code*/
 pWordNode wordsHead;
 pLabelNode labelsHead;
 pWordNode datasHead;
