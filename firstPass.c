@@ -1,17 +1,14 @@
 #include "firstPass.h"
 
 int i;
-char* tName;
 char* regList[]= {"r0","r1","r2","r3","r4","r5","r6","r7","r8","r9","r10","r11","r12","r13","r14","r15"};
 /* for debug functions remove later */
 
 bool firstPass(const char* fileName, int *ICF, int *DCF)
 {
     FILE *fp = NULL;
-    char* asFileName;
-    /* Important variables for the loop */
+    char* amFileName;
     char *token = NULL;
- /*   char *firstToken = NULL;  */          /* check if needed*/
     char *strTolPtr = NULL;
     char *labelName = NULL;
     bool isError = false;
@@ -22,20 +19,18 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
     char arg[31] = {0};
     Word tempWord = {0};
     Word opcodeWord = {0};
-    tempWord.are = A; /* All firstPass words get A, so no need to set it every time */
-    opcodeWord.are = A; /* All firstPass words get A, so no need to set it every time */
+    tempWord.are = A; /* All first Word get A, the determined later */
+    opcodeWord.are = A; /* All first Word get A, the determined later */
 
     IC = STARTING_IC;
     DC = 0;
 
-    tName = (char*)calloc(LABEL_LEN,sizeof(char));
-    asFileName = (char*)calloc(strlen(fileName) + strlen(".am") + 1, sizeof(char));
-   /* firstToken = (char*) calloc(LABEL_LEN,sizeof(char)); */
+    amFileName = (char*)calloc(strlen(fileName) + strlen(".am") + 1, sizeof(char));
     labelName = (char*) calloc(LABEL_LEN,sizeof(char));
 
-    strncpy(asFileName, fileName, strlen(fileName));
-    strcat(asFileName, ".am");
-    fp = fopen(asFileName, "r");
+    strncpy(amFileName, fileName, strlen(fileName));
+    strcat(amFileName, ".am");
+    fp = fopen(amFileName, "r");
 
     if (fp == NULL){
         printError(fileName, MISSING_FILE, 0);
@@ -49,8 +44,6 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
     returnStatus = false;
     while (fgets(line, LINE_LENGTH, fp) != NULL)
     {
-/*        memset(firstToken, '\0',LABEL_LEN); */ /*reset memory */
-        memset(tName, '\0',LABEL_LEN);
         memset(labelName, '\0',LABEL_LEN); /*reset memory */
         token = NULL;
         lineNum++;
@@ -61,18 +54,18 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
         if (isEmptyLine(line) == true || line[0] == ';') continue;
         /* check for line length excited */
         if (line[LINE_LENGTH-2]!= '\0') {
-            printError(asFileName, LINE_LIMIT_REACHED, lineNum);
+            printError(fileName, LINE_LIMIT_REACHED, lineNum);
             clearLine(line);
             continue; /* Can't actually check the line */
         }
         /* line ok ger first token */
         token = strtok(line, " \t\n");
-/*        strncpy(firstToken, token, strlen(token)); */
 
         if(token[strlen(token)-1] == ':')   /* check if first token is a label */
         {
-            returnStatus = labelCheck(asFileName, token, lineNum);
+            returnStatus = labelCheck(fileName, token, lineNum);
             if (returnStatus == true) {
+                isError = true;
                 clearLine(line);
                 continue;   /*if error found continue next line*/
             }
@@ -80,7 +73,6 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
             strncpy(labelName,token,strlen(token));
             /*if we found a label we want to continue to next argument */
             token = strtok(NULL, " \t\n");
-/*            strncpy(firstToken ,token, strlen(token)); */
             if(token == NULL)
             {
                 printError(fileName, MISSING_PARAMETER,lineNum);
@@ -98,7 +90,6 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
             if (isData == 0 || isString == 0) {
                 if (isLabel == true) {
                     addLabelNode(labelName, IC + DC, Data, NoneExtOrEnt); /* remembered label from before*/
-                    /* strncpy(tempWord.name,labelName,strlen(labelName)); */
                 }
 
                 if (isData == 0)
@@ -113,7 +104,7 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
                         continue;
                     }
 
-                    while(token != NULL) {
+                    while(token != NULL && token[0] != ';') {
                         if (isdigit(token[0]) != 0 ||token[0] == '+'|| token[0] == '-')
                         {
                             strncpy(arg,token,strlen(token));
@@ -125,9 +116,7 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
                                 continue;
                             }
                             tempWord.code.opcode = ind;
-
                             addWordNodeToData(tempWord, DC+IC,0,lineNum);
-                            printf(" \n%d , %d",DC,DC+IC);
                             DC++;
                             }
                         else
@@ -151,11 +140,10 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
                         clearLine(line);
                         continue;
                     }
-                    while (token[i] != '\0') {
+                    while (token[i] != '\0' ) {
                         tempWord.code.opcode = (unsigned int)token[i];
                         tempWord.are = A;
                         addWordNodeToData(tempWord, DC+IC,0,lineNum);
-                        printf(" \n%d , %d",DC,DC+IC);
                         DC++;
                         i++;
                     }
@@ -163,7 +151,6 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
                     tempWord.code.opcode = 0;
 
                     addWordNodeToData(tempWord,DC+IC,0,lineNum);
-                    printf(" \n%d , %d",DC,DC+IC);
                     DC++;
                 }
                 clearLine(line);
@@ -178,47 +165,49 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
                 token = strtok(NULL ," \t\n");      /* get label name after .extern declaration */
                 if (token == NULL) {
                     isError = true;
-                    printError(asFileName, MISSING_LABEL, lineNum);
+                    printError(fileName, MISSING_LABEL, lineNum);
                     clearLine(line);
                     continue;
                 }
 
-                /* check if externals label length is valid */
-                if (strlen(token) >= LABEL_LEN) {
+                returnStatus = labelCheck(fileName, token, lineNum);
+                if (returnStatus == true) {     /*if error found continue next line*/
                     isError = true;
-                    printError(asFileName, LABEL_LIMIT_REACHED, lineNum);
                     clearLine(line);
                     continue;
                 }
-                /* check if extern label name is valid*/
-                if (isalpha(token[0]) == 0) {
-                    isError = true;
-                    printError(asFileName, BAD_LABEL_NAME, lineNum);
-                    clearLine(line);
-                    continue;
-                }
-                /* extern label name is valid here create a label*/
+
+                /* extern label name is valid here and wasnt declared before create a label */
                 addLabelNode(token, 0, NoneDataOrCode, Extern);
+                /* check if more text after label */
+                token = strtok(NULL ," \t\n");      /* get label name after .extern declaration */
+                if(token != NULL && token[0] !=';')
+                {
+                    printError(fileName,EXTRA_TEXT_AT_END, lineNum);
+                    isError = true;
+                    clearLine(line);
+                    continue;
+                }
                 clearLine(line);
                 continue;
             } /* not an extern */
-
-            isError = true; /* TODO: change error type*/
-            printError(asFileName, INCOMPLETE_CODE, lineNum);
+            /* not a .data .string .extern or .entry*/
+            isError = true;
+            printError(fileName, INCOMPLETE_CODE, lineNum);
             clearLine(line);
             continue;
         } /* End of handling .string .data .entry .extern */
 
         /*----------------- handle code ----------------*/
         if (isLabel == true) {
-            addLabelNode(/*labelName */tName, IC + DC, Code, NoneExtOrEnt);
+            addLabelNode(labelName /*tName*/, IC + DC, Code, NoneExtOrEnt);
         }
 
         opCode = getOpcode(token);
 
         if (opCode == -1) {
             isError = true;
-            printError(asFileName, UNKNOWN_OPERATION, lineNum);
+            printError(fileName, UNKNOWN_OPERATION, lineNum);
             clearLine(line);
             continue;
         }
@@ -231,9 +220,9 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
         token = strtok(NULL, "\n");              /* get the rest of line after the command */
         if(opCode == STOP)
         {
-            if(token != NULL) /* no arguments expected */
+            if(token != NULL && token[0] != ';') /* no arguments expected */
             {
-                printError(asFileName, TOO_MANY_ARGUMENTS , lineNum);
+                printError(fileName, TOO_MANY_ARGUMENTS , lineNum);
                 isError = true;
                 clearLine(line);
             }
@@ -242,7 +231,7 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
         }else{ /* opcode is not for stop */
             if(token == NULL) /* arguments expected but was not received */
             {
-                printError(asFileName,NO_ARGUMENTS,lineNum);
+                printError(fileName,NO_ARGUMENTS,lineNum);
                 clearLine(line);
                 isError = true;
                 continue;
@@ -272,11 +261,8 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
     *ICF = (IC - STARTING_IC);
     *DCF = DC;
 
-    free(asFileName);
-    free(tName);
+    free(amFileName);
     free(labelName);
-   /* free(firstToken); */
-
     return isError;
 }
 
@@ -285,12 +271,12 @@ A function to check if the first word in the line is a label type, meaning:
     - it starts with an alpha
     - it's all alpha/num
 */
-bool labelCheck(char* asFileName, char* label, int lineNum) {
+bool labelCheck(const char* fileName, char* label, int lineNum) {
     int  len ,j; /* We will use this to set what situation we're in */
     len = (int)strlen(label);
     if(len > LABEL_LEN)
     {
-        printError(asFileName, LABEL_LIMIT_REACHED, lineNum);
+        printError(fileName, LABEL_LIMIT_REACHED, lineNum);
         return true; /* label name too long */
     }
 /* consider leaving it here - clean ':' from label */
@@ -301,39 +287,36 @@ bool labelCheck(char* asFileName, char* label, int lineNum) {
     }
     if(isalpha(label[0]) == 0)
     {
-        printError(asFileName,BAD_LABEL_NAME,lineNum);
+        printError(fileName,BAD_LABEL_NAME,lineNum);
         return true;
     }
     for(j = 0; j < len; j++)
     {
         if(isalnum(label[j]) == 0)
         {
-            printError(asFileName, BAD_LABEL_NAME, lineNum);
+            printError(fileName, BAD_LABEL_NAME, lineNum);
             return true;
         }
     }
     /*check if label is with a saved word - mabe need to add a check if it's a register name */
     if (getOpcode(label) != -1) {
-        printError(asFileName, BAD_LABEL_NAME, lineNum);
+        printError(fileName, USE_OF_SAVED_WORD, lineNum);
         return true; /* ERROR: Label can't be named that! */
     }
     /* check if label is registers name */
     if(isRegName(label))
     {
-        printError(asFileName, BAD_LABEL_NAME, lineNum);
+        printError(fileName, USE_OF_SAVED_WORD, lineNum);
         return true; /* ERROR: Label can't be named that! */
     }
 
     /*check if label exists already */
-    if (contains(labelsHead, label) != -1) {
-        printError(asFileName, LABEL_ALREADY_EXISTS, lineNum);
+    if (wasTheLabelDeclared(label) == true) {
+        printError(fileName, LABEL_ALREADY_EXISTS, lineNum);
         return true;
         /* ERROR: Label already exists */
     }
-
-/* label name valid - copy label name */
-    strncpy(tName, label, strlen(label));
-    return 0;
+    return false;
 }
 
 /*
@@ -369,7 +352,7 @@ int getFunct(int opCode, char* operation) {
     switch (opCode) {
         case ADD:                                       /* covers sub */
             if (strcmp(operation, "add") == 0) return 10;
-            if (strcmp(operation, "sub") == 0) return 10;
+            if (strcmp(operation, "sub") == 0) return 11;
             break;
         case CLR:                                       /*covers not, inc, dec */
             if (strcmp(operation, "clr") == 0) return 10;
@@ -414,7 +397,7 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
     token = strtok(argAsStr, ", \t\n");
     index = 0;
 
-    while (token != NULL && index < 2){
+    while (token != NULL && index < 2 && token[0] != ';'){
         memset(labelName, 0, strlen(argAsStr));
         if (token[0] == '#') { /* Immediate */
             argCount++;
@@ -444,7 +427,6 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
                 {
                     printError(asFileName, MISSING_BRACKETS, lineNum);
                     isError = true;
-                    /*return isError;*/
                 }else
                 {
                     /*there is closing bracket*/
@@ -530,6 +512,7 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
         return isError;
 
         /* add data containing words */
+    //memset(tempWord.name, 0, LABEL_LEN);
     if(Ad[0] == IMMEDIATE)
     {
         tempWord.are = A;
@@ -546,7 +529,7 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
         addWordNodeToCode(tempWord,IC,LABEL_DEST_O,lineNum);
         IC++;
     }
-
+    //memset(tempWord.name, 0, strlen(tempWord.name));
     if(Ad[1] == IMMEDIATE)           /* cant have too immediate */
     {
         tempWord.are = A;
@@ -581,18 +564,19 @@ bool isRegName(const char *label)
     return false;
 }
 /* check if label is registers name */
-int getRegNum(const char *label)
+int getRegNum(const char *reg)
 {
     int j;
     for( j=0; j < NUM_OF_REGS ; j++)
     {
-        if(strcmp(label,(regList[j])) == 0)
+        if(strcmp(reg,(regList[j])) == 0)
         {
             return j;
         }
     }
     return -1;
 }
+
 int getNumOfExpectedArguments(eCommands command)
 {
     switch(command)
@@ -614,7 +598,7 @@ int getNumOfExpectedArguments(eCommands command)
     }
 
 }
-
+/* strip the brackets from the label */
 char* getLabelFromIndexAddressing(char* token)
 {
     char * firstBracket = NULL;

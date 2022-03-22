@@ -1,79 +1,82 @@
-
 #include "utils.h"
 
 void printError(const char* currFileName, eErrorCode errCode, int lineNum)
 {
     printf("[ERROR]: ");
     switch (errCode) {
-        case MISSING_FILE_NAME:
-            printf("Missing file Name  \n");
-            break;
         case FAILED_TO_OPEN:
-            printf("The File \"%s\" Was Not Found\n", currFileName);
+            printf("Failed to Open File Named: \"%s\" Was Not Found\n", currFileName);
             break;
         case MISSING_FILE:
-            printf("The File \"%s\" Was Not Found\n", currFileName);
+            printf("File \"%s\" Was Not Found\n", currFileName);
             break;
         case LINE_LIMIT_REACHED:
-            printf("in file: %s, line: %d - Line Limit Reached Over 80 Chars\n",currFileName,lineNum);
+            printf("In File: %s, Line: %d - Line Limit Reached Over 80 Chars\n",currFileName,lineNum);
             break;
         case LABEL_LIMIT_REACHED:
-            printf("in file: %s, line: %d - Label Limit Reached Over 31 Chars\n",currFileName,lineNum);
+            printf("In File: %s, Line: %d - Label Limit Reached Over 31 Chars\n",currFileName,lineNum);
             break;
         case BAD_LABEL_NAME:
-            printf("in file: %s, line: %d - The declared label can't be named that\n",currFileName,lineNum);
+            printf("In File: %s, Line: %d - Label Name Dose Not Meet Requirements\n",currFileName,lineNum);
             break;
         case FAILED_TO_CREATE:
-            printf("in file: %s, line: %d - Failed to create final file\n",currFileName,lineNum);
+            printf("In File: %s, Line: %d - Failed to Create Final File\n",currFileName,lineNum);
             break;
         case NO_ARGUMENTS:
-            printf("in file: %s, line: %d - No arguments are provided\n",currFileName,lineNum);
+            printf("In File: %s, Line: %d - No Arguments are Provided\n",currFileName,lineNum);
             break;
         case INCOMPLETE_CODE:
-            printf("in file: %s, line: %d - Code line isn't complete\n",currFileName,lineNum);
+            printf("In File: %s, Line: %d - Code Line isn't Complete\n",currFileName,lineNum);
             break;
         case MISSING_LABEL:
-            printf("in file: %s, line: %d - Missing label after .extern\n",currFileName,lineNum);
+            printf("In File: %s, Line: %d - Missing Label Name After .extern\n",currFileName,lineNum);
             break;
         case MISSING_PARAMETER:
-            printf("in file: %s, line: %d - A parameter is missing!\n",currFileName,lineNum);
+            printf("In File: %s, Line: %d - A parameter is missing!\n",currFileName,lineNum);
             break;
         case LABEL_ALREADY_EXISTS:
-            printf("in file: %s, line: %d - Declared label was declared already\n",currFileName,lineNum);
+            printf("In File: %s, Line: %d - Declared Label Was Declared Already\n",currFileName,lineNum);
             break;
         case UNKNOWN_OPERATION:
-            printf("in file: %s, line: %d - Unknown operation\n",currFileName,lineNum);
+            printf("In File: %s, Line: %d - Unknown operation\n",currFileName,lineNum);
             break;
         case INVALID_ARGUMENT:
-            printf("in file: %s, line: %d - Argument isn't a number\n",currFileName,lineNum);
+            printf("In File: %s, Line: %d - Argument isn't a Number\n",currFileName,lineNum);
             break;
         case NUMBER_OUT_OF_BOUND:
-            printf("in file: %s, line: %d - Given number is out of bounds -32767 < x < 32767\n",currFileName,lineNum);
+            printf("In File: %s, Line: %d - Given Number is Out of Bounds -32767 < x < 32767\n",currFileName,lineNum);
             break;
         case INVALID_BRACKET_CONTENTS:
-            printf("in file: %s, line: %d - The bracket contents are invalid, must be a register between r10 and r15\n",currFileName,lineNum);
+            printf("In File: %s, Line: %d - The Bracket Contents are Invalid, Must be a Register Between r10 and r15\n",currFileName,lineNum);
             break;
         case TOO_MANY_ARGUMENTS:
-            printf("in file: %s, line: %d - Too many arguments were given to this operation\n",currFileName,lineNum);
+            printf("In File: %s, Line: %d - Too Many Arguments Were Given to This Operation\n",currFileName,lineNum);
             break;
         case INVALID_USE_OF_REGISTER:
-            printf("in file: %s, line: %d - Given register is out of bounds in this context, 10 >= r >= 15\n",currFileName,lineNum);
+            printf("In File: %s, Line: %d - Given Register is Out of Bounds in This Context,  Must be a Register Between 10 and 15\n",currFileName,lineNum);
             break;
         case MISSING_BRACKETS:
-            printf("in file: %s, line: %d - Missing brackets\n",currFileName,lineNum);
+            printf("In File: %s, Line: %d - Missing Brackets\n",currFileName,lineNum);
             break;
         case LABEL_IS_ALREADY_EXTERN:
-            printf("in file: %s, line: %d - Label is already extern\n",currFileName,lineNum);
+            printf("In File: %s, Line: %d - Label is Already Extern\n",currFileName,lineNum);
             break;
         case LABEL_DOSNT_EXIST:
-            printf("in file: %s, line: %d - Given label doesn't exist!\n",currFileName,lineNum);
+            printf("In File: %s, Line: %d - Given Label Doesn't Exist\n",currFileName,lineNum);
             break;
         case MISSING_ARGUMENTS:
-            printf("in file: %s, line: %d - less arguments were given to than expected\n",currFileName,lineNum);
+            printf("In File: %s, Line: %d - Less Arguments Were Given Than Expected\n",currFileName,lineNum);
             break;
+        case LABEL_WASNT_USED_AS_ENTRY:
+            printf("In File: %s, Line: %d - Label Wasn't Used as Entry in Code or Data Segments\n",currFileName,lineNum);
+            break;
+        case EXTRA_TEXT_AT_END:
+            printf("In File: %s, Line: %d - Extra Text at End of Declaration\n",currFileName,lineNum);
+            break;
+        case USE_OF_SAVED_WORD:
+            printf("In File: %s, Line: %d - Saved Word Cannot be Used as Label Name\n",currFileName,lineNum);
         default:
-            printf("in file: %s, line: %d - unkown error code\n",currFileName,lineNum);
-
+            printf("In File: %s, Line: %d - an Unexpected Error Occurred \n",currFileName,lineNum);
             break;
     }
 }
@@ -97,17 +100,5 @@ void clearLine(char* line)
     {
         line[i] = '\0';
     }
-}
-
-/*
-Replacement for isspace() method because isspace() counts '\n' as a space (which is end of line)
-*/
-int isSpace(char toCheck) { 
-    if (toCheck == ' ') return 1;
-    if (toCheck == '\t') return 2;
-    if (toCheck == '\v') return 3;
-    if (toCheck == '\f') return 4;
-    if (toCheck == '\r') return 5;
-    return 0;
 }
 

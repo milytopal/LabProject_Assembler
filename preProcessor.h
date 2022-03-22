@@ -8,10 +8,6 @@
 #include "utils.h"
 #include "dataStructs.h"
 
-/*------------ global variables ------------*/
-/* head of macro list*/
-pMacroNode head;
-
 /*--------------- functions ----------------*/
 /* the preprocess pass parsing the macros and placing them in the new file .am*/
 bool PreProcessPass(const char* fileName);

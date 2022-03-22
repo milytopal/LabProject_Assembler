@@ -12,7 +12,7 @@ LOOP: prn #48
       lea STR, r6
       m1
       sub r1,r4
-      bne END
+      bne END     ;comment check
       cmp val1,#-6
       bne END[r15]
       dec K

@@ -4,11 +4,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void addWordNodeToCode(Word word, int val, char labelDest , int lineN); /* constructs a word node for the code segments and
+ * adds it to the code list */
 
-/*void addWordNodeToCode(pWordNode, pWordNode);*/
-void addWordNodeToCode(Word word, int val, char labelDest , int lineN);
-void deleteWordList(pWordNode);
-void addWordNodeToData(Word word, int val, char labelDest , int lineN);
+void addWordNodeToData(Word word, int val, char labelDest , int lineN); /* constructs a word node for the data segment and
+ * adds it to the data list*/
 
-
+void deleteWordList(pWordNode); /* frees up the lists created
+ * Input: a given list's head  */
 #endif

@@ -35,12 +35,14 @@ typedef enum eDirectives{DATA,STRING,ENTRY,EXTERN }eDirectives;
 
 typedef enum eAddrresMethod{ NA = -1, IMMEDIATE=0,DIRECT,INDEX,DIRECT_REGISTER }eAddrresMethod;
 
-typedef enum eErrorCode { FAILED_TO_OPEN = 0 , MISSING_FILE_NAME,MISSING_FILE,LINE_LIMIT_REACHED, LABEL_LIMIT_REACHED, BAD_LABEL_NAME, FAILED_TO_CREATE,
-    NO_ARGUMENTS, INCOMPLETE_CODE,MISSING_LABEL, MISSING_PARAMETER,
+typedef enum eErrorCode { FAILED_TO_OPEN = 0 ,MISSING_FILE,LINE_LIMIT_REACHED,
+    LABEL_LIMIT_REACHED, BAD_LABEL_NAME, FAILED_TO_CREATE,
+    NO_ARGUMENTS, INCOMPLETE_CODE,MISSING_LABEL, MISSING_PARAMETER, EXTRA_TEXT_AT_END,
     LABEL_ALREADY_EXISTS, UNKNOWN_OPERATION, INVALID_ARGUMENT,
     NUMBER_OUT_OF_BOUND, INVALID_BRACKET_CONTENTS , TOO_MANY_ARGUMENTS,
     INVALID_USE_OF_REGISTER , MISSING_BRACKETS ,
-    LABEL_IS_ALREADY_EXTERN, LABEL_DOSNT_EXIST,MISSING_ARGUMENTS}eErrorCode;
+    LABEL_IS_ALREADY_EXTERN, LABEL_DOSNT_EXIST,MISSING_ARGUMENTS,
+    LABEL_WASNT_USED_AS_ENTRY, USE_OF_SAVED_WORD}eErrorCode;
 
 /* in each opcode only one bit is set to '1' */
 typedef enum eCommands{
@@ -69,7 +71,7 @@ typedef struct TokenNode{
     pTokenNode pNext;
 } TokenNode;
 
-/* Macro contains a name and a linked list of commands */
+/* Macro wasTheLabelDeclared a name and a linked list of commands */
 typedef struct Macro{
     char name[LABEL_LEN];
     TokenNode* tokenList;
@@ -131,8 +133,8 @@ typedef struct WordNode{
     pWordNode pNext;
 }WordNode;
 
-/* three lists designed as single occurrence
- * meaning there  label list in the code*/
+/* three lists designed as single occurrence meaning there is only one label list in the code
+ * every class in project includes the data structs header file there for the lists does not nned to be declared as externs*/
 pWordNode wordsHead;
 pLabelNode labelsHead;
 pWordNode datasHead;

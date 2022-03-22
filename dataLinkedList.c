@@ -64,21 +64,17 @@ void deleteLabelList(pLabelNode list)
     list = NULL;
 }
 
-int contains(pLabelNode list, char* contain)
+bool wasTheLabelDeclared(char* label)
 {
-    int ind;
     pLabelNode lp;
     lp = labelsHead;
-    ind = 0;
     while (lp != NULL) {
-        if (strcmp(lp->label.name, contain) == 0) {
-            return ind;
+        if (strcmp(lp->label.name, label) == 0) {
+            return true;
         }
         lp = lp->pNext;
-        ind++;
     }
-
-    return -1;
+    return false;
 }
 
 

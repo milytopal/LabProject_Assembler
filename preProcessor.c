@@ -2,13 +2,15 @@
 #include <stdio.h>
 #include <limits.h>
 #include "preProcessor.h"
+/* head of macro list*/
+pMacroNode head;
+
 bool PreProcessPass(const char* fileName)
 {
     FILE *fp = NULL;
     FILE *newFp = NULL;
     char* asFileName;
     char* amFileName;
-    char cwd[LINE_LENGTH];      /*todo : remove later*/
     fp = NULL; newFp = NULL;
     head = NULL;
     asFileName = (char*)calloc(strlen(fileName) + strlen(".as") + 1, sizeof(char));
@@ -17,12 +19,6 @@ bool PreProcessPass(const char* fileName)
     strcat(asFileName, ".as");
     strncpy(amFileName, fileName, strlen(fileName));
     strcat(amFileName, ".am");
-
-    if (getcwd(cwd, sizeof(cwd)) != NULL) {     /*todo : remove later*/
-        printf("Current working dir: %s\n", cwd);
-    } else {
-        perror("getcwd() error");
-    }                                           /*todo : remove later*/
 
     fp = fopen(asFileName, "r");
 
@@ -48,13 +44,6 @@ bool PreProcessPass(const char* fileName)
     fclose(newFp);
     free(amFileName);
     free(asFileName);
-    return false;
-}
-
-bool isMacro(char *line, int i){
-    if(strncmp(line, "macro", 5) == 0){
-        return true;
-    }
     return false;
 }
 

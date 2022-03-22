@@ -1,7 +1,7 @@
 ; file ps.as
     .extern LIST
     .extern W
-
+    .entry W
     .extern BAR
 MAIN: add r3,LIST
 LOOP: prn BAR
@@ -16,9 +16,11 @@ mov r3, BAR
 mov r3, W
 mov r3, W
 cmp W,#-9
-mov r3, BAR
+mov r3, RCT
 .entry MAIN
       sub LOOP[r10],r14
 END:  stop
 
 .extern val1
+.data -6 ;67
+STR:  .string "abcd" ;34

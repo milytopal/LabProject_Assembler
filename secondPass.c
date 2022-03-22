@@ -54,14 +54,14 @@ bool secondPass(char* fileName, int *ICF, int *DCF)
         isError = readFile(fp,fileName);
     }
 
-
+if(isError == false){
     printf("\n");
     printWords();
     printf("\n");
     printData();
     printf("\n");
     printLabels();
-
+}
     fclose(fp);
     free(asFileName);
     return isError;
@@ -119,12 +119,9 @@ bool readFile(FILE* fp, char* fileName)
             {
                 continue;
             }
-            /* handle binary operands here */
-
         }
-
     }
-    UpdateWordsListNodes();
+    isError |= UpdateWordsListNodes(fileName);
 
 free(firstToken);
 free(labelName);
@@ -144,58 +141,62 @@ pLabelNode getLabel(char *label)
     return NULL;
 }
 
-void UpdateWordsListNodes()
+bool UpdateWordsListNodes(const char* fileName)
 {
     pWordNode curr = NULL;
     pLabelNode pLabel = NULL;
+    bool isError = false;
     curr = wordsHead;
     while(curr !=  NULL)
     {
         if(curr->word.isLabel == true)
         {
-            if(strlen(curr->word.name) > 0)
+            if(strlen(curr->word.name) > 0) {
                 pLabel = getLabel(curr->word.name);
-            if(pLabel == NULL) /* there is no label */
-            {
-                curr = curr->pNext;
-                continue;
-            } else {
-                if(pLabel->label.locationType == Extern)
+                if (pLabel == NULL) /* there is no label -print the error only once*/
                 {
-                    if(curr->word.labelDest == LABEL_DEST_B)
-                    {
-                        if(pLabel->label.address != 0 )
-                        {
-                            duplicateExternLabelNode(pLabel, pLabel->pNext, curr->word.address);
-                            printLabels();
-                        }else{
-                            pLabel->label.value = curr->word.address;
-                            pLabel->label.address = curr->word.address;
-                        }
-                    }else if(curr->word.labelDest == LABEL_DEST_O) {
-                        if(pLabel->label.offset == 0 )              /* ofset was not initialized */
-                        {
-                            pLabel->label.offset = (int) (curr->word.address);          /* for extern labels need to print base and address*/
-                        }
+                    if( curr->word.labelDest == LABEL_DEST_B) {     /* in order to print the error only once */
+                        printError(fileName, LABEL_DOSNT_EXIST, curr->word.lineNum);
+                        isError = true;
                     }
+                    curr = curr->pNext;
+                    continue;
                 } else {
-                    if (curr->word.labelDest == LABEL_DEST_B) {
-                        curr->word.code.opcode = pLabel->label.address;
-                    } else if (curr->word.labelDest == LABEL_DEST_O) {
-                        curr->word.code.opcode = pLabel->label.offset;
+                    if (pLabel->label.locationType == Extern) {
+                        curr->word.are = E;
+                        curr->word.code.opcode = 0;
+                        if (curr->word.labelDest == LABEL_DEST_B) {
+                            if (pLabel->label.address != 0) {
+                                duplicateExternLabelNode(pLabel, pLabel->pNext, curr->word.address);
+                            } else {
+                                pLabel->label.value = curr->word.address;
+                                pLabel->label.address = curr->word.address;
+                            }
+                        } else if (curr->word.labelDest == LABEL_DEST_O) {
+                            if (pLabel->label.offset == 0)              /* ofset was not initialized */
+                            {
+                                pLabel->label.offset = (int) (curr->word.address);          /* for extern labels need to print base and address*/
+                            }
+                        }
+                    } else {
+                        if (curr->word.labelDest == LABEL_DEST_B) {
+                            curr->word.code.opcode = pLabel->label.address;
+                        } else if (curr->word.labelDest == LABEL_DEST_O) {
+                            curr->word.code.opcode = pLabel->label.offset;
+                        }
                     }
                 }
             }
         }
         curr = curr->pNext;
     }
+    return isError;
 }
 
 
 bool addEntryAttribute(const char* fileName, char* label, int lineNum)
 {
     pLabelNode curr = NULL;
-
     if (labelsHead == NULL)
         return false;
     curr = labelsHead;
@@ -204,7 +205,7 @@ bool addEntryAttribute(const char* fileName, char* label, int lineNum)
     }
     if (curr == NULL)            /* reached end of labels list */
     {
-        printError(fileName,LABEL_DOSNT_EXIST, lineNum);
+        printError(fileName,LABEL_WASNT_USED_AS_ENTRY, lineNum);
         return true;
     }else {
         if (curr->label.locationType == Extern) {
