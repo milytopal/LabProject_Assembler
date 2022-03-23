@@ -372,11 +372,6 @@ int getFunct(int opCode, char* operation) {
 }
 
 
-/*
-A function to get the addressing method and value of an argument.
-    - it will check 1 argument and return it's Addressing Method and value
-    - it will find errors in the Addressing Method, will return negative ints in addressingMethod for errors
-*/
 bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int funct, int lineNum, int numOfExpectedArgs) {
 
     char labelName[LABEL_LEN];
@@ -512,7 +507,6 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
         return isError;
 
         /* add data containing words */
-    //memset(tempWord.name, 0, LABEL_LEN);
     if(Ad[0] == IMMEDIATE)
     {
         tempWord.are = A;
@@ -529,7 +523,6 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
         addWordNodeToCode(tempWord,IC,LABEL_DEST_O,lineNum);
         IC++;
     }
-    //memset(tempWord.name, 0, strlen(tempWord.name));
     if(Ad[1] == IMMEDIATE)           /* cant have too immediate */
     {
         tempWord.are = A;
