@@ -75,6 +75,13 @@ void printError(const char* currFileName, eErrorCode errCode, int lineNum)
             break;
         case USE_OF_SAVED_WORD:
             printf("In File: %s, Line: %d - Saved Word Cannot be Used as Label Name\n",currFileName,lineNum);
+            break;
+        case EXTRA_COMMA_AT_END:
+            printf("In File: %s, Line: %d - Extra Comma At End Of Instruction\n",currFileName,lineNum);
+            break;
+        case MAX_RAM_EXCITED:
+            printf("In File: %s - Out Of Memory, Memory Limited To 8092 Words \n",currFileName);
+            break;
         default:
             printf("In File: %s, Line: %d - an Unexpected Error Occurred \n",currFileName,lineNum);
             break;

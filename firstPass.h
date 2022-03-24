@@ -35,5 +35,5 @@ bool fillOutArguments(const char*, char*,unsigned int ,int ,int ); /* handle the
  * words to the list according to the addressing method and data, adds also data for use in second path such as label names
  * in case of direct or indexed addressing methods
  * Output: true if an error was found during the argument handling, the error prints are also handled inside*/
-
+int countCommas(char * argAsStr);
 #endif

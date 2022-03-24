@@ -118,7 +118,7 @@ bool firstPass(const char* fileName, int *ICF, int *DCF)
                             tempWord.code.opcode = ind;
                             addWordNodeToData(tempWord, DC+IC,0,lineNum);
                             DC++;
-                            }
+                        }
                         else
                         {
                             printError(fileName,INVALID_ARGUMENT,lineNum);
@@ -381,7 +381,7 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
     bool isLabel[] = {0,0};
     eAddrresMethod Ad[] = {-1,-1};
     char labels[2][LABEL_LEN];
-    int argCount = 0;
+    int argCount = 0, countComma = 0;
     char *firstBracket = NULL;
     char *secondBracket = NULL;
     char *token = NULL;
@@ -389,8 +389,10 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
     char* temp;
     Word tempWord = {0};
     tempWord.code.operands.funct = funct;
-    token = strtok(argAsStr, ", \t\n");
     index = 0;
+    countComma = countCommas(argAsStr);
+
+    token = strtok(argAsStr, " ,\t\n");
 
     while (token != NULL && index < 2 && token[0] != ';'){
         memset(labelName, 0, strlen(argAsStr));
@@ -457,19 +459,22 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
             }
         }
         index++;
-        token = strtok(NULL,"], \t\n");
+
+        token = strtok(NULL,"] \t\n");
     }
 
     if(index < numOfExpectedArgs)
     {
         printError(asFileName, MISSING_ARGUMENTS, lineNum);
-        isError = true;
-        return isError;
-    }else if((index > numOfExpectedArgs) && token != NULL && token[0] != ';') /* if there is extra text after expected argument and it isn't a comment*/
+        return true;
+    }else if((index > numOfExpectedArgs) || (token != NULL && token[0] != ';')) /* if there is extra text after expected argument and it isn't a comment*/
     {
         printError(asFileName, TOO_MANY_ARGUMENTS, lineNum);
-        isError = true;
-        return isError;
+        return true;
+    }else if(countComma > (numOfExpectedArgs - 1))
+    {
+        printError(asFileName,EXTRA_COMMA_AT_END, lineNum);
+        return true;
     }
 
     /*create the second word with the new data*/
@@ -506,7 +511,7 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
     if(Ad[0] == DIRECT_REGISTER && Ad[1] == DIRECT_REGISTER)        /*no words to add*/
         return isError;
 
-        /* add data containing words */
+    /* add data containing words */
     if(Ad[0] == IMMEDIATE)
     {
         tempWord.are = A;
@@ -530,7 +535,7 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
         addWordNodeToCode(tempWord, IC, 0, lineNum);
         IC++;
     }
-     if(Ad[1] == DIRECT || Ad[1] == INDEX)
+    if(Ad[1] == DIRECT || Ad[1] == INDEX)
     {
         tempWord.are = R;
         tempWord.isLabel = isLabel[1];
@@ -540,7 +545,7 @@ bool fillOutArguments(const char* asFileName, char* argAsStr, unsigned  int func
         addWordNodeToCode(tempWord,IC,LABEL_DEST_O,lineNum);
         IC++;
     }
-return isError;
+    return isError;
 }
 
 /* check if label is registers name */
@@ -598,4 +603,21 @@ char* getLabelFromIndexAddressing(char* token)
     firstBracket = strpbrk(token, "[");
     *firstBracket = '\0';
     return token;
+}
+
+int countCommas(char * argAsStr)
+{
+    char *commaPtr = NULL;
+    char *comment = NULL;
+    int count = 0;
+    commaPtr = strpbrk(argAsStr, ","); /* find a comma */
+    comment = strpbrk(argAsStr, ";"); /* find start of comment */
+    while(commaPtr != NULL && commaPtr < comment)   /* while there is a comma and its not in a comment section */
+    {
+        count++;
+        commaPtr++;             /* skip the comma already counted */
+        commaPtr = strpbrk(argAsStr + (commaPtr - argAsStr), ","); /* find closing brackets */
+
+    }
+    return count;
 }

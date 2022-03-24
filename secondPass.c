@@ -41,6 +41,11 @@ bool secondPass(char* fileName, int *ICF, int *DCF)
     FILE *fp = NULL;
     char* asFileName = NULL;
     bool isError;
+    if(((*ICF) + (*DCF)) > (MAX_RAM_ADDRESS - STARTING_IC)) /* check if Memory usage reached 8192*/
+    {
+        printError(fileName, MAX_RAM_EXCITED, 0);
+        return true;
+    }
     asFileName = (char*)calloc((strlen(fileName) + strlen(".am") + 1) ,sizeof(char));
     strcpy(asFileName, fileName);
     strcat(asFileName, ".am");
