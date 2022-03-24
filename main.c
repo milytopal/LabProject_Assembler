@@ -1,7 +1,5 @@
 #include <stdio.h>
-
 #include "dataStructs.h"
-#include "utils.h"
 #include "preProcessor.h"
 #include "firstPass.h"
 #include "wordLinkedList.h"
@@ -17,9 +15,9 @@ int main(int argc, char *argv[]) {
     ICF = 0;
     DCF = 0;
     isErrorFound = false;
-    if(argc < 1)
+    if(argc < 2)
     {
-        fprintf(stderr, "Missing Arguments for Assembler \n ");
+        printf("Missing Arguments for The Assembler\n");
     }
 
     for(i=1; i < argc ; i++)
@@ -43,7 +41,6 @@ int main(int argc, char *argv[]) {
         deleteWordList(wordsHead);
         deleteWordList(datasHead);
         deleteLabelList(labelsHead);
-
     }
 
     return 0;
