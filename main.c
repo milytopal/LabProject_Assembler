@@ -1,3 +1,8 @@
+/* ******************************** *
+ * Writers:                         *
+ * Mily Topal 316720994             *
+ * Oz Aharonson 214785891           *
+ * ******************************** */
 #include <stdio.h>
 #include "dataStructs.h"
 #include "preProcessor.h"
