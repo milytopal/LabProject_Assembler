@@ -1,47 +1,11 @@
 #include "secondPass.h"
 
-void printLabels()
-{
-    pLabelNode curr = NULL;
-    curr = labelsHead;
-    printf("\n labels head address: %ld \n B = BASE: O = OFFSET:\n",(long)labelsHead);
-    while(curr!= NULL)
-    {
-        printf(" %s V:%d B:%d O:%d-> \n",(curr->label.name),curr->label.value,curr->label.address,curr->label.offset);
-        curr = curr->pNext;
-    }
-}
-void printWords()
-{
-    pWordNode curr = NULL;
-    curr = wordsHead;
-    printf("\n words head address: %ld \n",wordsHead);
-    while(curr!=NULL)
-    {
-        printf("label name: %s \tline: %d\tIC: %d \t dest: %c-> \n",(curr->word.name),
-               (curr->word.lineNum),curr->word.address, curr->word.labelDest);
-        curr = curr->pNext;
-    }
-}
-void printData()
-{
-    pWordNode curr = NULL;
-    curr = datasHead;
-    printf("\n data head address: %ld \n",datasHead);
-    while(curr!=NULL)
-    {
-        printf(" %s \tline: %d\tDC: %d \t data: %d-> \n",(curr->word.name),
-               (curr->word.lineNum),curr->word.address, (int)curr->word.code.opcode);
-        curr = curr->pNext;
-    }
-}
-
 bool secondPass(char* fileName, int *ICF, int *DCF)
 {
     FILE *fp = NULL;
     char* asFileName = NULL;
     bool isError;
-    if(((*ICF) + (*DCF)) > (MAX_RAM_ADDRESS - STARTING_IC)) /* check if Memory usage reached 8192*/
+    if(((*ICF) + (*DCF)) > (MAX_RAM_ADDRESS - STARTING_IC)) /* check if Memory usage reached 8092 (from address 100 to 8191)*/
     {
         printError(fileName, MAX_RAM_EXCITED, 0);
         return true;
@@ -59,14 +23,6 @@ bool secondPass(char* fileName, int *ICF, int *DCF)
         isError = readFile(fp,fileName);
     }
 
-if(isError == false){
-    printf("\n");
-    printWords();
-    printf("\n");
-    printData();
-    printf("\n");
-    printLabels();
-}
     fclose(fp);
     free(asFileName);
     return isError;

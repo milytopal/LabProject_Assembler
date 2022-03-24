@@ -2,7 +2,6 @@
 
 int i;
 char* regList[]= {"r0","r1","r2","r3","r4","r5","r6","r7","r8","r9","r10","r11","r12","r13","r14","r15"};
-/* for debug functions remove later */
 
 bool firstPass(const char* fileName, int *ICF, int *DCF)
 {
