@@ -28,6 +28,7 @@ int main(int argc, char *argv[]) {
     for(i=1; i < argc ; i++)
     {
         /* error will occur only if file is missing or failed to open file */
+	printf("\nAssembling %s:\n",argv[i]);
         isErrorFound = PreProcessPass(argv[i]);
 
         if(isErrorFound == false)
@@ -46,6 +47,7 @@ int main(int argc, char *argv[]) {
         deleteWordList(wordsHead);
         deleteWordList(datasHead);
         deleteLabelList(labelsHead);
+
     }
 
     return 0;

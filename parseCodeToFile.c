@@ -34,6 +34,7 @@ bool parseCodeToFile(const char *fileName, const int *ICF,const int *DCF)
     }else
     {
         printObjectFile(codeF, ICF,DCF);
+	printf("%s Created Successfully\n",codeFileName);
     }
     fclose(codeF);
     entF = fopen(entFileName, "w");        /* create the .ent file */
@@ -55,6 +56,8 @@ bool parseCodeToFile(const char *fileName, const int *ICF,const int *DCF)
     }else
     {
         printLabelTableToFiles(extF, entF);
+	printf("%s Created Successfully\n",entFileName);
+	printf("%s Created Successfully\n",extFileName);
     }
 
     fclose(extF);
